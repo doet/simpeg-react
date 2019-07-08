@@ -63,12 +63,13 @@
 				</button>
 
 				<div class="navbar-header pull-left">
-					<a href="index.html" class="navbar-brand">
+					<!-- <a href="index.html" class="navbar-brand">
 						<small>
 							<i class="fa fa-leaf"></i>
 							Ace Admin
 						</small>
-					</a>
+					</a> -->
+					<img src="{{ url('/public/images/pcmh.png') }}" style="margin-top: 5px; height:35px"/>
 				</div>
 
 				<div class="navbar-buttons navbar-header pull-right" role="navigation">
