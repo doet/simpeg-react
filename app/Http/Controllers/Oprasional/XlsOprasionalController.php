@@ -118,7 +118,7 @@ class XlsOprasionalController extends Controller
               $join->on('tb_jettys.id','tb_dls.jettys_id');
             })
             ->where(function ($query) use ($mulai,$akhir,$request){
-                $akhir = strtotime($mulai)+(60 * 60 * 24);
+                $akhir = strtotime($mulai)+(60 * 60 * 24)-1;
                 $mulai = strtotime('1-'.date('m-Y',$akhir));
                 $query->where('tb_dls.date', '>=', $mulai)
                   ->Where('tb_dls.date', '<', $akhir);
@@ -136,8 +136,9 @@ class XlsOprasionalController extends Controller
               'tb_ppjks.*',
               'tb_dls.*'
             )
+            ->orderBy('date', 'asc')
             ->get();
-
+            // dd(date('d-m-Y',strtotime($mulai)+(60 * 60 * 24)-1));
           $i=0;
           $multipleRows[$i] = array('No','ppjk','agen','date_req','kapal','grt','loa','bendera','jetty','ops','pc','tunda','mulai','akhir','dd','ket','rute','moring');
           foreach ($result as $row) {
