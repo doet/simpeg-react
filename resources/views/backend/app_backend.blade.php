@@ -150,7 +150,7 @@
 								</li>
 							</ul>
 						</li> -->
-						<li class="green dropdown-modal">
+						<!-- <li class="green dropdown-modal">
 							<a data-toggle="dropdown" class="dropdown-toggle" href="#">
 								<i class="ace-icon fa fa-envelope icon-animated-vertical"></i>
 								<span class="badge badge-success">5</span>
@@ -179,9 +179,9 @@
 													</span>
 												</span>
 											</a>
-										</li>
+										</li> -->
 
-										<li>
+										<!-- <li>
 											<a href="#" class="clearfix">
 												<img src="{{asset('images/avatars/avatar3.png')}}" class="msg-photo" alt="Susan's Avatar" />
 												<span class="msg-body">
@@ -196,9 +196,9 @@
 													</span>
 												</span>
 											</a>
-										</li>
+										</li> -->
 
-										<li>
+										<!-- <li>
 											<a href="#" class="clearfix">
 												<img src="{{asset('images/avatars/avatar4.png')}}" class="msg-photo" alt="Bob's Avatar" />
 												<span class="msg-body">
@@ -326,7 +326,7 @@
 									</a>
 								</li>
 							</ul>
-						</li>
+						</li> -->
 						<li class="green dropdown-modal" id='notif'></li>
 
 						<li class="light-blue dropdown-modal">
