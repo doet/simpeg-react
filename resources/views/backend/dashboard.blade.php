@@ -53,11 +53,11 @@
 
                 Welcome to
                 <strong class="green">
-                    Ace
-                    <small>(v1.4)</small>
+                    CiPS
+                    <small>(Cilegon Integreted Port System)</small>
                 </strong>,
-<a href="https://github.com/bopoda/ace">github</a> (with minified ace js/css files). Laravel version {{app()->version()}}
             </div>
+
 
             <div class="row">
                 <div class="space-6"></div>
