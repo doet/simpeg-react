@@ -226,6 +226,11 @@ return [
         'Validator' => Illuminate\Support\Facades\Validator::class,
         'View' => Illuminate\Support\Facades\View::class,
         'PDF' => Barryvdh\DomPDF\Facade::class,
+
+        /* Helper */
+        'GajiHelpers'   => App\Helpers\GajiHelpers::class,
+        'AppHelpers'    => App\Helpers\AppHelpers::class,
+        'AbsenHelpers'  => App\Helpers\AbsenHelpers::class,
     ],
 
 ];
