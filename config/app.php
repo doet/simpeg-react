@@ -228,8 +228,8 @@ return [
         'PDF' => Barryvdh\DomPDF\Facade::class,
 
         /* Helper */
-        'GajiHelpers'   => App\Helpers\GajiHelpers::class,
         'AppHelpers'    => App\Helpers\AppHelpers::class,
+        'GajiHelpers'   => App\Helpers\GajiHelpers::class,
         'AbsenHelpers'  => App\Helpers\AbsenHelpers::class,
     ],
 
