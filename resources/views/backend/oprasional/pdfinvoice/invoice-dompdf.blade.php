@@ -185,50 +185,27 @@
 
                   $isi[$i]['tundaoff']=date('d/m/y H:i',$row->tundaoff);
 
-                  $isi[$i]['selisihWaktu']=$selisihWaktu=number_format(($row->tundaoff-$row->tundaon)/3600,2);
-                  $exWaktu = explode(".",$selisihWaktu);
-                  // dd($exWaktu);
-                  if ($exWaktu[1]<=50 && $exWaktu[1]!=00 )$selisihWaktu2=$exWaktu[0]+0.5; else $selisihWaktu2=ceil($selisihWaktu);
-                  if ($selisihWaktu2<1)$selisihWaktu2=1;
-                  $isi[$i]['selisihWaktu2']=$selisihWaktu2=number_format($selisihWaktu2,2);
+                  $selisih = InvoiceHelpers::selisih_waktu($row->tundaon,$row->tundaoff);
+                  $isi[$i]['selisihWaktu']=$selisih['selisihWaktu'];
+                  $isi[$i]['selisihWaktu2']=$selisih['selisihWaktu2'];
 
-                  if ($isi[$i]['daria']!='S' && $isi[$i]['kea']!='S') $isi[$i]['mobilisasi']=$mobilisasi=2;
-                  else if ($isi[$i]['daria']!='S' && $isi[$i]['kea']=='S') $isi[$i]['mobilisasi']=$mobilisasi=2.25;
-                  else if ($isi[$i]['daria']=='S' && $isi[$i]['kea']!='S') $isi[$i]['mobilisasi']=$mobilisasi=2.25;
-                  else if ($isi[$i]['daria']=='S' && $isi[$i]['kea']=='S') $isi[$i]['mobilisasi']=$mobilisasi=2.5;
+                  $isi[$i]['mobilisasi']=InvoiceHelpers::mobilisasi($isi[$i]['daria'],$isi[$i]['kea']);
 
-                  $isi[$i]['jumlahWaktu']=$jumlahWaktu=$mobilisasi+$selisihWaktu2;
+                  $isi[$i]['jumlahWaktu']=$isi[$i]['mobilisasi']+$isi[$i]['selisihWaktu2'];
 
                   $kapalsGrt = $result->kapalsGrt;
 
-                  if($result->rute == '$') {
-                    if ($kapalsGrt<=3500)$tariffix = 152.25*$kurs->nilai;
-                    else if ($kapalsGrt<=8000)$tariffix = 386.25*$kurs->nilai;
-                    else if ($kapalsGrt<=14000)$tariffix = 587.1*$kurs->nilai;
-                    else if ($kapalsGrt<=18000)$tariffix = 770*$kurs->nilai;
-                    else if ($kapalsGrt<=40000)$tariffix = 1220*$kurs->nilai;
-                    else if ($kapalsGrt<=75000)$tariffix = 1300*$kurs->nilai;
-                    else if ($kapalsGrt>75000)$tariffix = 1700*$kurs->nilai;
-                  } else {
-                    if ($kapalsGrt<=3500)$tariffix = 495000;
-                    else if ($kapalsGrt<=8000)$tariffix = 577500;
-                    else if ($kapalsGrt<=14000)$tariffix = 825000;
-                    else if ($kapalsGrt<=18000)$tariffix = 1031250;
-                  }
+                  if ($kurs==null) $kurs=(object) array('nilai'=>'');
+                  $tarif = InvoiceHelpers::tarif($result->rute,$result->kapalsGrt,$kurs->nilai);
 
+                  $tariffix = $tarif['tariffix'];
                   $isi[$i]['jumlahTariffix']=$tariffix*$isi[$i]['jumlahWaktu'];
 
-                  if($result->rute == '$') {
-                    if ($kapalsGrt<=14000)$tarifvar=0.005*$kurs->nilai;
-                    else if ($kapalsGrt<=40000)$tarifvar=0.004*$kurs->nilai;
-                    else if ($kapalsGrt>40000)$tarifvar=0.002*$kurs->nilai;
-                  } else {
-                    $tarifvar=3.30;
-                  }
-                  $isi[$i]['jumlahTarifvar']=$tarifvar*$kapalsGrt*$jumlahWaktu;
+                  $tarifvar=$tarif['tarifvar'];
+                  $isi[$i]['jumlahTarifvar']=$tarifvar*$kapalsGrt*$isi[$i]['jumlahWaktu'];
 
                   if (empty($match[$i]))$match[$i]=0;
-                  $isi[$i]['jumlahTarif']=$jumlahTarif=$isi[$i]['jumlahTarifvar']+$isi[$i]['jumlahTariffix']+$match[$i];
+                  $isi[$i]['jumlahTarif']=$isi[$i]['jumlahTarifvar']+$isi[$i]['jumlahTariffix']+$match[$i];
 
                   if ($row->ops=='Berth'){
                     if ($row->shift!='on'){
@@ -363,8 +340,8 @@
                     <td class="top right">Tarif / <i>Tariff</i></td>
                     <td class="top right">Jumlah / <i>Amount</i></td>
                     <td class="top right">Tarif / <i>Tariff</i></td>
-                    <td class="top right" width='45px'>GRT</td>
-                    <td class="top right">Jumlah / <i>Amount</i></td>
+                    <td class="top right" width='40px'>GRT</td>
+                    <td class="top right" width='80px' >Jumlah / <i>Amount</i></td>
                   </tr>
                   <tr>
                     <td class="top" colspan="16" ></td>
@@ -427,7 +404,9 @@
                 </tr>
               </table>
             </div>
-
+            <?php
+            InvoiceHelpers::nilai_inv($result->id,$totalTarif+$match[$i+1],$bhtPNBP+$match[$i+2],$ppn+$match[$i+3],$totalinv+$match[$i+4]);
+            ?>
             <div style="position:absolute; top:80; left:650; width:300; font-size:11px;">
               <?php
               if($result->rute == '$') {

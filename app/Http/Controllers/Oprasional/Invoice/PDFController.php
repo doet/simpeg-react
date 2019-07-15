@@ -7,6 +7,7 @@ use App\Http\Requests;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
+use App\Helpers\InvoiceHelpers;
 use DB;
 use Auth;
 

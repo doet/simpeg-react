@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
 use App\Helpers\AppHelpers;
+use App\Helpers\InvoiceHelpers;
 
 use DB;
 use Auth;
@@ -106,6 +107,39 @@ class InvoiceApiController extends Controller
         }
         if(empty($responce))$responce[0]='null';
       break;
+      case 'ppjk':
+        $query = DB::table('tb_ppjks')
+          ->rightJoin('tb_kapals', function ($join) {
+            $join->on('tb_kapals.id','tb_ppjks.kapals_id')
+              ->where('tb_ppjks.bstdo','!=','');
+          })
+          // ->distinct('code')
+          ->where(function ($q) use ($request){
+            // $q->where('tb_ppjks.bstdo','!=','')
+            //   ->orWhere('tb_ppjks.bstdo','!=',(NULL));
+            $q->where('tb_ppjks.ppjk','like','%'.$request->input('cari').'%')
+              ->orWhere('tb_kapals.name', 'like','%'.$request->input('cari').'%');
+          })
+          ->select(
+            'tb_kapals.name as kapalsName',
+            //   // 'tb_jettys.color as jettyColor',
+            'tb_ppjks.*'
+            )
+          ->orderBy('ppjk', 'asc')
+          ->get();
+        $i=0;
+        $value_n='';
+        foreach($query as $row) {
+          if ($row->ppjk != $value_n){
+            $responce[$i]['value'] = $row->ppjk .' - '. $row->kapalsName;
+            $responce[$i]['label'] = $row->ppjk .' - '. $row->kapalsName;
+            $responce[$i]['id'] = $row->id;
+            $i++;
+            $value_n=$row->ppjk .' - '. $row->kapalsName;
+          }
+        }
+        if(empty($responce))$responce[0]='Null';
+      break;
     }
     return  Response()->json($responce);
   }
@@ -127,7 +161,8 @@ class InvoiceApiController extends Controller
           'dkurs'=>$dkurs,
           'selisih'=>$request->input('selisih'),
         );
-        $dddd = DB::table('tb_ppjks')->where('id', $id)->update($datanya);
+        $dddd = DB::table('tb_ppjks')->where('id', $id);
+        $dddd->update($datanya);
 
         $kurs = str_replace('.', '', $request->input('kurs'));
         $datakurs=array(
@@ -138,9 +173,13 @@ class InvoiceApiController extends Controller
           if (DB::table('tb_kurs')->where('date', strtotime($request->input('dkurs')))->exists()){
             DB::table('tb_kurs')->where('date', strtotime($request->input('dkurs')))->update($datakurs);
           } else {
-            DB::table('tb_kurs')->where('date', strtotime($request->input('dkurs')))->insert($datakurs);
+            DB::table('tb_kurs')->insert($datakurs);
+            //->where('date', strtotime($request->input('dkurs')))
           }
         }
+
+
+        InvoiceHelpers::nilai_invoice($dddd->first()->id);
 
         $responce = array(
           'status' => "success",
@@ -182,6 +221,9 @@ class InvoiceApiController extends Controller
             // })
             ->where(function ($query) use ($mulai,$akhir,$request){
               $query->where('tb_ppjks.bstdo','!=','');
+              if ($request->input('s_id')) {
+                $query->where('tb_ppjks.id', $request->input('s_id'));
+              }
             //   if (array_key_exists("lhp",$request->input())){
             //     $query->where('tb_ppjks.lhp', strtotime($request->input('lhp')));
             //   } else if (array_key_exists("bstdo",$request->input())){

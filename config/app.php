@@ -231,6 +231,7 @@ return [
         'AppHelpers'    => App\Helpers\AppHelpers::class,
         'GajiHelpers'   => App\Helpers\GajiHelpers::class,
         'AbsenHelpers'  => App\Helpers\AbsenHelpers::class,
+        'InvoiceHelpers'=> App\Helpers\InvoiceHelpers::class,
     ],
 
 ];

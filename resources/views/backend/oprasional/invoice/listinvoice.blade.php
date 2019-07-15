@@ -12,6 +12,9 @@
 
 	<link rel="stylesheet" href="{{ asset('/css/chosen.min.css') }}" />
 	<link rel="stylesheet" href="{{ asset('css/bootstrap-multiselect.min.css') }}" />
+	<style>
+		.ui-autocomplete { position: absolute; cursor: default; z-index: 1100 !important;}
+	</style>
 @endsection
 
 @section('breadcrumb')
@@ -173,10 +176,16 @@
 											</select>
 										</div>
 									</div>
+									<div class="profile-info-row">
+										<div class="profile-info-name"> Search PPJK </div>
+
+										<div class="profile-info-value">
+											<input class="input-sm col-xs-12" type="text" id="search" name="search">
+										</div>
+									</div>
 							</div>
 						</div>
 					</div>
-
 					<table id="grid-table"></table>
 					<div id="grid-pager"></div>
           <!-- PAGE CONTENT ENDS -->
@@ -427,10 +436,22 @@
 			// 		.addClass('ace ace-switch ace-switch-5')
 			// 		.after('<span class="lbl"></span>');
 			// }, 0);
-			// console.log(cellvalue);
-			var url="{{ url('oprasional/PDFInvoice') }}?page=invoice-dompdf&id="+cellvalue;
-			var url2="{{ url('oprasional/PDFInvoice') }}?page=invoice-dompdf2&id="+cellvalue;
-			return '<div><a class="fa fa-file-pdf-o orange" method="POST" href='+url+' target="_blank"></a> - <a class="fa fa-file-pdf-o orange" method="POST" href='+url2+' target="_blank"></a> - <a class="fa fa-credit-card orange"></a></div>';
+			file_c="grey";
+			url=url2='';
+			// console.log(cell);
+			if (cell[5]=="Domestic" && cell[6]!=="" && cell[7]!==null && cell[8]!==null && cell[9]!==null){
+				file_c="orange";
+
+				url="href='{{ url('oprasional/PDFInvoice') }}?page=invoice-dompdf&id="+cellvalue+"'";
+				url2="href='{{ url('oprasional/PDFInvoice') }}?page=invoice-dompdf2&id="+cellvalue+"'";
+			} else if (cell[5]=="Internasional" && cell[6]!=="" && cell[7]!==null && cell[8]!==null && cell[9]!==null && cell[12]!==""){
+				file_c="orange";
+				url="href='{{ url('oprasional/PDFInvoice') }}?page=invoice-dompdf&id="+cellvalue+"'";
+				url2="href='{{ url('oprasional/PDFInvoice') }}?page=invoice-dompdf2&id="+cellvalue+"'";
+			}// var gsr = $(this).jqGrid('getGridParam','selrow');
+			// tglinv = $(this).jqGrid('getCell',gsr,'tglinv');
+
+			return '<div><a class="fa fa-file-pdf-o '+ file_c +'" '+url+'  method="POST" target="_blank"></a> - <a class="fa fa-file-pdf-o '+ file_c +'" '+url2+' method="POST" target="_blank"></a> - <a class="fa fa-credit-card orange"></a></div>';
 		}
 
 		//switch element when editing inline
@@ -624,6 +645,35 @@ var i=0;
 				}
 		});
 
+		$('#search').on('keypress',function(e) {
+	    if(e.which == 13) {
+				s_id='';
+      	jQuery(grid_selector).jqGrid('setGridParam', { postData: {datatb:'invoice',s_id:s_id,_token:'{{ csrf_token() }}'} }).trigger("reloadGrid");
+	    }
+		});
+		$("#search").autocomplete({
+			source: function( request, response ) {
+				var postcar= {'datatb':'ppjk', cari: request.term, _token:'{{ csrf_token() }}'};
+				getparameter("{{url('/api/oprasional/invoice/autoc')}}",postcar,function(data){
+					response( $.map( data, function( item ) {
+						return {
+							label: item.label,
+							value: item.value,
+							id: item.id
+						}
+					}));
+				},function(data){
+					//be4 send
+				});
+			},
+			autoFocus: true,
+			minLength: 1,
+			select: function( event, ui ) {
+				jQuery(grid_selector).jqGrid('setGridParam', { postData: {datatb:'invoice',s_id:ui.item.id,_token:'{{ csrf_token() }}'} }).trigger("reloadGrid");
+				console.log(ui.item.id);
+				// parameters = {datatb:'ppjk',start:start,end:end,_token:'{{ csrf_token() }}'};
+			},
+		});
 
 		$(document).one('ajaxloadstart.page', function(e) {
 			$.jgrid.gridDestroy(grid_selector);

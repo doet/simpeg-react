@@ -17,7 +17,7 @@ use Illuminate\Http\Request;
 //     return $request->user();
 // });
 // Route::post('/','Notificatsions\NotificatiosanaApiController@jqgrid');
-
+// Auth::routes();
 Route::prefix('bank')->group(function(){
   Route::post('jqgrid', 'Bank\BankApiController@jqgrid');
   Route::post('json', 'Bank\BankApiController@json');

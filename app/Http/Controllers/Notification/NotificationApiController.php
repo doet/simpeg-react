@@ -66,6 +66,7 @@ class NotificationApiController extends Controller
             $row->users_id,
             $row->content,
             $row->read,
+            $row->uuid,
           );
           $i++;
         break;
@@ -84,13 +85,13 @@ class NotificationApiController extends Controller
       $datanya['id'] = DB::getPdo()->lastInsertId();
       $datanya['read'] = "0,";
     } else if ( $request->oper =='edit'){
-      $datanya['read'] = $request->read;
-      $datanya['updated_at']  = $request->updated_at;
-      $datanya['read'] = str_replace("0,","",$request->read);
-
+      $datanya['content'] = $request->content;
+      $datanya['uuid'] = $request->uuid;
+      $datanya['updated_at']  = date('Y-m-d H:i:s');
+      // $datanya['read'] = str_replace("0,","",$request->read);
       DB::table('notifs')->where('id', $request->id)->update($datanya);
-      $datanya['users_id'] = $request->users_id;
-      $datanya['index'] = $request->index;
+      $datanya['users_id'] = $request->users;
+      // $datanya['index'] = $request->index;
     }
     $datanya['oper'] = $request->oper;
 

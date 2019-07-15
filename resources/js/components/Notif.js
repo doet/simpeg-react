@@ -36,26 +36,33 @@ export default class Notif extends Component {
 
       window.Echo.channel('laravel_database_public').listen('NotifSent',({message}) => {
         console.log(message);
-        // this.state.myArray.push('new value')
         if (this.state.users_id == message.users_id || message.users_id == 0){
           if (message.oper == 'edit'){
-            this.state.messages[message.index].read=message.read;
-
-            this.setState(state => ({
-              messages:this.state.messages.slice(0,5),
-              unread:this.state.unread-1
-            }))
-          }else if (message.oper == 'add'){
-            delete data["oper"];
+            if("index" in message){
+              this.state.messages[message.index].read=message.read;
+              this.setState(state => ({
+                unread:this.state.unread-1
+              }))
+            } else {
+              this.state.messages.map((q,i) => {
+                if (message.uuid === q.uuid)this.state.messages[i].content=message.content;
+              });
+            }
+          } else if (message.oper == 'add'){
+            delete message["oper"];
             this.state.messages.unshift(message);
+            // console.log(this.state.messages);
             this.setState(state => ({
-              messages:this.state.messages.slice(0,5),
               unread:this.state.unread+1
             }))
-            console.log(this.state.messages);
+            // console.log(this.state.messages);
           }
+          this.setState(state => ({
+            messages:this.state.messages.slice(0,5)
+          }))
         }
       });
+
     }
     handleClick(e){
       e.preventDefault();
@@ -92,6 +99,7 @@ export default class Notif extends Component {
     }
 
     render() {
+
 
       return (
         <React.Fragment>
