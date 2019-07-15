@@ -110,22 +110,22 @@
               <table width="350px">
                 <thead>
                   <tr>
-                    <td class="top right left" rowspan="2" colspan="18">FORMULIR</td>
+                    <td class="top right left" rowspan="2" colspan="17">FORMULIR</td>
                     <td class="top right" colspan="4">Doc No </td>
-                    <td class="top right" colspan="2">F.PDP/01.004</td>
+                    <td class="top right" colspan="3">F.PDP/01.004</td>
                   </tr>
                   <tr>
                     <td class="top right" colspan="4">Rev</td>
-                    <td class="top right" colspan="2">0.0</td>
+                    <td class="top right" colspan="3">0.0</td>
                   </tr>
                   <tr>
-                    <td class="top right left" rowspan="2" colspan="18">LEMBAR HASIL PEKERJAAN</td>
+                    <td class="top right left" rowspan="2" colspan="17">LEMBAR HASIL PEKERJAAN</td>
                     <td class="top right" colspan="4">Tgl Efektif</td>
-                    <td class="top right" colspan="2"><?php echo date("d/m/Y",$mulai);?></td>
+                    <td class="top right" colspan="3"><?php echo date("d/m/Y",$mulai);?></td>
                   </tr>
                   <tr>
                     <td class="top right" colspan="4">Halaman</td>
-                    <td class="top right" colspan="2">1 dari 1</td>
+                    <td class="top right" colspan="3">1 dari 1</td>
                   </tr>
                   <tr>
                     <td class="top" colspan="24" ></td>
@@ -175,23 +175,25 @@
                   $i=1;
                   $jppjk=0;
                   $jbapp=array();
-                  $ppjk = $datetime = '';
+                  $ppjk = $datetime = $jettyName = '';
                   foreach ($result as $row ) {
                     // dd($row->ppjk);
                     $date = explode(" ", date("d-m-Y H:i",$row->date));
                     if ($ppjk == $row->ppjk){
-                      if ($datetime == $row->date){
+                      if ($datetime == $row->date && $jettyName=$row->jettyName){
                         $date[1] = 'SHIFT';
                         $classShift = 'blue';
                       } else {
                         $classShift = '';
                         $datetime = $row->date;
+                        $jettyName = $row->jettyName;
                       }
                     }else{
                       $ppjk = $row->ppjk;
                       $classShift = '';
                       $jppjk++;
                       $datetime = $row->date;
+                      $jettyName = $row->jettyName;
                     }
                     // if ($row->bapp != '') $jbapp = ;
                     if (!in_array($row->bapp,$jbapp) && $row->bapp!='')$jbapp[]=$row->bapp;
