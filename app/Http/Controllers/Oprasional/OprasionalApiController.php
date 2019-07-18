@@ -32,6 +32,8 @@ class OprasionalApiController extends Controller
   public function json(Request $request){
     $datatb = $request->input('datatb', '');
     $id = $request->input('iddata', '');
+    $sidx =$request->input('sidx', 'id');
+    $sord =$request->input('sord', 'asc');
     $responce = array();
     switch ($datatb) {
       case 'ppjk':
@@ -64,7 +66,9 @@ class OprasionalApiController extends Controller
         //   'tb_jettys.color as jettyColor',
         //   'tb_ppjks.*'
         )
+        // ->orderBy($sidx, $sord)
         ->get();
+        // $responce[]=$sidx;
         foreach($query as $row) {
           $responce[]=$row;
         }
@@ -509,11 +513,15 @@ class OprasionalApiController extends Controller
       break;
       case 'lstp':
         // dd($request->input());
+        if ($request->date_req)$request->date_req=strtotime($request->date_req);
+        if ($request->date_aprv)$request->date_aprv=strtotime($request->date_aprv);
         $data_a=array(
-          'lstp'=>$request->input('lstp','')
+          'lstp_req'=>$request->date_req,
+          'lstp_aprv'=>$request->date_aprv,
+          'lstp'=>$request->lstp,
         );
-        DB::table('tb_ppjks')->where('id', $request->input('ppjks_id',''))->update($data_a);
-
+        DB::table('tb_ppjks')->where('id', $id)->update($data_a);
+        // dd($data_a);
         //
         // $data_b=array(
         //   // 'moring'=>$request->input('moring',''),
@@ -657,6 +665,19 @@ class OprasionalApiController extends Controller
               $join->on('tb_ppjks.jettys_idx', 'tb_jettys.id');
             })
             ->where(function ($query) use ($mulai,$akhir,$request){
+
+              if (array_key_exists("lstp",$request->input())){
+                $query->where('lhp','!=','');
+                if ($request->input('s_id')) {
+                  $query->where('tb_ppjks.id', $request->input('s_id'));
+                } else {
+                  // $mulai = strtotime($mulai);
+                  // $akhir = strtotime($akhir);
+                  // if($akhir==0)$akhir = $mulai+(60 * 60 * 24);
+                  // $query->where('date_issue', '>=', $mulai)
+                  //   ->Where('date_issue', '<=', $akhir);
+                }
+              } else {
                 if ($request->input('s_id')) {
                   $query->where('tb_ppjks.id', $request->input('s_id'));
                 } else {
@@ -666,6 +687,7 @@ class OprasionalApiController extends Controller
                   $query->where('date_issue', '>=', $mulai)
                     ->Where('date_issue', '<=', $akhir);
                 }
+              }
             })
             ->select(
               'tb_agens.code as agenCode',
@@ -808,7 +830,8 @@ class OprasionalApiController extends Controller
         switch ($datatb) {
           case 'ppjk':   // Variabel Master
             // if ($row->ppjk == '' || $row->ppjk == null) $row->ppjk = ''; else $row->ppjk = substr($row->ppjk, -5);
-
+            if ($row->lstp_req!='')$row->lstp_req=date("d M Y",$row->lstp_req);
+            if ($row->lstp_aprv!='')$row->lstp_aprv=date("d M Y",$row->lstp_aprv);
             $responce['rows'][$i]['id'] = $row->id;
             $responce['rows'][$i]['cell'] = array(
               $row->id,
@@ -824,6 +847,9 @@ class OprasionalApiController extends Controller
               $row->etmal,
               $row->cargo,
               $row->muat,
+              $row->lstp_req,
+              $row->lstp_aprv,
+              $row->lstp,
             );
             $i++;
           break;

@@ -141,7 +141,7 @@
 										<div class="profile-info-value">
 											<select id="ppjk" class="multiselect" multiple="" disabled>
 												<option value=""></option>
-											</select>
+											</select> tersedia : <span id='tppjk'></span> ppjk
 										</div>
 									</div>
 							</div>
@@ -199,7 +199,7 @@
 				// // $('input[name="start"]').val(params.newValue);
 				setdate = params.newValue;
 		});
-		var setdate = moment().format('D MMMM YYYY');
+		var setdate = $('#psdate').html();
 
 		var nobstdo = 0;
 		var posdata= {'datatb':'ppjk', _token:'{{ csrf_token() }}'};
@@ -211,9 +211,9 @@
 		  success: function(data) {
 				var No = new Array();
 				$.each(data, function (idx, obj) {
-					if (data[idx].bstdo!==null)	No.push(data[idx].bstdo);
+					if (data[idx].bstdo!==null)No.push(data[idx].bstdo);
 				});
-				No.reverse();
+				No.sort().reverse();
 				// console.log(No)
 				if (No[0]!==null){
 					$('#NoBSTDO')
@@ -235,6 +235,7 @@
 		$('#NoBSTDO').editable({
 			type:'typeaheadjs',
 			success: function(response, newValue) {
+				console.log(newValue);
         // if(response.status == 'error') return response.msg; //msg will be shown in editable form
 				get_ppjk(newValue);
 				$(grid_selector).jqGrid('setGridParam',{postData:{bstdo:newValue}}).trigger("reloadGrid");
@@ -294,7 +295,7 @@
 				liGroup: '<li class="multiselect-item multiselect-group"><label></label></li>'
 			},
 			onChange: function(option, checked, select) {
-				postsave = {datatb:'bstdo',id:option.val(),checked:checked,bstdo:$('#NoBSTDO').html()};
+				postsave = {datatb:'bstdo',id:option.val(),checked:checked,date:setdate,bstdo:$('#NoBSTDO').html()};
 				getparameter("{{url('/api/oprasional/cud')}}",postsave,	function(data){
 					$(grid_selector).jqGrid('setGridParam',{postData:{bstdo:$('#NoBSTDO').html()}}).trigger("reloadGrid");
 				},function(data){});
@@ -302,7 +303,8 @@
 		});
 
 		function get_ppjk(setbstdo){
-			console.log(setbstdo);
+			// console.log(setbstdo);
+			var tppjk = 0;
 			var posdata= {'datatb':'ppjk', _token:'{{ csrf_token() }}'};
 			var $select_elem = $("#ppjk");
 			if (setbstdo===''){
@@ -315,15 +317,17 @@
 					$.each(data, function (idx, obj) {
 						if (data[idx].bstdo == setbstdo){
 							$select_elem.append('<option value="'+data[idx].id+'" selected>'+data[idx].ppjk+'</option>');
+							tppjk--;
 						} else if (data[idx].bstdo === null && data[idx].lhp !== null){
 							$select_elem.append('<option value="'+data[idx].id+'">'+data[idx].ppjk+'</option>');
+							tppjk++;
 						}
 					});
 					$select_elem.multiselect('rebuild');
+					$('#tppjk').html(tppjk);
 				},function(data){});
 			}
 		}
-
 		var postsave={};
 		postsave.url = "{{url('/api/oprasional/cud')}}";
 		postsave.grid = '#grid-table';
@@ -611,7 +615,7 @@
 							.prev().on(ace.click_event, function(){
 								$(this).next().focus();
 							});
-							console.log(data.pcon);
+							// console.log(data.pcon);
 						});
 						postsave.post = '';
 						postsave.post += 'oper=edit&dls_id='+gsr+'&ppjks_id='+ppjks_id+'&';
@@ -622,7 +626,7 @@
 				}
 		}).jqGrid('navButtonAdd',pager_selector,{
 				keys: true,
-				caption:"bstdo",
+				caption:"BSTDO",
 				buttonicon:"ace-icon fa fa-file-pdf-o orange",
 				position:"last",
 				onClickButton:function(){
@@ -637,7 +641,21 @@
 
 					$('#dompdf').submit();
 				}
-		})
+		}).jqGrid('navButtonAdd',pager_selector,{
+				keys: true,
+				caption:"BSTDO-M",
+				buttonicon:"ace-icon fa fa-file-pdf-o orange",
+				position:"last",
+				onClickButton:function(){
+					// var data = $(this).jqGrid('getRowData'); Get all data
+					$('#dompdf input[name=page]').val('bstdo-dompdf');
+					$('#dompdf input[name=bstdo]').val('');
+					$('#dompdf input[name=start]').val(setdate);
+					$('#dompdf input[name=ext1]').val('ppjk');
+
+					$('#dompdf').submit();
+				}
+		});
 
 
 		$(document).one('ajaxloadstart.page', function(e) {

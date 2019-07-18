@@ -223,6 +223,7 @@ class PDFController extends Controller
       break;
 
       case 'bstdo-dompdf':
+      // dd('1-'.date('m-Y',strtotime($mulai)));
         $result = DB::table('tb_dls')
           ->join('tb_ppjks', function ($join) {
             $join->on('tb_ppjks.id','tb_dls.ppjks_id');
@@ -237,9 +238,10 @@ class PDFController extends Controller
             $join->on('tb_agens.id', '=', 'tb_ppjks.agens_id');
           })
           ->where(function ($query) use ($mulai,$akhir,$request){
-          //
-            $query->where('bstdo',$request->input('bstdo'));
-            // $query->where('lhp_date', '!=', '');
+            if ($request->input('bstdo') != null) $query->where('bstdo',$request->input('bstdo'));
+            else {
+              $akhir = strtotime('1-'.date('m-Y',strtotime($mulai)));
+            }
           })
           ->select(
             'tb_jettys.code as jettyCode',

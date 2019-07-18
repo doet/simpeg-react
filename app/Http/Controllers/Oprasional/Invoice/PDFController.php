@@ -94,7 +94,7 @@ class PDFController extends Controller
           ->first();
 
         $tempo = date('d M Y',cek_libur($result->tglinv,3));
-        // $tempo = cek_libur($result->tglinv,3);
+        
 
         $page = 'backend.oprasional.pdfinvoice.'.$request->input('page');
         $nfile = $request->input('file');
