@@ -668,6 +668,8 @@ class OprasionalApiController extends Controller
 
               if (array_key_exists("lstp",$request->input())){
                 $query->where('lhp','!=','');
+                $query->where('bstdo',null);
+
                 if ($request->input('s_id')) {
                   $query->where('tb_ppjks.id', $request->input('s_id'));
                 } else {

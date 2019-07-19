@@ -562,69 +562,71 @@
 					form.closest('.ui-jqdialog').find('.ui-jqdialog-title').wrap('<div class="widget-header" />')
 				}
 			}
-		).jqGrid('navButtonAdd',pager_selector,{
-				keys: true,
-				caption:"",
-				buttonicon:"ace-icon fa fa-pencil blue",
-				position:"first",
-				onClickButton:function(){
-					$('#form').trigger("reset");
-					//
-					var gsr = $(this).jqGrid('getGridParam','selrow');
-					if(gsr){
-						var ppjks_id = $(this).jqGrid('getCell',gsr,'ppjks_id');
-						var lstp = $(this).jqGrid('getCell',gsr,'lstp');
-						var moring = $(this).jqGrid('getCell',gsr,'moring');
-						$('#lstp').val(lstp);
-						$('#moring').val(moring);
-
-						var posdata= {'datatb':'dl','search':gsr};
-						getparameter("{{url('/api/oprasional/json')}}",posdata,function(data){
-							$('#tundadate').daterangepicker({
-								'applyClass' : 'btn-sm btn-success',
-								'cancelClass' : 'btn-sm btn-default',
-								"opens": "center",
-								timePicker: true,
-								timePicker24Hour: true,
-								startDate: data.tundaon,
-								endDate: data.tundaoff,
-								locale: {
-									applyLabel: 'Apply',
-									cancelLabel: 'Cancel',
-									format: 'DD/MM/YY HH:mm'
-								}
-							})
-							.prev().on(ace.click_event, function(){
-								$(this).next().focus();
-							});
-
-							$('#pcdate').daterangepicker({
-								'applyClass' : 'btn-sm btn-success',
-								'cancelClass' : 'btn-sm btn-default',
-								"opens": "center",
-								timePicker: true,
-								timePicker24Hour: true,
-								startDate: data.pcon,
-								endDate: data.pcoff,
-								locale: {
-									applyLabel: 'Apply',
-									cancelLabel: 'Cancel',
-									format: 'DD/MM/YY HH:mm'
-								}
-							})
-							.prev().on(ace.click_event, function(){
-								$(this).next().focus();
-							});
-							// console.log(data.pcon);
-						});
-						postsave.post = '';
-						postsave.post += 'oper=edit&dls_id='+gsr+'&ppjks_id='+ppjks_id+'&';
-						$('#modal').modal('show');
-					} else {
-						alert("pilih tabel")
-					}
-				}
-		}).jqGrid('navButtonAdd',pager_selector,{
+		)
+		// .jqGrid('navButtonAdd',pager_selector,{
+		// 		keys: true,
+		// 		caption:"",
+		// 		buttonicon:"ace-icon fa fa-pencil blue",
+		// 		position:"first",
+		// 		onClickButton:function(){
+		// 			$('#form').trigger("reset");
+		// 			//
+		// 			var gsr = $(this).jqGrid('getGridParam','selrow');
+		// 			if(gsr){
+		// 				var ppjks_id = $(this).jqGrid('getCell',gsr,'ppjks_id');
+		// 				var lstp = $(this).jqGrid('getCell',gsr,'lstp');
+		// 				var moring = $(this).jqGrid('getCell',gsr,'moring');
+		// 				$('#lstp').val(lstp);
+		// 				$('#moring').val(moring);
+		//
+		// 				var posdata= {'datatb':'dl','search':gsr};
+		// 				getparameter("{{url('/api/oprasional/json')}}",posdata,function(data){
+		// 					$('#tundadate').daterangepicker({
+		// 						'applyClass' : 'btn-sm btn-success',
+		// 						'cancelClass' : 'btn-sm btn-default',
+		// 						"opens": "center",
+		// 						timePicker: true,
+		// 						timePicker24Hour: true,
+		// 						startDate: data.tundaon,
+		// 						endDate: data.tundaoff,
+		// 						locale: {
+		// 							applyLabel: 'Apply',
+		// 							cancelLabel: 'Cancel',
+		// 							format: 'DD/MM/YY HH:mm'
+		// 						}
+		// 					})
+		// 					.prev().on(ace.click_event, function(){
+		// 						$(this).next().focus();
+		// 					});
+		//
+		// 					$('#pcdate').daterangepicker({
+		// 						'applyClass' : 'btn-sm btn-success',
+		// 						'cancelClass' : 'btn-sm btn-default',
+		// 						"opens": "center",
+		// 						timePicker: true,
+		// 						timePicker24Hour: true,
+		// 						startDate: data.pcon,
+		// 						endDate: data.pcoff,
+		// 						locale: {
+		// 							applyLabel: 'Apply',
+		// 							cancelLabel: 'Cancel',
+		// 							format: 'DD/MM/YY HH:mm'
+		// 						}
+		// 					})
+		// 					.prev().on(ace.click_event, function(){
+		// 						$(this).next().focus();
+		// 					});
+		// 					// console.log(data.pcon);
+		// 				});
+		// 				postsave.post = '';
+		// 				postsave.post += 'oper=edit&dls_id='+gsr+'&ppjks_id='+ppjks_id+'&';
+		// 				$('#modal').modal('show');
+		// 			} else {
+		// 				alert("pilih tabel")
+		// 			}
+		// 		}
+		// })
+		.jqGrid('navButtonAdd',pager_selector,{
 				keys: true,
 				caption:"BSTDO",
 				buttonicon:"ace-icon fa fa-file-pdf-o orange",

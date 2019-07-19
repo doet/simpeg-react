@@ -370,7 +370,7 @@
 			sortname:'bstdo',
 			sortorder: 'desc',
 			height: 'auto',
-			colNames:[' ', 'BSTDO','PPJK','Agen','Kapal','Jalur','Tanggal Doc','Faktur Pajak','Nomor Invoice','Ref No','Selisih','Status','dkurs'],
+			colNames:[' ', 'BSTDO','PPJK','Agen','Kapal','Jalur','Date Doc','Faktur Pajak','No. Invoice','Ref No','Selisih','Status','dkurs','Date Pay'],
 			colModel:[
 				{name:'myac',index:'', width:50, fixed:true, sortable:false, resize:false, align: 'center'},
 				{name:'bstdo',index:'bstdo', width:40,editable: false},
@@ -384,7 +384,9 @@
 				{name:'refno',index:'refno', width:60, editable: false},
 				{name:'selisih',index:'selisih', width:60, editable: false},
 				{name:'status',index:'status', width:60, editable: false, formatter:status},
-				{name:'dkurs',index:'dkurs', width:60, editable: false}
+				{name:'dkurs',index:'dkurs', width:60, editable: false},
+				{name:'inv_pay',index:'inv_pay', width:60, editable: false}
+				// {name:'dkurs',index:'dkurs', width:60, editable: false},
 			],
 
 			viewrecords : true,
@@ -436,12 +438,11 @@
 			// 		.addClass('ace ace-switch ace-switch-5')
 			// 		.after('<span class="lbl"></span>');
 			// }, 0);
-			file_c="grey";
+			file_c=pay_c="grey";
 			url=url2='';
 			// console.log(cell);
 			if (cell[5]=="Domestic" && cell[6]!=="" && cell[7]!==null && cell[8]!==null && cell[9]!==null){
 				file_c="orange";
-
 				url="href='{{ url('oprasional/PDFInvoice') }}?page=invoice-dompdf&id="+cellvalue+"'";
 				url2="href='{{ url('oprasional/PDFInvoice') }}?page=invoice-dompdf2&id="+cellvalue+"'";
 			} else if (cell[5]=="Internasional" && cell[6]!=="" && cell[7]!==null && cell[8]!==null && cell[9]!==null && cell[12]!==""){
@@ -450,8 +451,13 @@
 				url2="href='{{ url('oprasional/PDFInvoice') }}?page=invoice-dompdf2&id="+cellvalue+"'";
 			}// var gsr = $(this).jqGrid('getGridParam','selrow');
 			// tglinv = $(this).jqGrid('getCell',gsr,'tglinv');
-
-			return '<div><a class="fa fa-file-pdf-o '+ file_c +'" '+url+'  method="POST" target="_blank"></a> - <a class="fa fa-file-pdf-o '+ file_c +'" '+url2+' method="POST" target="_blank"></a> - <a class="fa fa-credit-card orange"></a></div>';
+			if (cell[13]!==''&&cell[13]!==null){
+				pay_c="orange";
+			}
+			// console.log(cell);
+			return '<div><a class="fa fa-file-pdf-o '+ file_c +'" '+url+'  method="POST" target="_blank"></a> -	<a class="fa fa-file-pdf-o '+
+			file_c +'" '+url2+' method="POST" target="_blank"></a> - <a class="fa fa-credit-card '+
+			pay_c +'"></a></div>';
 		}
 
 		//switch element when editing inline

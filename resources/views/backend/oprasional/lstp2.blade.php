@@ -134,17 +134,6 @@
 		        <div class="col-xs-12">
 							<input class="input-sm col-xs-3" type="text" id="search" name="search">
 						</div>
-						<!-- <div class="form-group">
-								<label class="control-label col-xs-12 col-sm-3 no-padding-right" for="food">filter</label>
-
-								<div class="col-xs-12 col-sm-9">
-										<select id='filter' class="multiselect" multiple="">
-											<option value="req">Date Req</option>
-											<option value="aprov">Date Aprov</option>
-										</select>
-								</div>
-						</div> -->
-
 					</div>
 					<table id="grid-table"></table>
 					<div id="grid-pager"></div>
@@ -245,32 +234,6 @@
 			postsave.post += $("#form").serialize()+'&datatb=lstp';
 			saveGrid(postsave);
 		});
-		//////////////////
-		// $('#filter').multiselect({
-		// 	enableFiltering: false,
-		// 	enableHTML: true,
-		// 	buttonClass: 'btn btn-white btn-primary',
-		// 	templates: {
-		// 		button: '<button type="button" class="multiselect dropdown-toggle" data-toggle="dropdown"><span class="multiselect-selected-text"></span> &nbsp;<b class="fa fa-caret-down"></b></button>',
-		// 		ul: '<ul class="multiselect-container dropdown-menu"></ul>',
-		// 		filter: '<li class="multiselect-item filter"><div class="input-group"><span class="input-group-addon"><i class="fa fa-search"></i></span><input class="form-control multiselect-search" type="text"></div></li>',
-		// 		filterClearBtn: '<span class="input-group-btn"><button class="btn btn-default btn-white btn-grey multiselect-clear-filter" type="button"><i class="fa fa-times-circle red2"></i></button></span>',
-		// 		li: '<li><a tabindex="0"><label></label></a></li>',
-		// 		divider: '<li class="multiselect-item divider"></li>',
-		// 		liGroup: '<li class="multiselect-item multiselect-group"><label></label></li>'
-		// 	},
-		// 	onChange: function(option, checked, select) {
-		// 		// $(grid_selector).jqGrid('setGridParam',{postData:{start:params.newValue}}).trigger("reloadGrid");
-		// 		console.log($('#filter').val());
-		// 	}
-		// });
-		/////////////////////////
-
-		// $('#filter').multiselect({
-    //   onChange: function(option, checked, select) {
-    //     alert('onChange triggered ...');
-    //   }
-    // });
 
 		var grid_selector = "#grid-table";
 		var pager_selector = "#grid-pager";
