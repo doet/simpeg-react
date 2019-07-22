@@ -179,7 +179,7 @@ class InvoiceApiController extends Controller
         }
 
 
-        InvoiceHelpers::nilai_invoice($dddd->first()->id);
+        // InvoiceHelpers::nilai_inv($dddd->first()->id);
 
         $responce = array(
           'status' => "success",

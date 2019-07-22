@@ -221,7 +221,50 @@ class PDFController extends Controller
 
         $view =  \View::make($page, compact('result','mulai'))->render();
       break;
+      case 'lstp-dompdf':
+        $result = DB::table('tb_ppjks')
+          ->leftJoin('tb_agens', function ($join) {
+            $join->on('tb_ppjks.agens_id', 'tb_agens.id');
+          })
+          ->leftJoin('tb_kapals', function ($join) {
+            $join->on('tb_ppjks.kapals_id', 'tb_kapals.id');
+          })
+          ->leftJoin('tb_jettys', function ($join) {
+            $join->on('tb_ppjks.jettys_idx', 'tb_jettys.id');
+          })
+          ->where(function ($query) use ($mulai,$akhir,$request){
+            $query->where('lhp','!=','');
+            $query->where('bstdo',null);
 
+            if ($request->input('s_id')) {
+              $query->where('tb_ppjks.id', $request->input('s_id'));
+            } else {
+              // $mulai = strtotime($mulai);
+              // $akhir = strtotime($akhir);
+              // if($akhir==0)$akhir = $mulai+(60 * 60 * 24);
+              // $query->where('date_issue', '>=', $mulai)
+              //   ->Where('date_issue', '<=', $akhir);
+            }
+          })
+          ->select(
+            'tb_agens.code as agenCode',
+            'tb_kapals.name as kapalsName',
+            'tb_kapals.bendera as kapalsBendera',
+            'tb_jettys.code as jettyCode',
+            'tb_jettys.name as jettyName',
+          //   // 'tb_jettys.color as jettyColor',
+            'tb_ppjks.*'
+          )
+          ->orderBy('date_issue', 'asc')
+          ->get();
+          
+          $page = 'backend.oprasional.pdf.'.$request->input('page');
+          $nfile = $request->input('file');
+          $orientation = 'portrait';
+          // dd($request->input());
+          $view =  \View::make($page, compact('result','mulai'))->render();
+          $customPaper = "A4";
+      break;
       case 'bstdo-dompdf':
       // dd('1-'.date('m-Y',strtotime($mulai)));
         $result = DB::table('tb_dls')

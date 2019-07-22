@@ -548,7 +548,7 @@
 				onClickButton:function(){
 					// var data = $(this).jqGrid('getRowData'); Get all data
 
-					$('#dompdf input[name=page]').val('ppjk1-dompdf');
+					$('#dompdf input[name=page]').val('lstp-dompdf');
 					// $('#dompdf input[name=bstdo]').val($('#NoBSTDO').html());
 					$('#dompdf input[name=start]').val(start);
 					$('#dompdf input[name=end]').val(end);
