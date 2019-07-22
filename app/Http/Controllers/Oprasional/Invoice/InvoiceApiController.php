@@ -213,12 +213,9 @@ class InvoiceApiController extends Controller
             ->leftJoin('tb_kapals', function ($join) {
               $join->on('tb_kapals.id','tb_ppjks.kapals_id');
             })
-            // ->RightJoin('tb_ppjks', function ($join) {
-            //   $join->on('tb_ppjks.id','tb_dls.ppjks_id');
-            // })
-            // ->leftJoin('tb_jettys', function ($join) {
-            //   $join->on('tb_jettys.id','tb_dls.jettys_id');
-            // })
+            ->leftJoin('tb_inv', function ($join) {
+              $join->on('tb_ppjks.id','tb_inv.ppjk_id');
+            })
             ->where(function ($query) use ($mulai,$akhir,$request){
               $query->where('tb_ppjks.bstdo','!=','');
               if ($request->input('s_id')) {
@@ -241,6 +238,7 @@ class InvoiceApiController extends Controller
               'tb_agens.code as agenCode',
               'tb_kapals.name as kapalsName',
               'tb_kapals.jenis as kapalsJenis',
+              'tb_inv.tgl_pay as inv_pay',
               // 'tb_kapals.grt as kapalsGrt',
               // 'tb_kapals.loa as kapalsLoa',
               // 'tb_kapals.bendera as kapalsBendera',
@@ -248,7 +246,6 @@ class InvoiceApiController extends Controller
               // 'tb_jettys.code as jettyCode',
               // // 'tb_jettys.color as jettyColor',
               'tb_ppjks.*'
-              // 'tb_dls.*'
             );
         break;
       }
@@ -288,7 +285,7 @@ class InvoiceApiController extends Controller
             if ($row->tglinv != '') $row->tglinv=date('d-m-Y', $row->tglinv);
             if ($row->rute != '' && $row->rute == '$')$row->rute = 'Internasional'; else if ($row->rute != '' && $row->rute == 'Rp')$row->rute = 'Domestic';
             if ($row->dkurs !='')$dkurs=date("d-m-Y",$row->dkurs); else $dkurs='';
-            if ($row->inv_pay != '')  $row->inv_pay=date('d-m-Y', $row->inv_pay);
+            // if ($row->inv_pay != '')  $row->inv_pay=date('d-m-Y', $row->inv_pay);
             $responce['rows'][$i]['id'] = $row->id;
             $responce['rows'][$i]['cell'] = array(
               $row->id,
