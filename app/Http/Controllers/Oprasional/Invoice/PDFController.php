@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Oprasional\Invoice;
 date_default_timezone_set('Asia/Jakarta');
+setlocale (LC_TIME, 'IND');
 
 use App\Http\Requests;
 use Illuminate\Http\Request;
@@ -93,8 +94,8 @@ class PDFController extends Controller
           })
           ->first();
 
-        $tempo = date('d M Y',cek_libur($result->tglinv,3));
-        
+        $tempo = strftime("%d %B %Y",cek_libur($result->tglinv,3));
+
 
         $page = 'backend.oprasional.pdfinvoice.'.$request->input('page');
         $nfile = $request->input('file');

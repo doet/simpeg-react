@@ -122,6 +122,8 @@
                 <img src="{{public_path().'\\pic\\logo.png'}}" width="200px">
               </div> -->
               <?php
+
+              // dd(moment().subtract(5, 'days').format('YYYY-MM-DD'));
                 $totalTarif = 0;
                 $area=$tundaon=$dari=$ke= '';
 
@@ -139,6 +141,7 @@
                     if(!in_array('Cilegon',$code))array_push($code,'Cilegon');
                     // $area='Cilegon';
                   }
+
 
                   if(!in_array($row->jettyCode,$name))array_push($name,$row->jettyCode);
                   if(in_array('12',$name)){
@@ -226,9 +229,8 @@
                     }
                   }
                 }
-
-                // dd(substr($headstatus,0,9));
-                if (substr($headstatus,0,8)=='Cigading'){
+                if (substr($headstatus,0,8)=='Cigading' || substr($headstatus,0,8)=='CIGADING'){
+                  // dd($headstatus);
                   $bht99=$totalTarif*(98/100);
                   $bht5=$bht99*(5/100);
                   $bhtPNBP=$bht99-$bht5;
@@ -267,7 +269,9 @@
                   <tr style="font-size:13px">
                     <td class="left top right button" align="center" height='18px'>&nbsp;<?php echo $result->pajak?></td>
                     <td class="top right button" align="center">&nbsp;<?php echo $result->noinv?></td>
-                    <td class="top right button" align="center">&nbsp;<?php echo date('d M Y', $result->tglinv)?></i></td>
+                    <!-- ; -->
+                    <!-- time() -->
+                    <td class="top right button" align="center">&nbsp;<?php echo strftime("%d %B %Y", $result->tglinv)?></i></td>
                   </tr>
                 </table>
               </div>

@@ -110,35 +110,39 @@
                 <thead>
                   <!-- top left right -->
                   <tr>
-                    <td class="left top" colspan="5" rowspan="4">FORMULIR<br>LAPORAN BULANAN OPERASIONAL</td>
-                    <td class="left top" align="left"> &nbsp;Doc No</td>
-                    <td class="left top right" colspan="3" align="left"> &nbsp;f......</td>
+                    <td class="left top" colspan="8" rowspan="4">FORMULIR<br>LAPORAN BULANAN OPERASIONAL</td>
+                    <td class="left top" align="left" colspan="3"> &nbsp;Doc No</td>
+                    <td class="left top right" colspan="2" align="left"> &nbsp;f......</td>
                   </tr>
                   <tr>
-                    <td class="left top" align="left"> &nbsp;Rev</td>
-                    <td class="left top right" colspan="3" align="left"> &nbsp;0.0</td>
+                    <td class="left top" align="left" colspan="3"> &nbsp;Rev</td>
+                    <td class="left top right" colspan="2" align="left"> &nbsp;0.0</td>
                   </tr>
                   <tr>
-                    <td class="left top" align="left"> &nbsp;Tgl Efektif</td>
-                    <td class="left top right" colspan="3" align="left"> &nbsp;<?php echo $mulai;?></td>
+                    <td class="left top" align="left" colspan="3"> &nbsp;Tgl Efektif</td>
+                    <td class="left top right" colspan="2" align="left"> &nbsp;<?php echo $mulai;?></td>
                   </tr>
                   <tr>
-                    <td class="left top" align="left"> &nbsp;Halaman</td>
-                    <td class="left top right" colspan="3" align="left"> &nbsp;<span class="hal"></span></td>
+                    <td class="left top" align="left" colspan="3"> &nbsp;Halaman</td>
+                    <td class="left top right" colspan="2" align="left"> &nbsp;<span class="hal"></span></td>
                   </tr>
                   <tr>
-                    <td class="left top">No</td>
-                    <td class="left top">PPJK</td>
-                    <td class="left top">TGL</td>
-                    <td class="left top">NAMA KAPAL</td>
-                    <td class="left top">GRT</td>
-                    <td class="left top">LOA</td>
-                    <td class="left top">BENDERA</td>
-                    <td class="left top">DERMAGA</td>
-                    <td class="left top right">TARIF</td>
+                    <td class="left top" width='20px'>No</td>
+                    <td class="left top" width='55px'>PPJK</td>
+                    <td class="left top" width='50px'>Tgl</td>
+                    <td class="left top">Nama Kapal</td>
+                    <td class="left top" width='35px'>GRT</td>
+                    <td class="left top" width='25px'>LOA</td>
+                    <td class="left top">Bendera</td>
+                    <td class="left top">Dermaga</td>
+                    <td class="left top" width='25px'>Tarif</td>
+                    <td class="left top" width='35px'>LSTP</td>
+                    <td class="left top" width='35px'>Mooring</td>
+                    <td class="left top right" width='90px'>No Inv</td>
+                    <td class="left top right">Ket</td>
                   </tr>
                   <tr>
-                    <td class="top" colspan="9"></td>
+                    <td class="top" colspan="13"></td>
                   </tr>
                 </thead>
                 <tbody class="zebra">
@@ -155,13 +159,17 @@
                     <td class="left top" align="right"> '.$row->kapalsLoa.'&nbsp; </td>
                     <td class="left top"> &nbsp;'.$row->kapalsBendera.' </td>
                     <td class="left top"> &nbsp;'.$row->jettyName.' </td>
-                    <td class="left top right" align="center"> '.$row->rute.' </td>
+                    <td class="left top" align="center"> '.$row->rute.' </td>
+                    <td class="left top" align="center">  </td>
+                    <td class="left top" align="center">  </td>
+                    <td class="left top" align="center">  </td>
+                    <td class="left top right">  </td>
                     </tr>';
                     $i++;
                   }
                   ?>
                   <tr>
-                    <td class="top" colspan="9"></td>
+                    <td class="top" colspan="13"></td>
                   </tr>
                 </tbody>
               </table>
