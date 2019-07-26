@@ -160,9 +160,9 @@
                     <td class="left top"> &nbsp;'.$row->kapalsBendera.' </td>
                     <td class="left top"> &nbsp;'.$row->jettyName.' </td>
                     <td class="left top" align="center"> '.$row->rute.' </td>
+                    <td class="left top" align="center"> '.$row->lstp.' </td>
                     <td class="left top" align="center">  </td>
-                    <td class="left top" align="center">  </td>
-                    <td class="left top" align="center">  </td>
+                    <td class="left top" align="center"> '.$row->noinv.' </td>
                     <td class="left top right">  </td>
                     </tr>';
                     $i++;

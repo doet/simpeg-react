@@ -351,7 +351,7 @@
                     <td class="top" colspan="16" ></td>
                   </tr>
                 </thead>
-                <tbody class="zebra">
+                <tbody>
               <?php
               // dd($match);
 
