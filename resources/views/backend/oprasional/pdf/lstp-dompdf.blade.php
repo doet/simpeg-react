@@ -151,7 +151,7 @@
                     <td class="left top"> &nbsp;'.$row->kapalsName.' </td>
                     <td class="left top"> &nbsp;'.$row->kapalsBendera.' </td>
                     <td class="left top"> &nbsp;'.$row->jettyName.' </td>
-                    <td class="left top right" align="center"> </td>
+                    <td class="left top right" align="center"> '.$row->lstp.'  </td>
                     </tr>';
                     $i++;
                   }

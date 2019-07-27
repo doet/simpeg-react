@@ -163,7 +163,7 @@
                     <td class="left top" align="center"> '.$row->rute.' </td>
                     <td class="left top" align="center"> '.$row->lstp.' </td>
                     <td class="left top" align="center"> '.$row->noinv.' </td>
-                    <td class="left top right">  </td>
+                    <td class="left top right">&nbsp;'.$row->ket.' </td>
                     </tr>';
                     $i++;
                   }

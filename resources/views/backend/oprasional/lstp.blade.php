@@ -320,22 +320,22 @@
 			colNames:['id','Date Issue','PPJK','AGEN','Kapal','Jetty','ETA','ETD','Asal','Tujuan','Etmal','Cargo','Muatan','Date Req','Date Aprv','LSTP','Moring'],
 			colModel:[
 				{name:'id',index:'id', width:40, fixed:true, sortable:true, resize:false, align: 'center'},
-				{name:'date_issue',index:'date_issue', width:50, sorttype:"int", editable: false},
-				{name:'PPJK',index:'PPJK', width:60, sorttype:"int", editable: false},
-				{name:'AGEN',index:'AGEN',width:30, editable:false, align: 'center'},
-				{name:'Kapal',index:'Kapal', width:90,editable: false},
-				{name:'Jetty',index:'Jetty', width:90, editable: false},
-				{name:'ETA',index:'ETA', width:80, editable: false, align: 'center',hidden:true},
-				{name:'ETD',index:'ETD', width:80, sortable:false, align: 'center',hidden:true},
-				{name:'Asal',index:'Asal', width:70, editable: false,hidden:true},
-        {name:'Tujuan',index:'Tujuan', width:70, editable: false,hidden:true},
-        {name:'Etmal',index: 'Etmal', width: 50,editable: false, align: 'center',hidden:true},
-        {name:'Cargo',index:'Cargo',width:50, editable: false, align: 'center',hidden:true},
-				{name:'Muatan',index:'Muatan',width:50, editable: false, align: 'center',hidden:true},
-				{name:'lstp_req',index:'lstp_req',width:50, editable: false, align: 'center'},
-				{name:'lstp_aprv',index:'lstp_aprv',width:50, editable: false, align: 'center'},
-				{name:'lstp',index:'lstp',width:50, editable: false, align: 'center'},
-				{name:'moring',index:'moring',width:50, editable: false, align: 'center'}
+				{name:'date_issue',index:'date_issue', width:50, sorttype:"int"},
+				{name:'PPJK',index:'PPJK', width:60, sorttype:"int"},
+				{name:'AGEN',index:'AGEN',width:30, align: 'center'},
+				{name:'Kapal',index:'Kapal', width:90},
+				{name:'Jetty',index:'Jetty', width:90},
+				{name:'ETA',index:'ETA', width:80, align: 'center',hidden:true},
+				{name:'ETD',index:'ETD', width:80, align: 'center',hidden:true},
+				{name:'Asal',index:'Asal', width:70, hidden:true},
+        {name:'Tujuan',index:'Tujuan', width:70, hidden:true},
+        {name:'Etmal',index: 'Etmal', width: 50,align: 'center',hidden:true},
+        {name:'Cargo',index:'Cargo',width:50, align: 'center',hidden:true},
+				{name:'Muatan',index:'Muatan',width:50, align: 'center',hidden:true},
+				{name:'lstp_req',index:'lstp_req',width:50, align: 'center'},
+				{name:'lstp_aprv',index:'lstp_aprv',width:50, align: 'center'},
+				{name:'lstp',index:'lstp',width:50, align: 'center'},
+				{name:'moring',index:'moring',width:50, align: 'center'}
 			],
 
 			viewrecords : true,
@@ -518,30 +518,7 @@
 						alert("pilih tabel")
 					}
 				}
-		})
-		// .jqGrid('navButtonAdd',pager_selector,{
-		// 	keys: true,
-		// 	caption:"",
-		// 	buttonicon:"ace-icon fa fa-plus-circle purple",
-		// 	position:"first",
-		// 	onClickButton:function(){
-		// 		$('#form').trigger("reset");
-		// 		$('.tgl').datepicker("setDate", '{{date("d F Y")}}');
-		// 		$('#agen, #kapal, #jetty').val('').trigger("chosen:updated");
-		//
-		// 		// $('#etad')
-		// 		// 	.data('daterangepicker')
-		// 		// 	.setStartDate('{{date("d/m/y H:i")}}');
-		// 		// $('#etad')
-		// 		// 	.data('daterangepicker')
-		// 		// 	.setEndDate('{{date("d/m/y H:i",strtotime("+1 hours"))}}');
-		//
-		// 		postsave.post = '';
-		// 		postsave.post += 'oper=add&';
-		// 		$('#modal').modal('show');
-		// 	}
-		// })
-		.jqGrid('navButtonAdd',pager_selector,{
+		}).jqGrid('navButtonAdd',pager_selector,{
 				keys: true,
 				caption:"",
 				buttonicon:"ace-icon fa fa-file-pdf-o orange",
