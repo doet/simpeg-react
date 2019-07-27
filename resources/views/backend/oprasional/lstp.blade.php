@@ -118,7 +118,8 @@
           <!-- PAGE CONTENT BEGINS -->
 
 					<div align="center">LSTP<br />
-							Priode : <span class="editable" id="psdate"></span> s.d. <span class="editable" id="pedate"></span>
+							<span class="editable" id="psdate"></span>
+							<!-- s.d. <span class="editable" id="pedate"></span> -->
 					</div>
 					</br>
 
@@ -127,6 +128,7 @@
 						<input name="page" value="" hidden/>
 						<input name="file" value="" hidden/>
 						<input name="start" value="" hidden/>
+						<input name="ext" value="" hidden/>
 						<input name="end" value="" hidden/>
 					</form>
 
@@ -180,7 +182,8 @@
     $.fn.editableform.buttons = '<button type="submit" class="btn btn-info editable-submit"><i class="ace-icon fa fa-check"></i></button>'+
                                 '<button type="button" class="btn editable-cancel"><i class="ace-icon fa fa-times"></i></button>';
 
-		$('#psdate').html(moment().startOf('month').format('D MMMM YYYY'));
+		// $('#psdate').html(moment().startOf('month').format('D MMMM YYYY'));
+		$('#psdate').html(moment().format('D MMMM YYYY'));
 		$('#psdate').editable({
         type: 'adate',
         date: {
@@ -530,6 +533,28 @@
 					// $('#dompdf input[name=bstdo]').val($('#NoBSTDO').html());
 					$('#dompdf input[name=start]').val(start);
 					$('#dompdf input[name=end]').val(end);
+					$('#dompdf input[name=ext]').val('ext1');
+
+					$('#dompdf input[name=sidx]').val('ppjk');
+
+					// console.log(setdate);
+
+					$('#dompdf').submit();
+				}
+		}).jqGrid('navButtonAdd',pager_selector,{
+				keys: true,
+				caption:"",
+				buttonicon:"ace-icon fa fa-file-pdf-o orange",
+				position:"last",
+				onClickButton:function(){
+					// var data = $(this).jqGrid('getRowData'); Get all data
+
+					$('#dompdf input[name=page]').val('lstp-dompdf');
+					// $('#dompdf input[name=bstdo]').val($('#NoBSTDO').html());
+					$('#dompdf input[name=start]').val(start);
+					$('#dompdf input[name=end]').val(end);
+					$('#dompdf input[name=ext]').val('ext2');
+
 					$('#dompdf input[name=sidx]').val('ppjk');
 
 					// console.log(setdate);
@@ -537,25 +562,6 @@
 					$('#dompdf').submit();
 				}
 		})
-		// .jqGrid('navButtonAdd',pager_selector,{
-		// 		keys: true,
-		// 		caption:"",
-		// 		buttonicon:"ace-icon fa fa-file-pdf-o orange",
-		// 		position:"last",
-		// 		onClickButton:function(){
-		// 			// var data = $(this).jqGrid('getRowData'); Get all data
-		//
-		// 			$('#dompdf input[name=page]').val('ppjk2-dompdf');
-		// 			// $('#dompdf input[name=bstdo]').val($('#NoBSTDO').html());
-		// 			$('#dompdf input[name=start]').val(start);
-		// 			$('#dompdf input[name=end]').val(end);
-		// 			$('#dompdf input[name=sidx]').val('ppjk');
-		//
-		// 			// console.log(setdate);
-		//
-		// 			$('#dompdf').submit();
-		// 		}
-		// })
 		.jqGrid('navButtonAdd',pager_selector,{
 				caption:"",
 				buttonicon:"ace-icon fa fa-file-excel-o green",

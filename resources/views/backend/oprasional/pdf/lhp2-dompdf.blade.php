@@ -245,9 +245,9 @@
                     echo '<td class="top right" align="center">'.$tundaoff.'</td>';
                     echo '<td class="top right" align="center">'.$row->dd.'</td>';
                     echo '<td class="top right">&nbsp;'.$row->ket.'</td>';
-                    echo '<td class="top right" align="right">'.$row->lstp.'&nbsp;</td>';
-                    echo '<td class="top right" align="right">'.$row->bstdo.'&nbsp;</td>';
-                    echo '<td class="top right">&nbsp;'.$row->mooring.'</td>';
+                    echo '<td class="top right" align="center">'.$row->lstp.'</td>';
+                    echo '<td class="top right" align="center">'.$row->bstdo.'</td>';
+                    echo '<td class="top right" align="center">'.$row->mooring.'</td>';
                     echo '</tr>';
                     $i++;
                   }

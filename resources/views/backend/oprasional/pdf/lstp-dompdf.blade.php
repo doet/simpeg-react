@@ -127,16 +127,16 @@
                     <td class="left top right" colspan="2" align="left"> &nbsp;<span class="hal"></span></td>
                   </tr>
                   <tr>
-                    <td class="left top">No</td>
-                    <td class="left top">PPJK</td>
-                    <td class="left top">TGL</td>
-                    <td class="left top">AGEN</td>
+                    <td class="left top" width='20px'>No</td>
+                    <td class="left top" width='80px'>PPJK</td>
+                    <td class="left top" width='60px'>TGL</td>
+                    <td class="left top" width='40px'>AGEN</td>
                     <td class="left top">NAMA KAPAL</td>
                     <td class="left top">BENDERA</td>
                     <td class="left top">DERMAGA</td>
-                    <td class="left top">LSTP REQ</td>
-                    <td class="left top">LSTP APRV</td>
-                    <td class="left top right">LSTP</td>
+                    <td class="left top" width='60px'>LSTP REQ</td>
+                    <td class="left top" width='60px'>LSTP APRV</td>
+                    <td class="left top right" width='50px'>LSTP</td>
                   </tr>
                   <tr>
                     <td class="top" colspan="10"></td>

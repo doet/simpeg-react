@@ -96,7 +96,7 @@
           <img src="{{public_path().'\\pic\\logo.png'}}" width="125px"><div style="position:absolute; top:10; left:100"><b>PT. PELABUHAN CILEGON MANDIRI<br />
         Divisi Pemanduan dan Penundaan</b></div><br /><br /><br />
             <center>Laporan Harian<br />
-          <font size="-1"><?php echo $mulai;?></font></center>
+          <font size="-1"><?php echo date('d M Y',$mulai);?></font></center>
         </header>
 
         <footer>

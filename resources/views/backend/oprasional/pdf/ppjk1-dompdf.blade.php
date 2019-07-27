@@ -120,7 +120,7 @@
                   </tr>
                   <tr>
                     <td class="left top" align="left" colspan="3"> &nbsp;Tgl Efektif</td>
-                    <td class="left top right" colspan="2" align="left"> &nbsp;<?php echo $mulai;?></td>
+                    <td class="left top right" colspan="2" align="left"> &nbsp;<?php echo date('d M Y',$mulai);?></td>
                   </tr>
                   <tr>
                     <td class="left top" align="left" colspan="3"> &nbsp;Halaman</td>

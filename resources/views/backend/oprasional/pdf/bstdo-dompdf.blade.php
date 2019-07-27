@@ -260,7 +260,7 @@
               </tr>
               <tr>
                 <td class="top right" align="center" > Tanggal Serah Terima </td>
-                <td class="top right" align="center"> <?php echo $mulai?> </td>
+                <td class="top right" align="center"> <?php echo date("d/m/Y",$mulai)?> </td>
               </tr>
               <tr>
                 <td class="top"></td>
