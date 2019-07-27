@@ -147,7 +147,7 @@
                   if(in_array('12',$name)){
                     if ($result->rute == '$') $headstatus=$row->jettyName.' .1'; else $headstatus=$row->jettyName.' .2';
                   } else {
-                    if ($result->rute == '$') $headstatus='Non Cigading 1'; else $headstatus='Non Cigading 2';
+                    if ($result->rute == '$') $headstatus='NON CIGADING 1'; else $headstatus='NON CIGADING 2';
                   }
 
                   if ($row->ops=='Berth'){
@@ -237,7 +237,7 @@
                   $ppn=$bhtPNBP*(10/100);
                   $totalinv=$bhtPNBP+$ppn;
                 }
-                if ($headstatus=='Non Cigading 1' ||$headstatus=='Non Cigading 2'){
+                if ($headstatus=='NON CIGADING 1' ||$headstatus=='NON CIGADING 2'){
                   $bht99=$totalTarif*(99/100);
                   $bht5=$bht99*(5/100);
                   $bhtPNBP=$bht99-$bht5;

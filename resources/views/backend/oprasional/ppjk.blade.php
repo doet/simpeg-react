@@ -50,7 +50,7 @@
 	<div class="modal-dialog modal-lg">
 			<div class="modal-content">
 				<!-- 01 Header -->
-				<form id="form">
+				<form id="validation-form">
 					<div class="modal-header">
 						<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
 						<h3 class="smaller lighter blue no-margin">Form PPJK </h3>
@@ -239,6 +239,7 @@
 									</div>
 								</div>
 								<div class="space-2"></div>
+
 							</div>
 							<div class="col-xs-12 col-sm-6">
 								<div class="row">
@@ -278,6 +279,15 @@
 									</div>
 								</div>
 								<div class="space-2"></div>
+								<div class="row">
+									<div class="form-group">
+										<label class="control-label col-xs-12 col-sm-3 no-padding-right" for="comment">Keterangan</label>
+										<div class="col-xs-12 col-sm-9">
+											<div class="clearfix"><input class="input-sm col-sm-12" type="text" id="ket" name="ket"></div>
+										</div>
+									</div>
+								</div>
+								<div class="space-2"></div>
 							</div>
 						</div>
 					</div>
@@ -301,7 +311,6 @@
       <div class="row">
         <div class="col-xs-12">
           <!-- PAGE CONTENT BEGINS -->
-
 					<div align="center">Daftar PPJK<br />
 							Priode : <span class="editable" id="psdate"></span> s.d. <span class="editable" id="pedate"></span>
 					</div>
@@ -343,6 +352,7 @@
 	<script src="{{ asset('/js/ace-editable.min.js') }}"></script>
 
 	<script src="{{ asset('/js/chosen.jquery.min.js') }}"></script>
+	<script src="{{ asset('/js/jquery.validate.min.js') }}"></script>
 
 <script type="text/javascript">
 
@@ -516,6 +526,108 @@
 			});
 		},function(data){});
 
+		$('#validation-form').validate({
+				errorElement: 'div',
+				errorClass: 'help-block',
+				focusInvalid: false,
+				ignore: "",
+				rules: {
+						ppjk:{
+							required:true,
+						},
+						agen:{
+							required:true
+						},
+						kapal:{
+							required:true
+						},
+						jetty:{
+							required:true
+						},
+						rute:{
+							required:true
+						},
+						// etmal:{
+						// 	required:true
+						// },
+						// asal:{
+						// 	required:true
+						// },
+						// tujuan:{
+						// 	required:true
+						// },
+						// cargo:{
+						// 	required:true
+						// },
+						// muat:{
+						// 	required:true
+						// },
+				},
+
+				messages: {
+						// email: {
+						// 		required: "Please provide a valid email.",
+						// 		email: "Please provide a valid email."
+						// },
+						// password: {
+						// 		required: "Please specify a password.",
+						// 		minlength: "Please specify a secure password."
+						// },
+						// state: "Please choose state",
+						// subscription: "Please choose at least one option",
+						// gender: "Please choose gender",
+						// agree: "Please accept our policy"
+				},
+
+
+				highlight: function (e) {
+						$(e).closest('.form-group').removeClass('has-info').addClass('has-error');
+				},
+
+				success: function (e) {
+						$(e).closest('.form-group').removeClass('has-error');//.addClass('has-info');
+						$(e).remove();
+				},
+
+				errorPlacement: function (error, element) {
+						if(element.is('input[type=checkbox]') || element.is('input[type=radio]')) {
+								var controls = element.closest('div[class*="col-"]');
+								if(controls.find(':checkbox,:radio').length > 1) controls.append(error);
+								else error.insertAfter(element.nextAll('.lbl:eq(0)').eq(0));
+						}
+						else if(element.is('.select2')) {
+								error.insertAfter(element.siblings('[class*="select2-container"]:eq(0)'));
+						}
+						else if(element.is('.chosen-select')) {
+								error.insertAfter(element.siblings('[class*="chosen-container"]:eq(0)'));
+						}
+						else error.insertAfter(element.parent());
+				},
+
+				submitHandler: function (form) {
+				},
+				invalidHandler: function (form) {
+				},
+
+		});
+
+		jQuery.validator.addMethod("ppjk", function(value, element) {
+
+			post = {'datatb':'ppjk','selectby':'ppjk','select':value};
+			$.ajax({
+				url : "{{url('/api/oprasional/json')}}",
+				type : 'post',
+				async: false,
+				data : post,
+				dataType: 'json',
+				success : function(response){
+					return data=response;
+				}
+			});
+			// console.log(postsave.post);
+			if (data.length===0) return true; else return false;
+		}, 'PPJK is already exist.');
+
 
 		var postsave={};
 		postsave.url = "{{url('/api/oprasional/cud')}}";
@@ -523,8 +635,18 @@
 		postsave.modal = '#modal';
 		$('#save').click(function(e) {
 			e.preventDefault();
-			postsave.post += $("#form").serialize()+'&datatb=ppjk';
-			saveGrid(postsave);
+			postsave.post += $("#validation-form").serialize()+'&datatb=ppjk';
+			// console.log($('#ppjk').valid(
+			// 	rules: {
+			//
+			// 	}
+			// ));
+			if ($('#validation-form').valid())	saveGrid(postsave);
+			// postsave.post = '';
+		});
+
+		$( "#ppjk" ).change(function() {
+			$('#ppjk').valid();
 		});
 
 		var grid_selector = "#grid-table";
@@ -572,21 +694,25 @@
 			sortname:'date_issue',
 			sortorder: 'desc',
 			height: 'auto',
-			colNames:['id','Date Issue','PPJK','AGEN','Kapal','Jetty','ETA','ETD','Asal','Tujuan','Etmal','Cargo','Muatan'],
+			colNames:['id','Date Issue','PPJK','Agen','Kapal','Jetty','ETA','ETD','Asal','Tujuan','Etmal','Cargo','Muatan','lstp_req','lstp_aprv','lstp','Ket'],
 			colModel:[
-				{name:'id',index:'id', width:40, fixed:true, sortable:true, resize:false, align: 'center',search:false},
-				{name:'date_issue',index:'date_issue', width:50, sorttype:"int", editable: false,search:false},
-				{name:'PPJK',index:'PPJK', width:60, sorttype:"int", editable: false},
-				{name:'AGEN',index:'AGEN',width:30, editable:false, align: 'center',search:false},
-				{name:'Kapal',index:'Kapal', width:90,editable: false,search:false},
-				{name:'Jetty',index:'Jetty', width:90, editable: false,search:false},
-				{name:'ETA',index:'ETA', width:80, editable: false, align: 'center',search:false},
-				{name:'ETD',index:'ETD', width:80, sortable:false, align: 'center',search:false},
-				{name:'Asal',index:'Asal', width:70, editable: false,search:false},
-        {name:'Tujuan',index:'Tujuan', width:70, editable: false,search:false},
-        {name:'Etmal',index: 'Etmal', width: 50,editable: false, align: 'center',search:false},
-        {name:'Cargo',index:'Cargo',width:50, editable: false, align: 'center',search:false},
-				{name:'Muatan',index:'Muatan',width:50, editable: false, align: 'center',search:false}
+				{name:'id',index:'id', width:40, fixed:true, sortable:true, resize:false, align: 'center'},
+				{name:'date_issue',index:'date_issue', width:50, sorttype:"int"},
+				{name:'ppjk',index:'ppjk', width:60},
+				{name:'agen',index:'agen',width:30, align: 'center'},
+				{name:'kapal',index:'kapal', width:90},
+				{name:'jetty',index:'jetty', width:90},
+				{name:'eta',index:'eta', width:80, align: 'center'},
+				{name:'etd',index:'etd', width:80, sortable:false, align: 'center'},
+				{name:'asal',index:'asal', width:70},
+        {name:'tujuan',index:'tujuan', width:70},
+        {name:'etmal',index: 'etmal', width: 50, align: 'center'},
+        {name:'cargo',index:'cargo',width:50, align: 'center'},
+				{name:'muatan',index:'muatan',width:50, align: 'center'},
+				{name:'lstp_req',index:'lstp_req',width:50, align: 'center',hidden:true},
+				{name:'lstp_aprv',index:'lstp_aprv',width:50, align: 'center',hidden:true},
+				{name:'lstp',index:'lstp',width:50, align: 'center',hidden:true},
+				{name:'ket',index:'ket',width:50, align: 'center'}
 			],
 
 			viewrecords : true,
@@ -741,33 +867,35 @@
 				buttonicon:"ace-icon fa fa-pencil blue",
 				position:"first",
 				onClickButton:function(){
-					$('#form').trigger("reset");
+					$('#validation-form').trigger("reset");
+					$( "#ppjk" ).rules("remove",'ppjk');
+					$('#ppjk').prop('readonly', true);
 
 					var gsr = $(this).jqGrid('getGridParam','selrow');
 					if(gsr){
+						$('#ppjk').val($(this).jqGrid('getCell',gsr,'ppjk'));
+						$('#etmal').val($(this).jqGrid('getCell',gsr,'etmal'));
+						$('#asal').val($(this).jqGrid('getCell',gsr,'asal'));
+						$('#tujuan').val($(this).jqGrid('getCell',gsr,'tujuan'));
+						$('#cargo').val($(this).jqGrid('getCell',gsr,'cargo'));
+						$('#muat').val($(this).jqGrid('getCell',gsr,'muatan'));
+						$('#ket').val($(this).jqGrid('getCell',gsr,'ket'));
+
 						var posdata= {'datatb':'ppjk','search':gsr};
 						getparameter("{{url('/api/oprasional/json')}}",posdata,function(data){
-							$('#ppjk').val(data[0].ppjk);
-
-  						$('#date_issue').datepicker("setDate", moment.unix(data[0].date_issue).format("DD MMMM YYYY"));
 
 							$('#agen').val(data[0].agens_id).trigger('chosen:updated').trigger("change");
 							$('#kapal').val(data[0].kapals_id).trigger('chosen:updated').trigger("change");
 							$('#jetty').val(data[0].jettys_idx).trigger('chosen:updated').trigger("change");
 							$('#rute').val(data[0].rute).trigger('chosen:updated').trigger("change");
 
+							$('#date_issue').datepicker("setDate", moment.unix(data[0].date_issue).format("DD MMMM YYYY"));
 							$('#etad')
 								.data('daterangepicker')
 								.setStartDate(moment.unix(data[0].eta).format("DD/MM/YY HH:mm"));
 							$('#etad')
 								.data('daterangepicker')
 								.setEndDate(moment.unix(data[0].etd).format("DD/MM/YY HH:mm"));
-
-							$('#etmal').val(data[0].etmal);
-							$('#asal').val(data[0].asal);
-							$('#tujuan').val(data[0].tujuan);
-							$('#cargo').val(data[0].cargo);
-							$('#muat').val(data[0].muat);
 						});
 						postsave.post = '';
 						postsave.post += 'oper=edit&id='+gsr+'&';
@@ -782,7 +910,10 @@
 			buttonicon:"ace-icon fa fa-plus-circle purple",
 			position:"first",
 			onClickButton:function(){
-				$('#form').trigger("reset");
+				$('#validation-form').trigger("reset");
+
+				$('#ppjk').prop('readonly', false);
+
 				$('.tgl').datepicker("setDate", '{{date("d F Y")}}');
 				$('#agen, #kapal, #jetty').val('').trigger("chosen:updated");
 
@@ -792,6 +923,8 @@
 				$('#etad')
 					.data('daterangepicker')
 					.setEndDate('{{date("d/m/y H:i",strtotime("+1 hours"))}}');
+
+				$( "#ppjk" ).rules("add",{ppjk:true});
 
 				postsave.post = '';
 				postsave.post += 'oper=add&';

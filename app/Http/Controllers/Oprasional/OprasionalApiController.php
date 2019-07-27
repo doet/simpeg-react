@@ -54,6 +54,9 @@ class OprasionalApiController extends Controller
           if ($request->input('filter')){
             $query->where($request->input('filter'),null);
           };
+          if ($request->select){
+            $query->where($request->selectby,$request->select);
+          };
         })
         ->select(
         //   'tb_agens.code as agenCode',
@@ -383,7 +386,9 @@ class OprasionalApiController extends Controller
             'cargo'     => $request->input('cargo',''),
             'muat'      => $request->input('muat',''),
             'rute'      => $request->input('rute',''),
+            'ket'       => $request->ket,
           );
+          // dd($request->input());
           if ($oper=='add')DB::table('tb_ppjks')->insert($datanya);
           if ($oper=='edit')DB::table('tb_ppjks')->where('id', $id)->update($datanya);
           if ($oper=='del')DB::table('tb_ppjks')->delete($id);
@@ -852,6 +857,7 @@ class OprasionalApiController extends Controller
               $row->lstp_req,
               $row->lstp_aprv,
               $row->lstp,
+              $row->ket,
             );
             $i++;
           break;

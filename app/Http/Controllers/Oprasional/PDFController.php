@@ -45,9 +45,9 @@ class PDFController extends Controller
           // ->leftJoin('tb_ppjks', function ($join) {
           //   $join->on('tb_ppjks.id','tb_dls.ppjks_id');
           // })
-          // ->leftJoin('tb_agens', function ($join) {
-          //   $join->on('tb_agens.id','tb_ppjks.agens_id');
-          // })
+          ->leftJoin('tb_agens', function ($join) {
+            $join->on('tb_agens.id','tb_ppjks.agens_id');
+          })
           ->leftJoin('tb_kapals', function ($join) {
             $join->on('tb_kapals.id','tb_ppjks.kapals_id');
           })
@@ -73,7 +73,7 @@ class PDFController extends Controller
             'tb_kapals.loa as kapalsLoa',
             'tb_kapals.bendera as kapalsBendera',
             'tb_jettys.name as jettyName',
-            // 'tb_agens.code as agenCode',
+            'tb_agens.code as agenCode',
             // 'tb_kapals.jenis as kapalsJenis',
             // 'tb_jettys.code as jettyCode',
             // // 'tb_jettys.color as jettyColor',
@@ -257,7 +257,7 @@ class PDFController extends Controller
           )
           ->orderBy('date_issue', 'asc')
           ->get();
-          
+
           $page = 'backend.oprasional.pdf.'.$request->input('page');
           $nfile = $request->input('file');
           $orientation = 'portrait';

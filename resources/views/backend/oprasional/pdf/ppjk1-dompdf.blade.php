@@ -130,6 +130,7 @@
                     <td class="left top" width='20px'>No</td>
                     <td class="left top" width='55px'>PPJK</td>
                     <td class="left top" width='50px'>Tgl</td>
+                    <td class="left top" width='35px'>Agen</td>
                     <td class="left top">Nama Kapal</td>
                     <td class="left top" width='35px'>GRT</td>
                     <td class="left top" width='25px'>LOA</td>
@@ -137,7 +138,6 @@
                     <td class="left top">Dermaga</td>
                     <td class="left top" width='25px'>Tarif</td>
                     <td class="left top" width='35px'>LSTP</td>
-                    <td class="left top" width='35px'>Mooring</td>
                     <td class="left top right" width='90px'>No Inv</td>
                     <td class="left top right">Ket</td>
                   </tr>
@@ -154,6 +154,7 @@
                     <td class="left top" align="center"> '.$i.' </td>
                     <td class="left top" align="center"> '.$row->ppjk.' </td>
                     <td class="left top" align="center"> '.date("d/m/Y",$row->date_issue).' </td>
+                    <td class="left top" align="center"> '.$row->agenCode.' </td>
                     <td class="left top"> &nbsp;'.$row->kapalsName.' </td>
                     <td class="left top" align="right"> '.$row->kapalsGrt.'&nbsp; </td>
                     <td class="left top" align="right"> '.$row->kapalsLoa.'&nbsp; </td>
@@ -161,7 +162,6 @@
                     <td class="left top"> &nbsp;'.$row->jettyName.' </td>
                     <td class="left top" align="center"> '.$row->rute.' </td>
                     <td class="left top" align="center"> '.$row->lstp.' </td>
-                    <td class="left top" align="center">  </td>
                     <td class="left top" align="center"> '.$row->noinv.' </td>
                     <td class="left top right">  </td>
                     </tr>';
