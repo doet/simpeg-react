@@ -110,54 +110,62 @@
                 <thead>
                   <!-- top left right -->
                   <tr>
-                    <td class="left top" colspan="4" rowspan="4">FORMULIR<br>Permintaan LSTP</td>
-                    <td class="left top" align="left"> &nbsp;Doc No</td>
+                    <td class="left top" colspan="6" rowspan="4">FORMULIR<br>Permintaan LSTP</td>
+                    <td class="left top" colspan="2" align="left"> &nbsp;Doc No</td>
                     <td class="left top right" colspan="2" align="left"> &nbsp;f......</td>
                   </tr>
                   <tr>
-                    <td class="left top" align="left"> &nbsp;Rev</td>
+                    <td class="left top" colspan="2" align="left"> &nbsp;Rev</td>
                     <td class="left top right" colspan="2" align="left"> &nbsp;0.0</td>
                   </tr>
                   <tr>
-                    <td class="left top" align="left"> &nbsp;Tgl Efektif</td>
+                    <td class="left top" colspan="2" align="left"> &nbsp;Tgl Efektif</td>
                     <td class="left top right" colspan="2" align="left"> &nbsp;<?php echo $mulai;?></td>
                   </tr>
                   <tr>
-                    <td class="left top" align="left"> &nbsp;Halaman</td>
+                    <td class="left top" colspan="2" align="left"> &nbsp;Halaman</td>
                     <td class="left top right" colspan="2" align="left"> &nbsp;<span class="hal"></span></td>
                   </tr>
                   <tr>
                     <td class="left top">No</td>
                     <td class="left top">PPJK</td>
                     <td class="left top">TGL</td>
+                    <td class="left top">AGEN</td>
                     <td class="left top">NAMA KAPAL</td>
                     <td class="left top">BENDERA</td>
                     <td class="left top">DERMAGA</td>
+                    <td class="left top">LSTP REQ</td>
+                    <td class="left top">LSTP APRV</td>
                     <td class="left top right">LSTP</td>
                   </tr>
                   <tr>
-                    <td class="top" colspan="7"></td>
+                    <td class="top" colspan="10"></td>
                   </tr>
                 </thead>
                 <tbody class="zebra">
                   <?php
                   $i=1;
                   foreach ($result as $row) {
+                    if ($row->lstp_req=='')$row->lstp_req='';else $row->lstp_req = date("d/m/Y",$row->lstp_req);
+                    if ($row->lstp_aprv=='')$row->lstp_aprv='';else $row->lstp_aprv = date("d/m/Y",$row->lstp_aprv);
                     echo
                     '<tr>
                     <td class="left top" align="center"> '.$i.' </td>
                     <td class="left top" align="center"> '.$row->ppjk.' </td>
                     <td class="left top" align="center"> '.date("d/m/Y",$row->date_issue).' </td>
+                    <td class="left top" align="center"> &nbsp;'.$row->agenCode.' </td>
                     <td class="left top"> &nbsp;'.$row->kapalsName.' </td>
                     <td class="left top"> &nbsp;'.$row->kapalsBendera.' </td>
                     <td class="left top"> &nbsp;'.$row->jettyName.' </td>
+                    <td class="left top right" align="center"> '.$row->lstp_req.'  </td>
+                    <td class="left top right" align="center"> '.$row->lstp_aprv.'  </td>
                     <td class="left top right" align="center"> '.$row->lstp.'  </td>
                     </tr>';
                     $i++;
                   }
                   ?>
                   <tr>
-                    <td class="top" colspan="7"></td>
+                    <td class="top" colspan="10"></td>
                   </tr>
                 </tbody>
               </table>
