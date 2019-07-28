@@ -173,6 +173,31 @@
             <p style="page-break-after: never;">
 
             </p>
+            <table width="350px">
+              <tr>
+                <td class=""> </td>
+                <td class=""> </td>
+                <td class=""> </td>
+                <td class=""> </td>
+                <td class="" rowspan="4" align="center"><?php echo 'Cilegon, '.date('d M Y', $mulai) ?><br>Diserahkan Oleh,<br /><br /><br /><br /><br />________________________</td>
+                <td class=""> </td>
+                <td class="" rowspan="4" align="center">Diterima Oleh,<br /><br /><br /><br /><br />________________________</td>
+              </tr>
+              <tr>
+                <td class=""> </td>
+                <td class=""> </td>
+                <td class="top"> </td>
+                <td class=""> </td>
+                <td class=""> </td>
+              </tr>
+              <tr>
+                <td class=""> </td>
+                <td class=""> </td>
+                <td class=""> </td>
+                <td class=""> </td>
+                <td class=""> </td>
+              </tr>
+            </table>
         </main>
     </body>
 </html>

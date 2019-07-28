@@ -171,7 +171,7 @@ class PDFController extends Controller
             } else if ($request->input('ext1')=='lhp2'){
               // $akhir = $mulai+(60 * 60 * 24);
               // $akhir = $mulai
-              $query->where('tb_ppjks.lhp', '>=', $mulai);
+              $query->where('tb_ppjks.lhp', '>=', strtotime('1-'.date('m-Y',$mulai)));
                 // $query->Where('tb_ppjks.lhp', '<=', );
               // $query->where('tb_ppjks.lhp', $akhir);
             }
@@ -256,7 +256,7 @@ class PDFController extends Controller
           //   // 'tb_jettys.color as jettyColor',
             'tb_ppjks.*'
           )
-          ->orderBy('date_issue', 'asc')
+          ->orderBy('lstp_req', 'desc')
           ->get();
 
           $page = 'backend.oprasional.pdf.'.$request->input('page');

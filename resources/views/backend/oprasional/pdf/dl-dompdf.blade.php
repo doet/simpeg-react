@@ -206,31 +206,7 @@
                   }
                   ?>
                   <tr>
-                  <td class="top"></td>
-                  <td class="top"></td>
-                  <td class="top"></td>
-                  <td class="top"></td>
-                  <td class="top"></td>
-                  <td class="top"></td>
-                  <td class="top"></td>
-                  <td class="top"></td>
-                  <td class="top"></td>
-                  <td class="top"></td>
-                  <td class="top"></td>
-                  <td class="top"></td>
-                  <td class="top"></td>
-
-                  <td class="top"></td>
-                  <td class="top"></td>
-                  <td class="top"></td>
-                  <td class="top"></td>
-                  <td class="top"></td>
-
-                  <td class="top"></td>
-                  <td class="top"></td>
-                  <td class="top"></td>
-                  <td class="top"></td>
-                  <td class="top"></td>
+                    <td class="top" colspan="23" ></td>
                   </tr>
                 </tbody>
               </table>
