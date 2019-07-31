@@ -110,7 +110,7 @@
 									<div class="form-group">
 										<label class="control-label col-xs-12 col-sm-3 no-padding-right" for="comment">No Invoice</label>
 										<div class="col-xs-12 col-sm-9">
-											<div class="clearfix"><input class="input-sm input-mask-eyescript" type="text" id="noinv" name="noinv" placeholder="____-__/AF19.__"></div>
+											<div class="clearfix"><input class="input-sm" type="text" id="noinv" name="noinv"></div>
 										</div>
 									</div>
 								</div>
@@ -210,16 +210,9 @@
 
 	<script src="{{ asset('/js/chosen.jquery.min.js') }}"></script>
 	<script src="{{ asset('/js/bootstrap-multiselect.min.js') }}"></script>
-	<script src="{{ asset('/js/jquery.maskedinput.min.js') }}"></script>
-
 	<script type="text/javascript">
 
 	jQuery(function($) {
-		$.mask.definitions["9"] = '';
-		$.mask.definitions["Q"] = '[0-9]';
-		$.mask.definitions["X"] = '[A-Z]';
-		$('.input-mask-eyescript').mask("QQQQ-QQ/AF19.XX");
-
 		//editables on first profile page
     $.fn.editable.defaults.mode = 'inline';
     $.fn.editableform.loading = "<div class='editableform-loading'><i class='ace-icon fa fa-spinner fa-spin fa-2x light-blue'></i></div>";
@@ -583,6 +576,7 @@ var i=0;
 				buttonicon:"ace-icon fa fa-pencil blue",
 				position:"first",
 				onClickButton:function(){
+
 					$('#form').trigger("reset");
 					$('.tgl').datepicker('update', '');
 					var gsr = $(this).jqGrid('getGridParam','selrow');
@@ -595,8 +589,6 @@ var i=0;
 						rute = $(this).jqGrid('getCell',gsr,'rute');
 						selisih = $(this).jqGrid('getCell',gsr,'selisih');
 
-						// if (noinv)$('#noinv').val(noinv); else $('#noinv').val("0000-00/AF19.XX");
-						console.log($('#noinv').val());
 						$('#pajak').val(pajak);
 						$('#noinv').val(noinv);
 						$('#refno').val(refno);
@@ -612,6 +604,43 @@ var i=0;
 							$('#dkurs').prop('disabled', false);
 							$('#kurs').prop('disabled', false);
 						}
+
+						// console.log($('#dkurs').val());
+						// var oldDate = $('#dkurs').val();
+						// $('#dkurs').on('changeDate', function (ev) {
+						// 	console.log(i);
+						// 	console.log($(this).val());
+						//
+						//
+						//   // if (oldDate !== $(this).val()){
+						// 	// 	// kurs($(this).val());
+						// 	// 	console.log(oldDate +'!=='+ $(this).val());
+						// 	//
+						// 	// }
+						// 	// oldDate = $(this).val();
+						// });i++;
+						//
+						// var oldDate = $('#dkurs').val();
+						// $('#dkurs').datepicker("setDate",dkurs).on('change', function (ev) {
+						// 	alert(oldDate+'-'+$(this).val());
+						// 	oldDate = $(this).val();
+						// });
+						// $('#dkurs').datepicker().on('changeDate', function (ev) {
+						//   if (oldDate !== $(this).val()){
+						// 		// kurs($(this).val());
+						// 		// console.log(oldDate +'!=='+ $(this).val());
+						//
+						// 	}
+						// 	oldDate = $(this).val();
+						// });
+						// if (tglinv!==''){
+						// 	// console.log(dkurs);
+						// 	$('#tglinv').datepicker("setDate",tglinv).on("change", function(e) {
+						// 		// kurs(dkurs);
+						// 		// console.log(dkurs);
+						// 	})
+						// 	// kurs(dkurs);
+						// }
 
 						postsave.post = '';
 						postsave.post += 'oper=edit&id='+gsr+'&';

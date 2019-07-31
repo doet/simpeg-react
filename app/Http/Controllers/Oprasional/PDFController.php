@@ -218,6 +218,8 @@ class PDFController extends Controller
         $view =  \View::make($page, compact('result','mulai'))->render();
       break;
       case 'lstp-dompdf':
+
+      // dd($mulai);
         $result = DB::table('tb_ppjks')
           ->leftJoin('tb_agens', function ($join) {
             $join->on('tb_ppjks.agens_id', 'tb_agens.id');
@@ -233,9 +235,11 @@ class PDFController extends Controller
               $query->where('lstp_req',$mulai);
             } else if($request->ext=='ext2'){
               // $query->where('lstp_req',$mulai);
+              $query->where('lstp_req', '>=', strtotime('1-'.date('m-Y',$mulai)))
+                ->Where('lstp_req', '<=', $mulai+(60 * 60 * 24));
             };
             $query->where('lhp','!=','');
-            $query->where('bstdo',null);
+            // $query->where('bstdo',null);
 
             if ($request->input('s_id')) {
               $query->where('tb_ppjks.id', $request->input('s_id'));
