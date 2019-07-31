@@ -157,10 +157,10 @@
                 <tbody class="zebra">
                   </tr>
                   <?php
-                  $i=1;
+                  $i=0;
                   $jppjk=0;
                   $jbapp=array();
-                  $ppjk = $datetime = '';
+                  $ppjk = $ppjk_ex = $datetime = '';
 
                   foreach ($result as $row ) {
                     $date = explode(" ", date("d-m-Y H:i",$row->date));
@@ -197,7 +197,12 @@
                     if ($row->tundaoff == '') $tundaoff=$row->tundaon; else $tundaoff=date("H:i",$row->tundaoff);
 
                     echo '<tr>';
-                    echo '<td class="top right left" align="center">&nbsp;'.$i.'</td>';
+                    if ($ppjk!=$ppjk_ex){
+                      $i++;
+                      echo '<td class="top right left" align="center">'.$i.'</td>';
+                    } else {
+                      echo '<td class="right left" align="center">&nbsp;</td>';
+                    }
                     echo '<td class="top right" align="center">'.$ppjk.'</td>';
                     echo '<td class="top right" align="center">'.$row->agenCode.'</td>';
                     echo '<td class="top right" align="center">'.$date[0].'</td>';
@@ -221,31 +226,13 @@
                     echo '<td class="top right">&nbsp;'.$row->ket.'</td>';
                     echo '</tr>';
                     $bstdo = $row->bstdo;
-                    $i++;
+
+
+                    $ppjk_ex = $ppjk;
                   }
                   ?>
                   <tr>
-                  <td class="top"></td>
-                  <td class="top"></td>
-                  <td class="top"></td>
-                  <td class="top"></td>
-                  <td class="top"></td>
-                  <td class="top"></td>
-                  <td class="top"></td>
-                  <td class="top"></td>
-                  <td class="top"></td>
-                  <td class="top"></td>
-                  <td class="top"></td>
-                  <td class="top"></td>
-                  <td class="top"></td>
-
-                  <td class="top"></td>
-                  <td class="top"></td>
-                  <td class="top"></td>
-                  <td class="top"></td>
-                  <td class="top"></td>
-                  <td class="top"></td>
-                  <td class="top"></td>
+                    <td class="top" colspan="20" ></td>
                   </tr>
                 </tbody>
               </table>
