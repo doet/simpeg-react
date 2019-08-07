@@ -869,7 +869,7 @@
 				onClickButton:function(){
 					$('#validation-form').trigger("reset");
 					$( "#ppjk" ).rules("remove",'ppjk');
-					$('#ppjk').prop('readonly', true);
+					// $('#ppjk').prop('readonly', true);
 
 					var gsr = $(this).jqGrid('getGridParam','selrow');
 					if(gsr){
