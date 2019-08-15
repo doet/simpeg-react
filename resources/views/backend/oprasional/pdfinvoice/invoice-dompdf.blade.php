@@ -276,7 +276,7 @@
                 </table>
               </div>
               <div style="position:absolute; top:-8; left:5;"><b><i style="font-size:15px">NOTA TAGIHAN / INVOICE</i></b></div>
-              <table >
+              <table>
                   <tr tr style="font-size:11px; font-weight: bold;">
                     <!-- rowspan="2" colspan="2" -->
                     <td class="left top right" colspan="2" style="background-color: #DCDCDC;">&nbsp;Kepada / <i>To :</i></td>
@@ -319,7 +319,7 @@
                 <thead>
                   <tr>
                     <!-- rowspan="2" colspan="2" -->
-                    <td class="left top right" rowspan="3" width='40px'>LSTP<br>No</td>
+                    <td class="left top right" rowspan="3" width='55px'>LSTP<br>No</td>
                     <td class="top right" rowspan="2" colspan="2">Lokasi / <i>Location</i></td>
                     <td class="top right" rowspan="3" width='70px'>Uraian /<br> <i>Description</i></td>
                     <td class="top right" rowspan="3" width='90px'>Mulai / <i>Start</i><br> <i>(hr/bln/th jam:mnt)</i><br> <i>(dd/mm/yy hr:mnt)</i></td>
@@ -332,7 +332,7 @@
                     <td class="top right" rowspan="2" width='45px'>Waktu/<br><i>Time</i></td>
                     <td class="top right" rowspan="2" width='45px'>Terhitung/<br><i>Counted</i></td>
                     <td class="top right" rowspan="2" width='45px'>Mobilisasi/<br><i>Mobilize</i></td>
-                    <td class="top right" rowspan="2" width='45px'>Total/<br><i>Total</i></td>
+                    <td class="top right" rowspan="2" width='40px'>Total/<br><i>Total</i></td>
 
                     <td class="top right" colspan="2">Tetap / <i>Fixed</i></td>
                     <td class="top right" colspan="3">Variabel / <i>Variable</i></td>
@@ -345,7 +345,7 @@
                     <td class="top right">Jumlah / <i>Amount</i></td>
                     <td class="top right">Tarif / <i>Tariff</i></td>
                     <td class="top right" width='40px'>GRT</td>
-                    <td class="top right" width='80px' >Jumlah / <i>Amount</i></td>
+                    <td class="top right" width='70px' >Jumlah / <i>Amount</i></td>
                   </tr>
                   <tr>
                     <td class="top" colspan="16" ></td>
@@ -365,20 +365,20 @@
                   echo '<td class="top right" align="center"> Tunda/<i>Towing</i> </td>';
                   echo '<td class="top right" align="center"> '.$row['tundaon'].' </td>';
                   echo '<td class="top right" align="center"> '.$row['tundaoff'].' </td>';
-                  echo '<td class="top right" align="right"> '.number_format($row['selisihWaktu'],2).'&nbsp; </td>';
-                  echo '<td class="top right" align="right"> '.number_format($row['selisihWaktu2'],2).'&nbsp;  </td>';
-                  echo '<td class="top right" align="right"> '.number_format($row['mobilisasi'],2).'&nbsp;  </td>';
-                  echo '<td class="top right" align="right"> '.number_format($row['jumlahWaktu'],2).'&nbsp;  </td>';
-                  echo '<td class="top right" align="right">Rp. '.number_format($tariffix).'&nbsp;</td>';
-                  echo '<td class="top right" align="right">Rp. '.number_format($row['jumlahTariffix']).'&nbsp;</td>';
+                  echo '<td class="top right" align="right" style="font-size:12px;"> '.number_format($row['selisihWaktu'],2).'&nbsp; </td>';
+                  echo '<td class="top right" align="right" style="font-size:12px;"> '.number_format($row['selisihWaktu2'],2).'&nbsp;  </td>';
+                  echo '<td class="top right" align="right" style="font-size:12px;"> '.number_format($row['mobilisasi'],2).'&nbsp;  </td>';
+                  echo '<td class="top right" align="right" style="font-size:12px;"> '.number_format($row['jumlahWaktu'],2).'&nbsp;  </td>';
+                  echo '<td class="top right" align="right" style="font-size:12px;">Rp. '.number_format($tariffix).'&nbsp;</td>';
+                  echo '<td class="top right" align="right" style="font-size:12px;">Rp. '.number_format($row['jumlahTariffix']).'&nbsp;</td>';
                   if($result->rute == '$') {
-                    echo '<td class="top right" align="right">Rp. '.number_format($tarifvar).'&nbsp;</td>';
+                    echo '<td class="top right" align="right" style="font-size:12px;">Rp. '.number_format($tarifvar).'&nbsp;</td>';
                   } else{
-                    echo '<td class="top right" align="right">Rp. '.number_format($tarifvar,2).'&nbsp;</td>';
+                    echo '<td class="top right" align="right" style="font-size:12px;">Rp. '.number_format($tarifvar,2).'&nbsp;</td>';
                   }
-                  echo '<td class="top right" align="right"> '.number_format($kapalsGrt).'&nbsp;</td>';
-                  echo '<td class="top right" align="right">Rp. '.number_format($row['jumlahTarifvar']).'&nbsp;</td>';
-                  echo '<td class="top right" align="right">Rp. '.number_format($row['jumlahTarif'],2).'&nbsp;</td>';
+                  echo '<td class="top right" align="right" style="font-size:12px;"> '.number_format($kapalsGrt).'&nbsp;</td>';
+                  echo '<td class="top right" align="right" style="font-size:12px;">Rp. '.number_format($row['jumlahTarifvar']).'&nbsp;</td>';
+                  echo '<td class="top right" align="right" style="font-size:12px;">Rp. '.number_format($row['jumlahTarif'],2).'&nbsp;</td>';
                   echo '</tr>';
                   $i++;
                 }
