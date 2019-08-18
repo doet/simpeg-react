@@ -186,12 +186,12 @@ Terbilang :<br />
     <td align="center" valign="top">
 			Diajukan Oleh <br />
 			Staf SDM dan Hukum <br /><br /><br /><br /><br />
-			Muhammad Yusuf
+			
 		</td>
     <td align="center" valign="top">
 			<br />
       Supervisor SDM &amp; Hukum<br /><br /><br /><br /><br />
-			Fajar Prasetia
+
     </td>
     <td align="center" valign="top">
 			<br />
