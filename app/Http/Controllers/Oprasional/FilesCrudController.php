@@ -296,6 +296,7 @@ class FilesCrudController extends Controller
         }
       break;
       case 'rute':
+        
         if($request->input('type')=='bulan'){
           $m_end = strtotime($request->input('end'));
           $end = date('m',$m_end);

@@ -36,6 +36,7 @@ class PDFController extends Controller
     $sidx = $request->input('sidx', 'id');
 
     $case = $request->input('case', 'unknow');
+    $tmp['img'] = $request->input('img');
     switch ($case) {
       case 'rute':
         // if($request->input('type')=='bulan'){

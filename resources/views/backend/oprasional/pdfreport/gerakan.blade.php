@@ -193,6 +193,7 @@
                   </tr>
                 </tbody>
               </table>
+              <img src="<?php  echo $tmp['img']?>" width="100%">
             </div>
             <!-- <p style="page-break-after: never;">
                 Content Page 2

@@ -48,7 +48,7 @@
           <input name="end" value="" type="hidden"/>
           <input name="divisi" value="5" type="hidden"/>
           <input name="page" value="absen" type="hidden"/>
-          <input name="file" value="LogAbsen" type="hidden"/>
+          <input name="img" value="" type="hidden"/>
       </form>
       <form id="print-2" role="form" method="POST" action="{{ url('oprasional/PDFReport') }}" target="_blank">
           {!! csrf_field() !!}
@@ -57,7 +57,7 @@
           <input name="end" value="" type="hidden"/>
           <input name="divisi" value="5" type="hidden"/>
           <input name="page" value="absen" type="hidden"/>
-          <input name="file" value="LogAbsen" type="hidden"/>
+          <input name="img" value="" type="hidden"/>
       </form>
       <form id="print-3" role="form" method="POST" action="{{ url('oprasional/PDFReport') }}" target="_blank">
           {!! csrf_field() !!}
@@ -66,7 +66,7 @@
           <input name="end" value="" type="hidden"/>
           <input name="divisi" value="5" type="hidden"/>
           <input name="page" value="absen" type="hidden"/>
-          <input name="file" value="LogAbsen" type="hidden"/>
+          <input name="img" value="" type="hidden"/>
       </form>
       <form id="print-4" role="form" method="POST" action="{{ url('oprasional/PDFReport') }}" target="_blank">
           {!! csrf_field() !!}
@@ -75,7 +75,7 @@
           <input name="end" value="" type="hidden"/>
           <input name="divisi" value="5" type="hidden"/>
           <input name="page" value="absen" type="hidden"/>
-          <input name="file" value="LogAbsen" type="hidden"/>
+          <input name="img" value="" type="hidden"/>
       </form>
 
       <div align="center">Data Report<br />
@@ -296,17 +296,33 @@
 <script type="text/javascript">
   jQuery(function($) {
     $('#print1').click(function() {
-        document.getElementById('print-1').submit();
+      var canvas = document.getElementById("rute");
+      var img    = canvas.toDataURL("image/png");
+      $('input[name="img"]').val(img);
+      document.getElementById('print-1').submit();
+      // console.log(img);
     });
     $('#print2').click(function() {
-        document.getElementById('print-2').submit();
+      var canvas = document.getElementById("gerakan");
+      var img    = canvas.toDataURL("image/png");
+      $('input[name="img"]').val(img);
+      document.getElementById('print-2').submit();
     });
     $('#print3').click(function() {
-        document.getElementById('print-3').submit();
+      var canvas = document.getElementById("rutegrt");
+      var img    = canvas.toDataURL("image/png");
+      $('input[name="img"]').val(img);
+      document.getElementById('print-3').submit();
     });
     $('#print4').click(function() {
-        document.getElementById('print-4').submit();
+      var canvas = document.getElementById("pandu");
+      var img    = canvas.toDataURL("image/png");
+      $('input[name="img"]').val(img);
+      document.getElementById('print-4').submit();
     });
+
+
+
     //editables on first profile page
     $.fn.editable.defaults.mode = 'inline';
     $.fn.editableform.loading = "<div class='editableform-loading'><i class='ace-icon fa fa-spinner fa-spin fa-2x light-blue'></i></div>";
