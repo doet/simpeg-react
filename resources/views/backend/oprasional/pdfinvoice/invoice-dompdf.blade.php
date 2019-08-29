@@ -326,7 +326,7 @@
                     <td class="top right" rowspan="3" width='90px'>Selesai / <i>Finish</i><br> <i>(hr/bln/th jam:mnt)</i><br> <i>(dd/mm/yy hr:mnt)</i></td>
                     <td class="top right" colspan="4">Jumlah Waktu (Jam) / <i>Duration</i> (hour)</td>
                     <td class="top right" colspan="5">Perhitungan Tagihan / <i>Calculation of Invoice</i></td>
-                    <td class="top right" rowspan="3">Total / <i>Total</i></td>
+                    <td class="top right" rowspan="3" width='100px'>Total / <i>Total</i></td>
                   </tr>
                   <tr>
                     <td class="top right" rowspan="2" width='45px'>Waktu/<br><i>Time</i></td>
@@ -341,9 +341,9 @@
                     <td class="top right" width='120px'>Dari / <i>From</i></td>
                     <td class="top right" width='120px'>Ke / <i>To</i></td>
 
-                    <td class="top right">Tarif / <i>Tariff</i></td>
-                    <td class="top right">Jumlah / <i>Amount</i></td>
-                    <td class="top right">Tarif / <i>Tariff</i></td>
+                    <td class="top right" width='85px'>Tarif / <i>Tariff</i></td>
+                    <td class="top right" width='85px'>Jumlah / <i>Amount</i></td>
+                    <td class="top right" width='40px'>Tarif / <i>Tariff</i></td>
                     <td class="top right" width='40px'>GRT</td>
                     <td class="top right" width='85px' >Jumlah / <i>Amount</i></td>
                   </tr>
@@ -392,19 +392,19 @@
                 <tr>
                   <td class="top" colspan="6" rowspan="4"> &nbsp; </td>
                   <td class="top" colspan="9" align="right">Total Tunda&nbsp;</td>
-                  <td class="left top right" align="right">Rp. <?php echo number_format($totalTarif+$match[$i+1])?>&nbsp;</td>
+                  <td class="left top right" align="right"  style="font-size:12px;">Rp. <?php echo number_format($totalTarif+$match[$i+1])?>&nbsp;</td>
                 </tr>
                 <tr>
                   <td colspan="9" align="right">Bagi Hasil Tunda setelah PNBP&nbsp;</td>
-                  <td class="left top right" align="right">Rp. <?php echo number_format($bhtPNBP+$match[$i+2])?>&nbsp;</td>
+                  <td class="left top right" align="right"  style="font-size:12px;">Rp. <?php echo number_format($bhtPNBP+$match[$i+2])?>&nbsp;</td>
                 </tr>
                 <tr>
                   <td colspan="9" align="right">PPn / Total after VAT&nbsp;</td>
-                  <td class="left top right" align="right">Rp. <?php echo number_format($ppn+$match[$i+3])?>&nbsp;</td>
+                  <td class="left top right" align="right"  style="font-size:12px;">Rp. <?php echo number_format($ppn+$match[$i+3])?>&nbsp;</td>
                 </tr>
                 <tr>
                   <td colspan="9" align="right">Total Tagihan Bagi Hasil / Total Invoice&nbsp;</td>
-                  <td class="left top right button" align="right">Rp. <?php echo number_format($totalinv+$match[$i+4])?>&nbsp;</td>
+                  <td class="left top right button" align="right"  style="font-size:12px;">Rp. <?php echo number_format($totalinv+$match[$i+4])?>&nbsp;</td>
                 </tr>
               </table>
             </div>
