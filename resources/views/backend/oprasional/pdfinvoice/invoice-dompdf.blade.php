@@ -345,7 +345,7 @@
                     <td class="top right">Jumlah / <i>Amount</i></td>
                     <td class="top right">Tarif / <i>Tariff</i></td>
                     <td class="top right" width='40px'>GRT</td>
-                    <td class="top right" width='70px' >Jumlah / <i>Amount</i></td>
+                    <td class="top right" width='85px' >Jumlah / <i>Amount</i></td>
                   </tr>
                   <tr>
                     <td class="top" colspan="16" ></td>
