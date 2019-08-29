@@ -25,6 +25,7 @@
             }
 
             footer {
+              
                 /* position: fixed;
                 bottom: -60px;
                 left: 0px;
