@@ -142,7 +142,6 @@
                     // $area='Cilegon';
                   }
 
-
                   if(!in_array($row->jettyCode,$name))array_push($name,$row->jettyCode);
                   if(in_array('12',$name)){
                     if ($result->rute == '$') $headstatus=$row->jettyName.' .1'; else $headstatus=$row->jettyName.' .2';

@@ -52,9 +52,9 @@ class InvoiceHelpers {
   }
 
 
-  public static function nilai_inv($ppjk_id,$totalTarif,$bhtPNBP,$ppn,$totalinv){
+  public static function nilai_inv($ppjks_id,$totalTarif,$bhtPNBP,$ppn,$totalinv){
     $datainv = array(
-      'ppjk_id'=>$ppjk_id,
+      'ppjks_id'=>$ppjks_id,
       // 't_pandu'=>'1',
       't_tunda'=>$totalTarif,
       'bht_bnbp'=>$bhtPNBP,
@@ -62,8 +62,8 @@ class InvoiceHelpers {
       't_bht'=>$totalinv
     );
 
-    if (DB::table('tb_inv')->where('ppjk_id', $ppjk_id)->exists()){
-      DB::table('tb_inv')->where('ppjk_id',$ppjk_id)->update($datainv);
+    if (DB::table('tb_inv')->where('ppjks_id', $ppjks_id)->exists()){
+      DB::table('tb_inv')->where('ppjks_id',$ppjks_id)->update($datainv);
     }else{
       DB::table('tb_inv')->insert($datainv);
     }

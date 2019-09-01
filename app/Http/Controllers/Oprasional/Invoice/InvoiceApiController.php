@@ -37,32 +37,13 @@ class InvoiceApiController extends Controller
     switch ($datatb) {
       case 'ppjk':
         $query = DB::table('tb_ppjks')
-        // ->join('tb_agens', function ($join) {
-        //   $join->on('tb_agens.id','tb_ppjks.agens_id');
-        // })
-        // ->join('tb_kapals', function ($join) {
-        //   $join->on('tb_kapals.id','tb_ppjks.kapals_id');
-        // })
-        // ->join('tb_jettys', function ($join) {
-        //   $join->on('tb_jettys.id','tb_ppjks.jettys_id');
-        // })
-        ->where(function ($query) use ($request){
-          if ($request->input('search')){
-            $query->where('id',$request->input('search'));
-          };
-        })
-        ->select(
-        //   'tb_agens.code as agenCode',
-        //   'tb_kapals.name as kapalsName',
-        //   'tb_kapals.jenis as kapalsJenis',
-        //   'tb_kapals.grt as kapalsGrt',
-        //   'tb_kapals.loa as kapalsLoa',
-        //   'tb_kapals.bendera as kapalsBendera',
-        //   'tb_jettys.name as jettyName',
-        //   // 'tb_jettys.color as jettyColor',
-          // 'tb_ppjks.*'
-        )
-        ->get();
+          ->where(function ($query) use ($request){
+            if ($request->input('search')){
+              $query->where('id',$request->input('search'));
+            };
+          })
+          ->select()
+          ->get();
         foreach($query as $row) {
           $responce[]=$row;
         }
@@ -71,13 +52,10 @@ class InvoiceApiController extends Controller
         if ($request->input('search')==null)$search='-';else $search=strtotime($request->input('search'));
         $query = DB::table('tb_kurs')
           ->where(function ($query) use ($request, $search){
-            // if ($search!='-'){
               $query->where('date',$search);
-            // };
           })->orderBy('date', 'desc')
           ->first();
         $responce[]=array('a'=>$search);
-        // $responce=$query;
         array_push($responce,$query);
       break;
     }
@@ -99,7 +77,6 @@ class InvoiceApiController extends Controller
         $value_n='';
         foreach($query as $row) {
           if ($row->bstdo != $value_n){
-            // $responce[$i] = '('.$row->jenis.') '.$row->value;
             $responce[$i]['value'] = $row->bstdo;
             $i++;
             $value_n=$row->bstdo;
@@ -115,14 +92,11 @@ class InvoiceApiController extends Controller
           })
           // ->distinct('code')
           ->where(function ($q) use ($request){
-            // $q->where('tb_ppjks.bstdo','!=','')
-            //   ->orWhere('tb_ppjks.bstdo','!=',(NULL));
             $q->where('tb_ppjks.ppjk','like','%'.$request->input('cari').'%')
               ->orWhere('tb_kapals.name', 'like','%'.$request->input('cari').'%');
           })
           ->select(
             'tb_kapals.name as kapalsName',
-            //   // 'tb_jettys.color as jettyColor',
             'tb_ppjks.*'
             )
           ->orderBy('ppjk', 'asc')
@@ -174,20 +148,29 @@ class InvoiceApiController extends Controller
             DB::table('tb_kurs')->where('date', strtotime($request->input('dkurs')))->update($datakurs);
           } else {
             DB::table('tb_kurs')->insert($datakurs);
-            //->where('date', strtotime($request->input('dkurs')))
           }
         }
-
-
-        // InvoiceHelpers::nilai_inv($dddd->first()->id);
-
         $responce = array(
           'status' => "success",
           'msg' => 'ok',
         );
       break;
+      case 'kwitansi':
+        // dd($request->input());
+        if ($request->input('tgl_pay')!='')$tgl_pay=strtotime($request->input('tgl_pay'));else $tgl_pay='';
+        $datanya=array(
+          'tgl_pay'=>$tgl_pay,
+          'no_kwn'=>$request->input('no_kwn'),
+        );
+        $dddd = DB::table('tb_inv')->where('ppjks_id', $id);
+        $dddd->update($datanya);
 
+        $responce = array(
+          'status' => "success",
+          'msg' => 'ok',
+        );
 
+      break;
     }
 
     return  Response()->json($responce);
@@ -214,7 +197,7 @@ class InvoiceApiController extends Controller
               $join->on('tb_kapals.id','tb_ppjks.kapals_id');
             })
             ->leftJoin('tb_inv', function ($join) {
-              $join->on('tb_ppjks.id','tb_inv.ppjk_id');
+              $join->on('tb_ppjks.id','tb_inv.ppjks_id');
             })
             ->where(function ($query) use ($mulai,$akhir,$request){
               $query->where('tb_ppjks.bstdo','!=','');
@@ -238,7 +221,8 @@ class InvoiceApiController extends Controller
               'tb_agens.code as agenCode',
               'tb_kapals.name as kapalsName',
               'tb_kapals.jenis as kapalsJenis',
-              'tb_inv.tgl_pay as inv_pay',
+              'tb_inv.tgl_pay as tgl_pay',
+              'tb_inv.no_kwn as no_kwn',
               // 'tb_kapals.grt as kapalsGrt',
               // 'tb_kapals.loa as kapalsLoa',
               // 'tb_kapals.bendera as kapalsBendera',
@@ -283,9 +267,10 @@ class InvoiceApiController extends Controller
 
             // if ($row->ppjk == '' || $row->ppjk == null) $row->ppjk = ''; else $row->ppjk = substr($row->ppjk, -5);
             if ($row->tglinv != '') $row->tglinv=date('d-m-Y', $row->tglinv);
+
             if ($row->rute != '' && $row->rute == '$')$row->rute = 'Internasional'; else if ($row->rute != '' && $row->rute == 'Rp')$row->rute = 'Domestic';
             if ($row->dkurs !='')$dkurs=date("d-m-Y",$row->dkurs); else $dkurs='';
-            // if ($row->inv_pay != '')  $row->inv_pay=date('d-m-Y', $row->inv_pay);
+            if ($row->tgl_pay != '')  $row->tgl_pay=date('d-m-Y', $row->tgl_pay);
             $responce['rows'][$i]['id'] = $row->id;
             $responce['rows'][$i]['cell'] = array(
               $row->id,
@@ -301,7 +286,8 @@ class InvoiceApiController extends Controller
               $row->selisih,
               $row->id,
               $dkurs,
-              $row->inv_pay
+              $row->tgl_pay,
+              $row->no_kwn
             );
             $i++;
           break;

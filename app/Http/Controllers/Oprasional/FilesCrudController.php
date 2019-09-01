@@ -295,8 +295,75 @@ class FilesCrudController extends Controller
           $i++;
         }
       break;
+      case 'gerakanChart':
+        $m_end = strtotime($request->input('end'));
+        $end = date('m',$m_end);
+        $day1 = (60 * 60 * 24);
+
+        $start = 1564592400;
+        $end = 1567070789;
+        $day1 = (60 * 60 * 24);
+
+        $i=$n= 0;
+        $items=$all=array();
+        /////////////////////// data harian
+        // $tmp['items']=array('$',"Rp","all",'Cilegon',"Serang","all");
+        for($start; $start < $end; $start = $start+$day1) {
+          ////////////// data dalam 1 tanggal //////////////
+          $label = date('d.m',$start);
+          $tmp['label'][] = $label; // ambil tanggal sumbu x
+
+          $query = DB::table('tb_dls')
+            ->join('tb_jettys', function ($join) {
+              $join->on('tb_dls.jettys_id','tb_jettys.id');
+            })
+            ->where(function ($query) use ($start,$day1){
+                $query->where('date', '>', $start)
+                  ->Where('date', '<', $start+$day1);
+            })
+            ->select('tb_jettys.name as jettyName','tb_jettys.code as jettyCode', 'tb_dls.*')
+            ->get();
+
+          // $data['unknow'] = array();
+          foreach ($query as $row) {
+            if ($row->jettyCode=='')$row->jettyCode='unknow';
+            else if ($row->jettyCode[0]=='S')$row->jettyCode='Serang';
+            else $row->jettyCode='Cilegon';
+            $tmp['items'][] = $row->jettyCode;
+            $data2[$label][]=$row->jettyCode;
+          }
+          $data[$label]=array_count_values($data2[$label]);
+          $data[$label]['all']=count($data2[$label]);
+        }
+        $tmp['items'] = array_values(array_unique($tmp['items']));
+        $tmp['items'][] = 'all';
+
+        foreach ($tmp['items'] as $val){
+          foreach ($tmp['label'] as $row) {
+
+            if (!array_key_exists($val,$data[$row]))$data[$row][$val]=0;
+            $tmp['ds'][$val]['data'][$row] = $data[$row][$val];
+            $tmp['ds'][$val]['label'] = $val;
+          }
+          $tmp['ds'][$val]['data'] = array_values($tmp['ds'][$val]['data']);
+        }
+        $tmp['ds'] = array_values($tmp['ds']);
+
+        $tmp['ds'][array_search('Serang',$tmp['items'])]['backgroundColor'] = 'rgb(54, 162, 235)';
+        $tmp['ds'][array_search('Serang',$tmp['items'])]['borderColor'] = 'rgb(54, 162, 235)';
+        $tmp['ds'][array_search('Serang',$tmp['items'])]['fill'] = false;
+
+        $tmp['ds'][array_search('Cilegon',$tmp['items'])]['backgroundColor'] = 'rgb(255, 99, 132)';
+        $tmp['ds'][array_search('Cilegon',$tmp['items'])]['borderColor'] = 'rgb(255, 99, 132)';
+        $tmp['ds'][array_search('Cilegon',$tmp['items'])]['fill'] = false;
+
+        $tmp['ds'][array_search('all',$tmp['items'])]['backgroundColor'] = 'rgba(201, 203, 207,0.3)';
+        $tmp['ds'][array_search('all',$tmp['items'])]['borderColor'] = 'rgb(255, 159, 64)';
+        $tmp['ds'][array_search('all',$tmp['items'])]['fill'] = true;
+        // dd($tmp);
+      break;
       case 'rute':
-        
+
         if($request->input('type')=='bulan'){
           $m_end = strtotime($request->input('end'));
           $end = date('m',$m_end);

@@ -50,7 +50,7 @@
 				<form id="form">
 					<div class="modal-header">
 						<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-						<h3 class="smaller lighter blue no-margin">Form Laporan </h3>
+						<h3 class="smaller lighter blue no-margin">Form Invoice </h3>
 					</div>
 					<!-- 01 end heder -->
 					<!-- 02 body -->
@@ -147,6 +147,69 @@
 			</div>
 		</div>
 </div><!-- /.modal-dialog -->
+
+<div id="modal_kwitansi" class="modal fade" tabindex="-1">
+	<div class="modal-dialog modal-lg">
+			<div class="modal-content">
+				<!-- 01 Header -->
+				<form id="form_kwitansi">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+						<h3 class="smaller lighter blue no-margin">Form Kwitansi </h3>
+					</div>
+					<!-- 01 end heder -->
+					<!-- 02 body -->
+					<div class="modal-body">
+						{{ csrf_field() }}
+						<!-- <input type="hidden" name="datatb" value="keluarga" />
+						<input type="hidden" id='oper-1' name="oper" value="add" />-->
+						<input type="hidden" id='id_kwn' name="id" value="id" />
+						<div class="row">
+							<div class="col-xs-12 col-sm-6">
+
+								<div class="row">
+									<div class="form-group">
+										<label class="control-label col-xs-12 col-sm-3 no-padding-right" for="comment">Tgl Kwitansi</label>
+										<div class="col-xs-12 col-sm-9">
+											<div class="clearfix"><input class="input-sm col-sm-4 tgl" type="text" id="tgl_pay" name="tgl_pay" readonly></div>
+										</div>
+									</div>
+								</div>
+								<div class="space-2"></div>
+
+							</div>
+							<div class="col-xs-12 col-sm-6">
+
+								<div class="row">
+									<div class="form-group">
+										<label class="control-label col-xs-12 col-sm-3 no-padding-right" for="comment">No Kwitansi</label>
+										<div class="col-xs-12 col-sm-9">
+											<div class="clearfix"><input class="input-sm col-sm-9" type="text" id="no_kwn" name="no_kwn"></div>
+										</div>
+									</div>
+								</div>
+								<div class="space-2"></div>
+
+							</div>
+						</div>
+
+					</div>
+					<!-- 02 end body -->
+
+					<!-- 03 footer -->
+					<div class="modal-footer">
+						<button class="btn btn-sm btn-danger pull-right" id='save_kwitansi'>
+								<i class="ace-icon fa fa-floppy-o"></i>Save
+						</button>
+						<button class="btn btn-sm btn-danger pull-right" data-dismiss="modal">
+								<i class="ace-icon fa fa-times"></i>Close
+						</button>
+					</div>
+					<!-- 03 end footer Form -->
+				</form>
+			</div>
+		</div>
+</div>
 
       <div class="row">
         <div class="col-xs-12">
@@ -331,6 +394,16 @@
 			postsave.post += $("#form").serialize()+'&datatb=inv';
 			saveGrid(postsave);
 		});
+
+		var postsave_kwitansi={};
+		postsave_kwitansi.url = "{{url('/api/oprasional/invoice/cud')}}";
+		postsave_kwitansi.grid = '#grid-table';
+		postsave_kwitansi.modal = '#modal_kwitansi';
+		$('#save_kwitansi').click(function(e) {
+			e.preventDefault();
+			postsave_kwitansi.post = $("#form_kwitansi").serialize()+'&datatb=kwitansi';
+			saveGrid(postsave_kwitansi);
+		});
 //////////////////////////////////////////////
 
 		var grid_selector = "#grid-table";
@@ -377,7 +450,7 @@
 			sortname:'bstdo',
 			sortorder: 'desc',
 			height: 'auto',
-			colNames:[' ', 'BSTDO','PPJK','Agen','Kapal','Jalur','Date Doc','Faktur Pajak','No. Invoice','Ref No','Selisih','Status','dkurs','Date Pay'],
+			colNames:[' ', 'BSTDO','PPJK','Agen','Kapal','Jalur','Date Doc','Faktur Pajak','No. Invoice','Ref No','Selisih','Status','dkurs','Date Pay','No Kwn'],
 			colModel:[
 				{name:'myac',index:'', width:50, fixed:true, sortable:false, resize:false, align: 'center'},
 				{name:'bstdo',index:'bstdo', width:40,editable: false},
@@ -392,8 +465,8 @@
 				{name:'selisih',index:'selisih', width:60, editable: false},
 				{name:'status',index:'status', width:60, editable: false, formatter:status},
 				{name:'dkurs',index:'dkurs', width:60, editable: false},
-				{name:'inv_pay',index:'inv_pay', width:60, editable: false}
-				// {name:'dkurs',index:'dkurs', width:60, editable: false},
+				{name:'tgl_pay',index:'tgl_pay', width:60, editable: false},
+				{name:'no_kwn',index:'no_kwn', width:60, editable: false}
 			],
 
 			viewrecords : true,
@@ -446,25 +519,30 @@
 			// 		.after('<span class="lbl"></span>');
 			// }, 0);
 			file_c=pay_c="grey";
-			url=url2='';
+			url=url2=url3=on_click='';
 			// console.log(cell);
 			if (cell[5]=="Domestic" && cell[6]!=="" && cell[7]!==null && cell[8]!==null && cell[9]!==null){
 				file_c="orange";
+				on_click = "kwitansi('"+cellvalue+"','"+cell[13]+"','"+cell[14]+"')";
 				url="href='{{ url('oprasional/PDFInvoice') }}?page=invoice-dompdf&id="+cellvalue+"'";
 				url2="href='{{ url('oprasional/PDFInvoice') }}?page=invoice-dompdf2&id="+cellvalue+"'";
 			} else if (cell[5]=="Internasional" && cell[6]!=="" && cell[7]!==null && cell[8]!==null && cell[9]!==null && cell[12]!==""){
 				file_c="orange";
+				on_click = "kwitansi('"+cellvalue+"','"+cell[13]+"','"+cell[14]+"')";
 				url="href='{{ url('oprasional/PDFInvoice') }}?page=invoice-dompdf&id="+cellvalue+"'";
 				url2="href='{{ url('oprasional/PDFInvoice') }}?page=invoice-dompdf2&id="+cellvalue+"'";
 			}// var gsr = $(this).jqGrid('getGridParam','selrow');
 			// tglinv = $(this).jqGrid('getCell',gsr,'tglinv');
-			if (cell[13]!==''&&cell[13]!==null){
+			if (cell[13]!==''&&cell[14]!==null){
 				pay_c="orange";
+				on_click = "kwitansi('"+cellvalue+"','"+cell[13]+"','"+cell[14]+"')";
+				url3="href='{{ url('oprasional/PDFInvoice') }}?page=kwitansi-dompdf&id="+cellvalue+"'";
 			}
 			// console.log(cell);
-			return '<div><a class="fa fa-file-pdf-o '+ file_c +'" '+url+'  method="POST" target="_blank"></a> -	<a class="fa fa-file-pdf-o '+
-			file_c +'" '+url2+' method="POST" target="_blank"></a> - <a class="fa fa-credit-card '+
-			pay_c +'"></a></div>';
+			return '<div><a class="fa fa-file-pdf-o '+ file_c +'" '+url+'  method="POST" target="_blank"></a> <a class="fa fa-file-pdf-o '+
+			file_c +'" '+url2+' method="POST" target="_blank"></a> <a class="fa fa-credit-card '+
+			pay_c +'" onclick="'+on_click+'"></a> <a class="fa fa-file-pdf-o '+
+			pay_c +'" '+url3+' method="POST" target="_blank"></a></div>';
 		}
 
 		//switch element when editing inline
@@ -483,7 +561,7 @@
 			}, 0);
 		}
 
-var i=0;
+		var i=0;
 		//navButtons
 		jQuery(grid_selector).jqGrid('navGrid',pager_selector,
 			{ 	//navbar options
@@ -576,8 +654,7 @@ var i=0;
 					form.closest('.ui-jqdialog').find('.ui-jqdialog-title').wrap('<div class="widget-header" />')
 				}
 			}
-		)
-		.jqGrid('navButtonAdd',pager_selector,{
+		).jqGrid('navButtonAdd',pager_selector,{
 				keys: true,
 				caption:"",
 				buttonicon:"ace-icon fa fa-pencil blue",
@@ -652,11 +729,25 @@ var i=0;
 			},
 		});
 
+
 		$(document).one('ajaxloadstart.page', function(e) {
 			$.jgrid.gridDestroy(grid_selector);
 			$('.ui-jqdialog').remove();
 		});
 	});
+
+	function kwitansi(cellvalue,date,nokiwitansi){
+
+		$('#form_kwitansi').trigger("reset");
+		$('.tgl').datepicker('update', '');
+
+		$('#id_kwn').val(cellvalue);
+		if (date!=='null') $('#tgl_pay').datepicker("setDate",date);
+		if (nokiwitansi!=='null') $('#no_kwn').val(nokiwitansi);
+
+		$('#modal_kwitansi').modal('show');
+		// alert(date);
+	}
 </script>
 
 @endsection

@@ -103,6 +103,7 @@ class PDFController extends Controller
 
         $view =  \View::make($page, compact('result','query','kurs','tempo'))->render();
         // return view($page, compact('result','mulai'));
+        $customPaper = array(0,0,595.276,935.4331);
       break;
       case 'invoice-dompdf2':
         $result = DB::table('tb_ppjks')
@@ -165,6 +166,36 @@ class PDFController extends Controller
 
         $view =  \View::make($page, compact('result','query','kurs'))->render();
         // return view($page, compact('result','mulai'));
+        $customPaper = array(0,0,595.276,935.4331);
+      break;
+      case 'kwitansi-dompdf':
+        // dd($request->input());
+        $query = DB::table('tb_inv')
+          ->leftJoin('tb_ppjks', function ($join) {
+            $join->on('tb_ppjks.id','tb_inv.ppjks_id');
+          })
+          ->leftJoin('tb_kapals', function ($join) {
+            $join->on('tb_kapals.id','tb_ppjks.kapals_id');
+          })
+          ->where(function ($query) use ($request){
+            $query->where('ppjks_id',$request->id);
+          })
+          // ->select(
+          //   'tb_jettys.code as jettyCode',
+          //   'tb_jettys.name as jettyName',
+          //   'tb_dls.*'
+          // )
+          // ->orderBy('tundaon', 'asc')
+          ->get();
+
+        $page = 'backend.oprasional.pdfinvoice.'.$request->input('page');
+        $nfile = $request->input('file');
+        $orientation = 'landscape';
+
+        $view =  \View::make($page, compact('query','request'))->render();
+        // return view($page, compact('result','mulai'));
+
+        $customPaper = array(0,0,453.543,566.929);
       break;
     }
 
@@ -172,7 +203,7 @@ class PDFController extends Controller
 
     $pdf = \App::make('dompdf.wrapper');
 
-    $customPaper = array(0,0,595.276,935.4331);
+
     $pdf->setPaper($customPaper,$orientation);
 
     $pdf->loadHTML($view);
