@@ -106,23 +106,31 @@
         <!-- Wrap the content of your PDF inside a main tag -->
 
         <main>
+          <?php
+            $total = 0 ;
+            foreach ($query as $row ) {
+              $total = $total + $row->t_bht;
+            }
+          ?>
           <div style="page-break-after: avoid;">
             <div style="position:absolute; top:127; left:240;"><?php echo $query[0]->no_kwn ?></div>
             <div style="position:absolute; top:141; left:141;"><?php echo "PT. KRAKATAU BANDAR SAMUDRA"?></div>
-            <div style="position:absolute; top:155; left:141;"><?php echo Terbilang($query[0]->t_bht)?></div>
-            <div style="position:absolute; top:178; left:255;"><?php echo number_format($query[0]->t_bht) ?></div>
+            <div style="position:absolute; top:155; left:141;"><?php echo Terbilang($total)?></div>
+            <div style="position:absolute; top:178; left:255;"><?php echo number_format($total) ?></div>
 
-            <div style="position:absolute; top:226;">
+
               <!--  left:42; -->
             <?php
+            $top = 226;
               foreach ($query as $row ) {
                 // echo number_format($row->t_bht);
-                echo '<div style="position:absolute;left:42;">'.$row->noinv.'</div>';
-                echo '<div style="position:absolute;left:141;">'.$row->name.'</div>';
-                echo '<div style="position:absolute;left:226;">'.number_format($row->t_bht).'</div>';
+                echo '<div style="position:absolute; top:'.$top.'; left:42;">'.$row->noinv.'</div>';
+                echo '<div style="position:absolute; top:'.$top.'; left:141;">'.$row->name.'</div>';
+                echo '<div style="position:absolute; top:'.$top.'; right:270;">'.number_format($row->t_bht).'</div>';
+                $top = $top + 14;
               }
             ?>
-            </div>
+
             <div style="position:absolute; top:354; left:377;">Cilegon, <?php echo date('d - M - Y',$query[0]->tgl_pay) ?></div>
           </div>
 

@@ -178,7 +178,7 @@ class PDFController extends Controller
             $join->on('tb_kapals.id','tb_ppjks.kapals_id');
           })
           ->where(function ($query) use ($request){
-            $query->where('ppjks_id',$request->id);
+            $query->where('no_kwn',$request->id);
           })
           // ->select(
           //   'tb_jettys.code as jettyCode',

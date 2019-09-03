@@ -536,7 +536,7 @@
 			if (cell[13]!==''&&cell[14]!==null){
 				pay_c="orange";
 				on_click = "kwitansi('"+cellvalue+"','"+cell[13]+"','"+cell[14]+"')";
-				url3="href='{{ url('oprasional/PDFInvoice') }}?page=kwitansi-dompdf&id="+cellvalue+"'";
+				url3="href='{{ url('oprasional/PDFInvoice') }}?page=kwitansi-dompdf&id="+cell[14]+"'";
 			}
 			// console.log(cell);
 			return '<div><a class="fa fa-file-pdf-o '+ file_c +'" '+url+'  method="POST" target="_blank"></a> <a class="fa fa-file-pdf-o '+
