@@ -195,7 +195,7 @@ class PDFController extends Controller
         $view =  \View::make($page, compact('query','request'))->render();
         // return view($page, compact('result','mulai'));
 
-        $customPaper = array(0,0,453.543,566.929);
+        $customPaper = array(0,0,459.213,566.929);
       break;
     }
 

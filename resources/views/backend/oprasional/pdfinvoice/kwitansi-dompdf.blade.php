@@ -10,84 +10,6 @@
             footer { position: fixed; left: 10px; bottom: -15px; right: 0px;}
             footer .page:after { content: counter(page, normal); }
 
-            header {
-                /* position: fixed;
-                top: -60px;
-                left: 0px;
-                right: 0px;
-                height: 50px; */
-
-                /** Extra personal styles **/
-                /* background-color: #03a9f4;
-                color: white;
-                text-align: center;
-                line-height: 35px; */
-            }
-
-            footer {
-                /* position: fixed;
-                bottom: -60px;
-                left: 0px;
-                right: 0px;
-                height: 50px; */
-
-                /** Extra personal styles **/
-                /* background-color: #03a9f4;
-                color: white;
-                text-align: center;
-                line-height: 35px; */
-            }
-            /* #footer .page:after { content: counter(page, normal); } */
-
-            thead {
-              text-align: center;
-              vertical-align: middle;
-            }
-
-            table {
-                border-collapse: collapse;
-              /* border: 1px dotted; */
-
-              border-spacing: 0;
-              margin-top:10px;
-              width: 100%;
-              margin-bottom:10px;
-              max-height:50px;
-              height:40px ;
-              /* font-family :"Arial", Helvetica, sans-serif !important; */
-              font-size: 12px;
-            }
-            .right{
-                border-right: 1px dotted;
-            }
-            .left{
-              border-left: 1px dotted;
-            }
-            .top{
-                border-top: 1px dotted;
-            }
-            .button{
-            	border-bottom: 1px dotted;
-            }
-
-            .zebra tr:nth-child(even) {
-                 background-color: #f9f9f9;
-            }
-            .zebra tr:nth-child(odd) {
-                 background-color: #DCDCDC;
-            }
-            .blue {
-                 background-color: #5373D1;
-                 color: #FFFFFF;
-            }
-            .kuning {
-                 background-color: #FFFF00;
-                 /* color: #FFFFFF; */
-            }
-            .ungu {
-                 background-color: #800080;
-                 color: #FFFFFF;
-            }
         </style>
     </head>
     <!-- <body style="font-family:'Arial', Helvetica, sans-serif ; font-size:12px;"> -->
@@ -113,10 +35,10 @@
             }
           ?>
           <div style="page-break-after: avoid;">
-            <div style="position:absolute; top:127; left:240;"><?php echo $query[0]->no_kwn ?></div>
-            <div style="position:absolute; top:141; left:141;"><?php echo "PT. KRAKATAU BANDAR SAMUDRA"?></div>
+            <div style="position:absolute; top:118; left:240;"><?php echo $query[0]->no_kwn ?></div>
+            <div style="position:absolute; top:141; left:141;"><b><?php echo "PT. KRAKATAU BANDAR SAMUDRA"?></b></div>
             <div style="position:absolute; top:155; left:141;"><?php echo Terbilang($total)?></div>
-            <div style="position:absolute; top:178; left:255;"><?php echo number_format($total) ?></div>
+            <div style="position:absolute; top:173; right:270;"><?php echo number_format($total) ?></div>
 
 
               <!--  left:42; -->
@@ -124,14 +46,15 @@
             $top = 226;
               foreach ($query as $row ) {
                 // echo number_format($row->t_bht);
-                echo '<div style="position:absolute; top:'.$top.'; left:42;">'.$row->noinv.'</div>';
-                echo '<div style="position:absolute; top:'.$top.'; left:141;">'.$row->name.'</div>';
+                echo '<div style="position:absolute; top:'.$top.'; left:69; font-size: 10px;">'.$row->noinv.'</div>';
+                echo '<div style="position:absolute; top:'.$top.'; left:135;">'.$row->name.'</div>';
                 echo '<div style="position:absolute; top:'.$top.'; right:270;">'.number_format($row->t_bht).'</div>';
                 $top = $top + 14;
               }
             ?>
 
-            <div style="position:absolute; top:354; left:377;">Cilegon, <?php echo date('d - M - Y',$query[0]->tgl_pay) ?></div>
+            <div style="position:absolute; top:340; left:405;"><?php echo date('d - M - Y',$query[0]->tgl_pay) ?></div>
+            <div style="position:absolute; top:433; left:396; text-align: center;"><b>H.ARIEF RIVA'I, SH, MH, M.SI</b></br>Derektur Utama<</div>
           </div>
 
             <!-- <p style="page-break-after: never;">
