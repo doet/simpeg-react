@@ -58,6 +58,20 @@ class InvoiceApiController extends Controller
         $responce[]=array('a'=>$search);
         array_push($responce,$query);
       break;
+      case 'nomor_akhir':
+        $query = DB::table('tb_ppjks')
+          ->where(function ($query) use ($request){
+              // $query->where('tglinv','!=','');
+          })->get();
+        foreach($query as $row) {
+          $faktur[] = substr($row->pajak, -8);
+          $noinv[] = substr($row->noinv, 0,4);
+        }
+        $responce['faktur']='010.000.19.'.max($faktur);
+        $responce['noinv']=max($noinv)+1;
+        array_push($responce,$query);
+      break;
+
     }
     return  Response()->json($responce);
   }

@@ -664,6 +664,7 @@
 					$('.tgl').datepicker('update', '');
 					var gsr = $(this).jqGrid('getGridParam','selrow');
 					if(gsr){
+
 						tglinv = $(this).jqGrid('getCell',gsr,'tglinv');
 						pajak = $(this).jqGrid('getCell',gsr,'pajak');
 						noinv = $(this).jqGrid('getCell',gsr,'noinv');
@@ -672,10 +673,16 @@
 						rute = $(this).jqGrid('getCell',gsr,'rute');
 						selisih = $(this).jqGrid('getCell',gsr,'selisih');
 
+						var posdata= {'datatb':'nomor_akhir'};
+						getparameter("{{url('/api/oprasional/invoice/json')}}",posdata,function(data){
+							if (pajak === "")$('#pajak').val(data.faktur); else $('#pajak').val(pajak);
+							if (noinv === "")$('#noinv').val(data.noinv+'-00/AF19.XX'); else $('#noinv').val(noinv);
+						});
+
 						// if (noinv)$('#noinv').val(noinv); else $('#noinv').val("0000-00/AF19.XX");
-						console.log($('#noinv').val());
-						$('#pajak').val(pajak);
-						$('#noinv').val(noinv);
+						// console.log($('#noinv').val());
+						// $('#pajak').val(pajak);
+						// $('#noinv').val(noinv);
 						$('#refno').val(refno);
 						$('#selisih').val(selisih);
 
