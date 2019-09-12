@@ -441,7 +441,14 @@
 		*/
 		var subgrid_data =
 		[
-		 {id:"", name:"", qty: ''},
+		 {id:"1", name:"sub grid item 1", qty: 11},
+		 {id:"2", name:"sub grid item 2", qty: 3},
+		 {id:"3", name:"sub grid item 3", qty: 12},
+		 {id:"4", name:"sub grid item 4", qty: 5},
+		 {id:"5", name:"sub grid item 5", qty: 2},
+		 {id:"6", name:"sub grid item 6", qty: 9},
+		 {id:"7", name:"sub grid item 7", qty: 3},
+		 {id:"8", name:"sub grid item 8", qty: 8}
 		];
 
 
@@ -460,17 +467,17 @@
 			},
 			//for this example we are using local data
 			subGridRowExpanded: function (subgridDivId, rowId) {
-				// alert(rowId);
+				alert('rowId : ',subgridDivId);
 				var subgridTableId = subgridDivId + "_t";
 				$("#" + subgridDivId).html("<table id='" + subgridTableId + "'></table>");
 				$("#" + subgridTableId).jqGrid({
 					datatype: 'local',
 					data: subgrid_data,
-					colNames: ['dari','ke','Total'],
+					colNames: ['No','Item Name','Qty'],
 					colModel: [
-						{ name: 'id', width: 150 },
+						{ name: 'id', width: 50 },
 						{ name: 'name', width: 150 },
-						{ name: 'qty', width: 150 }
+						{ name: 'qty', width: 50 }
 					]
 				});
 			},
