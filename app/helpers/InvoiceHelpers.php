@@ -5,6 +5,77 @@ date_default_timezone_set('Asia/Jakarta');
 use DB;
 
 class InvoiceHelpers {
+  public static function items_inv($id_ppjk) {
+    $query = DB::table('tb_dls')
+      ->leftJoin('tb_jettys', function ($join) {
+        $join->on('tb_jettys.id','tb_dls.jettys_id');
+      })
+      ->where(function ($query) use ($id_ppjk){
+        $query->where('tb_dls.ppjks_id',$id_ppjk);
+      })->orderBy('date', 'asc')
+      ->select(
+        'tb_jettys.code as jettyCode',
+        'tb_jettys.name as jettyName',
+        'tb_dls.*'
+      )->get();
+
+    $i=0;
+    foreach ($query as $row ) {
+      $isi[$i]['id'] = $i;
+      if ($row->ops=='Berth'){
+        if ($row->shift!='on'){
+          $isi[$i]['dari'] = 'Laut/<i>Sea</i>';
+          $isi[$i]['ke'] = $row->jettyName;
+          $dari=$row->jettyName;
+          $isi[$i]['daria']=$isi[$i]['kea']=substr($row->jettyCode,0,1);
+        } else {
+          $isi[$i]['dari'] = $dari;
+          $isi[$i]['ke'] = $row->jettyName;
+          $dari=$row->jettyName;
+          $isi[$i]['daria']=$isi[$i-1]['kea'];
+          $isi[$i]['kea']=substr($row->jettyCode,0,1);
+        }
+      }
+
+      if ($row->ops=='Unberth'){
+        if ($row->shift!='on'){
+          $isi[$i]['dari'] = $dari;
+          $isi[$i]['ke'] = 'Laut/<i>Sea</i>';
+          $tundaon='';
+          $isi[$i]['daria']=$isi[$i-1]['kea'];
+          $isi[$i]['kea']=$isi[$i-1]['kea'];
+        } else {
+          // $isi[$i]['dari'] = $dari;
+          $dari=$row->jettyName;
+          $tundaon=$row->tundaon;
+          $isi[$i]['daria']='';
+          $isi[$i]['kea']='';
+        }
+      }
+
+
+      if ($row->ops=='Berth'){
+        if ($row->shift!='on'){
+          // $totalTarif = $isi[$i]['jumlahTarif']+$totalTarif;
+          $i++;
+        } else {
+          // $totalTarif = $isi[$i]['jumlahTarif']+$totalTarif;
+          $i++;
+        }
+      }
+
+      if ($row->ops=='Unberth'){
+        if ($row->shift!='on'){
+          // $totalTarif = $isi[$i]['jumlahTarif']+$totalTarif;
+          $i++;
+        } else {
+
+        }
+      }
+    }
+  
+    return $isi;
+  }
   public static function selisih_waktu($won,$woff) {
     $responce['selisihWaktu']=number_format(($woff-$won)/3600,2);
     $exWaktu = explode(".",$responce['selisihWaktu']);

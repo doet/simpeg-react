@@ -246,8 +246,26 @@ class InvoiceApiController extends Controller
               'tb_ppjks.*'
             );
         break;
+        case 'invoice-sub':
+          $query = DB::table('tb_dls')
+            ->leftJoin('tb_jettys', function ($join) {
+              $join->on('tb_jettys.id','tb_dls.jettys_id');
+            })
+            ->where(function ($query) use ($id_ppjk){
+              $query->where('tb_dls.ppjks_id',$id_ppjk);
+            })->orderBy('date', 'asc')
+            ->select(
+              'tb_jettys.code as jettyCode',
+              'tb_jettys.name as jettyName',
+              'tb_dls.*'
+            )->get();
+            $dari = $ke = 0;
+        break;
       }
+
       $count = $qu->count();
+
+      // $count = $qu->count();
 
       if( $count > 0 ) {
         $total_pages = ceil($count/$limit);    //calculating total number of pages
@@ -270,6 +288,7 @@ class InvoiceApiController extends Controller
 
       $i=0;
       // dd($query);
+
       foreach($query as $row) {
         switch ($datatb) {
           case 'invoice':   // Variabel Master
@@ -305,6 +324,15 @@ class InvoiceApiController extends Controller
             );
             $i++;
           break;
+          case 'invoice-sub':   // Variabel Master
+            $responce['rows'][$i]['id'] = $row->id;
+            $responce['rows'][$i]['cell'] = array(
+              $row->id,
+              $dari,
+              $ke
+            );
+            $i++;
+          break;
         }
       }
       if(!isset($responce['rows'])){
@@ -312,7 +340,72 @@ class InvoiceApiController extends Controller
         $responce['rows'][0]['cell']=array('');
       }
       // print_r(empty($responce['rows']));
-      // $responce['tambah'] = strtotime($mulai);
+      $responce['xcoba'] = $query;
+      return  Response()->json($responce);
+  }
+  public function jqgrid_sub(Request $request){
+
+      $datatb = $request->input('datatb', '');
+      // $cari = $request->input('cari', '0');
+
+      $page = $request->input('page', '1');
+      $limit = $request->input('rows', '10');
+      $sord = $request->input('sord', 'asc');
+      $sidx = $request->input('sidx', 'id');
+
+      $mulai = $request->input('start', '0');
+      $akhir = $request->input('end', '0');
+      switch ($datatb) {
+        case 'invoice':
+          $qu = InvoiceHelpers::items_inv($request->cari);
+          $dari = $ke = 0;
+        break;
+      }
+
+      $count = count($qu);
+
+      // $count = $qu->count();
+
+      if( $count > 0 ) {
+        $total_pages = ceil($count/$limit);    //calculating total number of pages
+      } else {
+        $total_pages = 0;
+      }
+
+      if ($page > $total_pages) $page=$total_pages;
+      $start = $limit*$page - $limit; // do not put $limit*($page - 1)
+      $start = ($start<0)?0:$start;  // make sure that $start is not a negative value
+
+      $responce['page'] = $page;
+      $responce['total'] = $total_pages;
+      $responce['records'] = $count;
+
+  // Mengambil Nilai Query //
+      $query = $qu;
+        // ->orderBy($sidx, $sord)
+        // ->skip($start)->take($limit)
+        // ->get();
+
+      $i=0;
+      // dd($query);
+      foreach($query as $row) {
+        switch ($datatb) {
+          case 'invoice':   // Variabel Master
+            $responce['rows'][$i]['id'] = $row['id'];
+            $responce['rows'][$i]['cell'] = array(
+              $row['id'],
+              $row['dari'],
+              $row['ke']
+            );
+            $i++;
+          break;
+        }
+      }
+      $responce['cob'] = $qu;
+      if(!isset($responce['rows'])){
+        $responce['rows'][0]['id'] = '';
+        $responce['rows'][0]['cell']=array('');
+      }
       return  Response()->json($responce);
   }
 }

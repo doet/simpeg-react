@@ -68,6 +68,7 @@ Route::prefix('oprasional')->group(function(){
 
   Route::prefix('invoice')->group(function(){
     Route::post('/jqgrid',          'Oprasional\Invoice\InvoiceApiController@jqgrid');
+    Route::post('/jqgrid_sub',      'Oprasional\Invoice\InvoiceApiController@jqgrid_sub');
     Route::post('/json',            'Oprasional\Invoice\InvoiceApiController@json');
     Route::post('/cud',             'Oprasional\Invoice\InvoiceApiController@cud');
     Route::match(['get', 'post'],	  'autoc','Oprasional\Invoice\InvoiceApiController@autoc');

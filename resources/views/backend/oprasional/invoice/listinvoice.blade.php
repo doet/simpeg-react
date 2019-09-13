@@ -464,13 +464,18 @@
 				var subgridTableId = subgridDivId + "_t";
 				$("#" + subgridDivId).html("<table id='" + subgridTableId + "'></table>");
 				$("#" + subgridTableId).jqGrid({
-					datatype: 'local',
-					data: subgrid_data,
-					colNames: ['dari','ke','Total'],
+					datatype: "json",            //supported formats XML, JSON or Arrray
+		      mtype : "post",
+		      postData: {datatb:'invoice', cari: rowId, _token:'{{ csrf_token() }}'},
+					url:"{{url('/api/oprasional/invoice/jqgrid_sub')}}",
+					sortname:'date',
+					sortorder: 'asc',
+					colNames: ['id','dari','ke','Total'],
 					colModel: [
-						{ name: 'id', width: 150 },
-						{ name: 'name', width: 150 },
-						{ name: 'qty', width: 150 }
+						{ name: 'id', width: 50 },
+						{ name: 'dari', width: 150 },
+						{ name: 'ke', width: 150 },
+						{ name: 'total', width: 150 }
 					]
 				});
 			},
