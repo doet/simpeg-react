@@ -190,14 +190,33 @@ class InvoiceApiController extends Controller
 
       break;
       case 'edit_nilai':
-        // dd($request->input());
-        // if ($request->input('tgl_pay')!='')$tgl_pay=strtotime($request->input('tgl_pay'));else $tgl_pay='';
-        // $datanya=array(
-        //   'tgl_pay'=>$tgl_pay,
-        //   'no_kwn'=>$request->input('no_kwn'),
-        // );
-        // $dddd = DB::table('tb_inv')->where('ppjks_id', $id);
-        // $dddd->update($datanya);
+        $nilai  = InvoiceHelpers::items_inv($request->pk);
+        $jumlahTarif_old = $nilai[$request->name]['jumlahTarif'];
+
+        $qu = DB::table('tb_ppjks')->where('id', $request->pk);
+        $query = $qu->first();
+        if(!empty($query->selisih)) $selisih_old = array_map("floatval",explode(",",$query->selisih)); else $selisih_old = array();
+
+        if (count($selisih_old)>$request->name)$n = count($selisih_old); else $n = $request->name;
+        for ($x = 0; $x <= $n; $x++){
+          if(empty($selisih_old[$x]))$selisih_old[$x] = 0;
+        };
+        // dd($selisih_old);
+
+        // dd($jumlahTarif_new[$request->name]);
+        $value = (float)str_replace(",","",$request->value);
+        $margin = $value - $jumlahTarif_old ;
+
+        $selisih_new = $selisih_old;
+        $selisih_new[$request->name] = $margin;
+        $selisih_new = join(",",$selisih_new);
+        // dd($selisih_new);
+
+        $datanya=array(
+          'selisih'=>$selisih_new,
+        );
+
+        $qu->update($datanya);
 
         $responce = array(
           'status' => "success",

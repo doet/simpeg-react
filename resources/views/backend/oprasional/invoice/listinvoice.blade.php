@@ -252,12 +252,10 @@
 							</div>
 						</div>
 					</div>
-					tst
-					<input id="txt" runat="server" value="121212121212121"></input>
+
 					<table id="grid-table"></table>
 					<div id="grid-pager"></div>
-					<input type="text" id="nilai" name="nilai" value="" class="input-sm form-control"  style="text-align: right;" onkeyup="formatNumber(this);" onchange="formatNumber(this);"/>
-          <!-- PAGE CONTENT ENDS -->
+					 <!-- PAGE CONTENT ENDS -->
         </div><!-- /.col -->
       </div><!-- /.row -->
 @endsection
