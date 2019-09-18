@@ -361,8 +361,8 @@ lacinia ornare, quam ante aliquam nisi, eu iaculis leo purus venenatis dui.
 
 @section('js')
 <!-- page specific plugin scripts -->
-    <script src="{{ asset('/js/jquery-ui.min.js') }}"></script>  
-    <script src="{{ asset('/js/jquery.ui.touch-punch.min.js') }}"></script>  
+    <script src="{{ asset('/js/jquery-ui.min.js') }}"></script>
+    <script src="{{ asset('/js/jquery.ui.touch-punch.min.js') }}"></script>
 
 <!-- inline scripts related to this page -->
 <script type="text/javascript">

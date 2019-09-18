@@ -14,6 +14,9 @@
 	<link rel="stylesheet" href="{{ asset('css/bootstrap-multiselect.min.css') }}" />
 	<style>
 		.ui-autocomplete { position: absolute; cursor: default; z-index: 1100 !important;}
+		.editable-input	{
+		    width:120px;
+		}
 	</style>
 @endsection
 
@@ -50,7 +53,7 @@
 				<form id="form">
 					<div class="modal-header">
 						<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-						<h3 class="smaller lighter blue no-margin">Form Laporan </h3>
+						<h3 class="smaller lighter blue no-margin">Form Invoice </h3>
 					</div>
 					<!-- 01 end heder -->
 					<!-- 02 body -->
@@ -110,7 +113,7 @@
 									<div class="form-group">
 										<label class="control-label col-xs-12 col-sm-3 no-padding-right" for="comment">No Invoice</label>
 										<div class="col-xs-12 col-sm-9">
-											<div class="clearfix"><input class="input-sm" type="text" id="noinv" name="noinv"></div>
+											<div class="clearfix"><input class="input-sm input-mask-eyescript" type="text" id="noinv" name="noinv" placeholder="____-__/AF19.__"></div>
 										</div>
 									</div>
 								</div>
@@ -147,6 +150,69 @@
 			</div>
 		</div>
 </div><!-- /.modal-dialog -->
+
+<div id="modal_kwitansi" class="modal fade" tabindex="-1">
+	<div class="modal-dialog modal-lg">
+			<div class="modal-content">
+				<!-- 01 Header -->
+				<form id="form_kwitansi">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+						<h3 class="smaller lighter blue no-margin">Form Kwitansi </h3>
+					</div>
+					<!-- 01 end heder -->
+					<!-- 02 body -->
+					<div class="modal-body">
+						{{ csrf_field() }}
+						<!-- <input type="hidden" name="datatb" value="keluarga" />
+						<input type="hidden" id='oper-1' name="oper" value="add" />-->
+						<input type="hidden" id='id_kwn' name="id" value="id" />
+						<div class="row">
+							<div class="col-xs-12 col-sm-6">
+
+								<div class="row">
+									<div class="form-group">
+										<label class="control-label col-xs-12 col-sm-3 no-padding-right" for="comment">Tgl Kwitansi</label>
+										<div class="col-xs-12 col-sm-9">
+											<div class="clearfix"><input class="input-sm col-sm-4 tgl" type="text" id="tgl_pay" name="tgl_pay" readonly></div>
+										</div>
+									</div>
+								</div>
+								<div class="space-2"></div>
+
+							</div>
+							<div class="col-xs-12 col-sm-6">
+
+								<div class="row">
+									<div class="form-group">
+										<label class="control-label col-xs-12 col-sm-3 no-padding-right" for="comment">No Kwitansi</label>
+										<div class="col-xs-12 col-sm-9">
+											<div class="clearfix"><input class="input-sm col-sm-9" type="text" id="no_kwn" name="no_kwn"></div>
+										</div>
+									</div>
+								</div>
+								<div class="space-2"></div>
+
+							</div>
+						</div>
+
+					</div>
+					<!-- 02 end body -->
+
+					<!-- 03 footer -->
+					<div class="modal-footer">
+						<button class="btn btn-sm btn-danger pull-right" id='save_kwitansi'>
+								<i class="ace-icon fa fa-floppy-o"></i>Save
+						</button>
+						<button class="btn btn-sm btn-danger pull-right" data-dismiss="modal">
+								<i class="ace-icon fa fa-times"></i>Close
+						</button>
+					</div>
+					<!-- 03 end footer Form -->
+				</form>
+			</div>
+		</div>
+</div>
 
       <div class="row">
         <div class="col-xs-12">
@@ -188,6 +254,7 @@
 					</div>
 					<table id="grid-table"></table>
 					<div id="grid-pager"></div>
+					<input type="text" id="nilai" name="nilai" value="" class="input-sm form-control"  style="text-align: right;" onkeyup="formatNumber(this);" onchange="formatNumber(this);"/>
           <!-- PAGE CONTENT ENDS -->
         </div><!-- /.col -->
       </div><!-- /.row -->
@@ -210,9 +277,16 @@
 
 	<script src="{{ asset('/js/chosen.jquery.min.js') }}"></script>
 	<script src="{{ asset('/js/bootstrap-multiselect.min.js') }}"></script>
+	<script src="{{ asset('/js/jquery.maskedinput.min.js') }}"></script>
+
 	<script type="text/javascript">
 
 	jQuery(function($) {
+		$.mask.definitions["9"] = '';
+		$.mask.definitions["Q"] = '[0-9]';
+		$.mask.definitions["X"] = '[A-Z]';
+		$('.input-mask-eyescript').mask("QQQQ-QQ/AF19.XX");
+
 		//editables on first profile page
     $.fn.editable.defaults.mode = 'inline';
     $.fn.editableform.loading = "<div class='editableform-loading'><i class='ace-icon fa fa-spinner fa-spin fa-2x light-blue'></i></div>";
@@ -221,17 +295,11 @@
 
 		$('#psdate').html(moment().format('D MMMM YYYY'));
 		$('#psdate').editable({
-				type: 'adate',
-				date: {
-						//datepicker plugin options
-								format: 'dd MM yyyy',
-						viewformat: 'dd MM yyyy',
-						 weekStart: 1
-
-						//,nativeUI: true//if true and browser support input[type=date], native browser control will be used
-						//,format: 'yyyy-mm-dd',
-						//viewformat: 'yyyy-mm-dd'
-				}
+			type: 'text',
+			title: 'Enter username',
+			success: function(response, newValue) {
+				userModel.set('username', newValue); //update backbone model
+			}
 		}).on('save', function(e, params) {
 				// $(grid_selector).jqGrid('setGridParam',{postData:{start:params.newValue}}).trigger("reloadGrid");
 				// // $('input[name="start"]').val(params.newValue);
@@ -247,6 +315,7 @@
 		$('#dkurs').on('changeDate', function (ev) {
 			kurs($(this).val());
 		});
+
 		function kurs(dkurs){
 			var posdata= {'datatb':'kurs','search':dkurs};
 			// console.log(tglinv);
@@ -324,6 +393,16 @@
 			postsave.post += $("#form").serialize()+'&datatb=inv';
 			saveGrid(postsave);
 		});
+
+		var postsave_kwitansi={};
+		postsave_kwitansi.url = "{{url('/api/oprasional/invoice/cud')}}";
+		postsave_kwitansi.grid = '#grid-table';
+		postsave_kwitansi.modal = '#modal_kwitansi';
+		$('#save_kwitansi').click(function(e) {
+			e.preventDefault();
+			postsave_kwitansi.post = $("#form_kwitansi").serialize()+'&datatb=kwitansi';
+			saveGrid(postsave_kwitansi);
+		});
 //////////////////////////////////////////////
 
 		var grid_selector = "#grid-table";
@@ -333,7 +412,10 @@
 		//resize to fit page size
 		$(window).on('resize.jqGrid', function () {
 			$(grid_selector).jqGrid( 'setGridWidth', parent_column.width() );
-			})
+
+			// grid-table_1314_t
+			// console.log(parent_column.width());
+		})
 
 		//resize on sidebar collapse/expand
 		$(document).on('settings.ace.jqGrid' , function(ev, event_name, collapsed) {
@@ -359,8 +441,96 @@
 			}
 		})
 		*/
+		var subgrid_data =
+		[
+		 {id:"", name:"", qty: ''},
+		];
+
 
 		jQuery(grid_selector).jqGrid({
+
+			//direction: "rtl",
+
+			//subgrid options
+			subGrid : true,
+			//subGridModel: [{ name : ['No','Item Name','Qty'], width : [55,200,80] }],
+			//datatype: "xml",
+			subGridOptions : {
+				plusicon : "ace-icon fa fa-plus center bigger-110 blue",
+				minusicon  : "ace-icon fa fa-minus center bigger-110 blue",
+				openicon : "ace-icon fa fa-chevron-right center orange"
+			},
+			//for this example we are using local data
+			subGridRowExpanded: function (subgridDivId, rowId) {
+				var subgridTableId = subgridDivId + "_t";
+// formatNumber
+
+				var content = '<div class="table-detail">\
+				  <div class="row">\
+						<div class="col-xs-12 col-sm-5">\
+	            <div class="space visible-xs"></div>\
+		            <div class="profile-user-info profile-user-info-striped" id='+ subgridTableId +'>\
+		            </div>\
+			        </div>\
+					  </div>\
+					</div>';
+				$("#" + subgridDivId).html(content)
+
+				var postData = {datatb:'invoice', cari: rowId, _token:'{{ csrf_token() }}'};
+				getparameter("{{url('/api/oprasional/invoice/json')}}",postData,function(data){
+
+					data.data.forEach(function(element){
+						// console.log(element);
+						if(element.jumlahTarif !== 0) element.jumlahTarif = Numbers(element.jumlahTarif);
+						element.jumlahTarif
+						$("#" + subgridTableId ).append('<div class="profile-info-row row">\
+							<div class="profile-info-value col-xs-6 col-sm-5" style="text-align:right"> '+element.dari+' - '+element.ke+' </div>\
+							<div class="profile-info-value col-xs-6 col-sm-7" style="text-align:left">\
+							<span class="x_edit">'+element.jumlahTarif+'</span>\
+							</div>\
+							</div>');
+					});
+
+					$('.x_edit').editable({
+						type: 'text',
+						inputclass:'input-sm',
+						validate: function(value) {
+							alert(value);
+						}
+					}).on('save', function(e, params) {});
+
+					$('.x_edit').on("click",function(){
+						// console.log('test');
+			      $(this).next().find(".editable-input input").attr("onkeyup",'formatNumber(this);')
+			    });
+
+					// $(".number").keyup(function() {
+					//   console.log('test');
+					// });
+				});
+				// $("#" + subgridTableId ).append("<div>test</div>");
+
+				// $("#" + subgridDivId).html("<table id='" + subgridTableId + "'>"+ +"</table>");
+				// $("#" + subgridTableId).jqGrid({
+				// 	datatype: "json",            //supported formats XML, JSON or Arrray
+		    //   mtype : "post",
+		    //   postData: {datatb:'invoice', cari: rowId, _token:'{{ csrf_token() }}'},
+				// 	url:"{{url('/api/oprasional/invoice/jqgrid_sub')}}",
+				// 	sortname:'date',
+				// 	sortorder: 'asc',
+				// 	colNames: ['id','dari','ke','Total','Ubah'],
+				// 	colModel: [
+				// 		{ name: 'id' },
+				// 		{ name: 'dari' },
+				// 		{ name: 'ke' },
+				// 		{ name: 'total' },
+				// 		{ name: 'ubah' }
+				// 	]
+				// });
+
+
+			},
+
 			caption: "Daftar Invoice",
       datatype: "json",            //supported formats XML, JSON or Arrray
       mtype : "post",
@@ -370,7 +540,7 @@
 			sortname:'bstdo',
 			sortorder: 'desc',
 			height: 'auto',
-			colNames:[' ', 'BSTDO','PPJK','Agen','Kapal','Jalur','Date Doc','Faktur Pajak','No. Invoice','Ref No','Selisih','Status','dkurs','Date Pay'],
+			colNames:[' ', 'BSTDO','PPJK','Agen','Kapal','Jalur','Date Doc','Faktur Pajak','No. Invoice','Ref No','Selisih','Status','dkurs','Date Pay','No Kwn'],
 			colModel:[
 				{name:'myac',index:'', width:50, fixed:true, sortable:false, resize:false, align: 'center'},
 				{name:'bstdo',index:'bstdo', width:40,editable: false},
@@ -385,8 +555,8 @@
 				{name:'selisih',index:'selisih', width:60, editable: false},
 				{name:'status',index:'status', width:60, editable: false, formatter:status},
 				{name:'dkurs',index:'dkurs', width:60, editable: false},
-				{name:'inv_pay',index:'inv_pay', width:60, editable: false}
-				// {name:'dkurs',index:'dkurs', width:60, editable: false},
+				{name:'tgl_pay',index:'tgl_pay', width:60, editable: false},
+				{name:'no_kwn',index:'no_kwn', width:60, editable: false}
 			],
 
 			viewrecords : true,
@@ -439,25 +609,30 @@
 			// 		.after('<span class="lbl"></span>');
 			// }, 0);
 			file_c=pay_c="grey";
-			url=url2='';
+			url=url2=url3=on_click='';
 			// console.log(cell);
 			if (cell[5]=="Domestic" && cell[6]!=="" && cell[7]!==null && cell[8]!==null && cell[9]!==null){
 				file_c="orange";
+				on_click = "kwitansi('"+cellvalue+"','"+cell[13]+"','"+cell[14]+"')";
 				url="href='{{ url('oprasional/PDFInvoice') }}?page=invoice-dompdf&id="+cellvalue+"'";
 				url2="href='{{ url('oprasional/PDFInvoice') }}?page=invoice-dompdf2&id="+cellvalue+"'";
 			} else if (cell[5]=="Internasional" && cell[6]!=="" && cell[7]!==null && cell[8]!==null && cell[9]!==null && cell[12]!==""){
 				file_c="orange";
+				on_click = "kwitansi('"+cellvalue+"','"+cell[13]+"','"+cell[14]+"')";
 				url="href='{{ url('oprasional/PDFInvoice') }}?page=invoice-dompdf&id="+cellvalue+"'";
 				url2="href='{{ url('oprasional/PDFInvoice') }}?page=invoice-dompdf2&id="+cellvalue+"'";
 			}// var gsr = $(this).jqGrid('getGridParam','selrow');
 			// tglinv = $(this).jqGrid('getCell',gsr,'tglinv');
-			if (cell[13]!==''&&cell[13]!==null){
+			if (cell[13]!==''&&cell[14]!==null){
 				pay_c="orange";
+				on_click = "kwitansi('"+cellvalue+"','"+cell[13]+"','"+cell[14]+"')";
+				url3="href='{{ url('oprasional/PDFInvoice') }}?page=kwitansi-dompdf&id="+cell[14]+"'";
 			}
 			// console.log(cell);
-			return '<div><a class="fa fa-file-pdf-o '+ file_c +'" '+url+'  method="POST" target="_blank"></a> -	<a class="fa fa-file-pdf-o '+
-			file_c +'" '+url2+' method="POST" target="_blank"></a> - <a class="fa fa-credit-card '+
-			pay_c +'"></a></div>';
+			return '<div><a class="fa fa-file-pdf-o '+ file_c +'" '+url+'  method="POST" target="_blank"></a> <a class="fa fa-file-pdf-o '+
+			file_c +'" '+url2+' method="POST" target="_blank"></a> <a class="fa fa-credit-card '+
+			pay_c +'" onclick="'+on_click+'"></a> <a class="fa fa-file-pdf-o '+
+			pay_c +'" '+url3+' method="POST" target="_blank"></a></div>';
 		}
 
 		//switch element when editing inline
@@ -476,7 +651,7 @@
 			}, 0);
 		}
 
-var i=0;
+		var i=0;
 		//navButtons
 		jQuery(grid_selector).jqGrid('navGrid',pager_selector,
 			{ 	//navbar options
@@ -569,18 +744,17 @@ var i=0;
 					form.closest('.ui-jqdialog').find('.ui-jqdialog-title').wrap('<div class="widget-header" />')
 				}
 			}
-		)
-		.jqGrid('navButtonAdd',pager_selector,{
+		).jqGrid('navButtonAdd',pager_selector,{
 				keys: true,
 				caption:"",
 				buttonicon:"ace-icon fa fa-pencil blue",
 				position:"first",
 				onClickButton:function(){
-
 					$('#form').trigger("reset");
 					$('.tgl').datepicker('update', '');
 					var gsr = $(this).jqGrid('getGridParam','selrow');
 					if(gsr){
+
 						tglinv = $(this).jqGrid('getCell',gsr,'tglinv');
 						pajak = $(this).jqGrid('getCell',gsr,'pajak');
 						noinv = $(this).jqGrid('getCell',gsr,'noinv');
@@ -589,8 +763,16 @@ var i=0;
 						rute = $(this).jqGrid('getCell',gsr,'rute');
 						selisih = $(this).jqGrid('getCell',gsr,'selisih');
 
-						$('#pajak').val(pajak);
-						$('#noinv').val(noinv);
+						var posdata= {'datatb':'nomor_akhir'};
+						getparameter("{{url('/api/oprasional/invoice/json')}}",posdata,function(data){
+							if (pajak === "")$('#pajak').val(data.faktur); else $('#pajak').val(pajak);
+							if (noinv === "")$('#noinv').val(data.noinv+'-00/AF19.XX'); else $('#noinv').val(noinv);
+						});
+
+						// if (noinv)$('#noinv').val(noinv); else $('#noinv').val("0000-00/AF19.XX");
+						// console.log($('#noinv').val());
+						// $('#pajak').val(pajak);
+						// $('#noinv').val(noinv);
 						$('#refno').val(refno);
 						$('#selisih').val(selisih);
 
@@ -604,43 +786,6 @@ var i=0;
 							$('#dkurs').prop('disabled', false);
 							$('#kurs').prop('disabled', false);
 						}
-
-						// console.log($('#dkurs').val());
-						// var oldDate = $('#dkurs').val();
-						// $('#dkurs').on('changeDate', function (ev) {
-						// 	console.log(i);
-						// 	console.log($(this).val());
-						//
-						//
-						//   // if (oldDate !== $(this).val()){
-						// 	// 	// kurs($(this).val());
-						// 	// 	console.log(oldDate +'!=='+ $(this).val());
-						// 	//
-						// 	// }
-						// 	// oldDate = $(this).val();
-						// });i++;
-						//
-						// var oldDate = $('#dkurs').val();
-						// $('#dkurs').datepicker("setDate",dkurs).on('change', function (ev) {
-						// 	alert(oldDate+'-'+$(this).val());
-						// 	oldDate = $(this).val();
-						// });
-						// $('#dkurs').datepicker().on('changeDate', function (ev) {
-						//   if (oldDate !== $(this).val()){
-						// 		// kurs($(this).val());
-						// 		// console.log(oldDate +'!=='+ $(this).val());
-						//
-						// 	}
-						// 	oldDate = $(this).val();
-						// });
-						// if (tglinv!==''){
-						// 	// console.log(dkurs);
-						// 	$('#tglinv').datepicker("setDate",tglinv).on("change", function(e) {
-						// 		// kurs(dkurs);
-						// 		// console.log(dkurs);
-						// 	})
-						// 	// kurs(dkurs);
-						// }
 
 						postsave.post = '';
 						postsave.post += 'oper=edit&id='+gsr+'&';
@@ -681,11 +826,25 @@ var i=0;
 			},
 		});
 
+
 		$(document).one('ajaxloadstart.page', function(e) {
 			$.jgrid.gridDestroy(grid_selector);
 			$('.ui-jqdialog').remove();
 		});
 	});
+
+	function kwitansi(cellvalue,date,nokiwitansi){
+
+		$('#form_kwitansi').trigger("reset");
+		$('.tgl').datepicker('update', '');
+
+		$('#id_kwn').val(cellvalue);
+		if (date!=='null') $('#tgl_pay').datepicker("setDate",date);
+		if (nokiwitansi!=='null') $('#no_kwn').val(nokiwitansi);
+
+		$('#modal_kwitansi').modal('show');
+		// alert(date);
+	}
 </script>
 
 @endsection

@@ -71,7 +71,11 @@ class InvoiceApiController extends Controller
         $responce['noinv']=max($noinv)+1;
         array_push($responce,$query);
       break;
-
+      case 'invoice':
+        $query = InvoiceHelpers::items_inv($request->cari);
+        $responce['data'] = $query;
+        // array_push($responce,$query);
+      break;
     }
     return  Response()->json($responce);
   }
@@ -185,6 +189,22 @@ class InvoiceApiController extends Controller
         );
 
       break;
+      case 'edit_nilai':
+        // dd($request->input());
+        // if ($request->input('tgl_pay')!='')$tgl_pay=strtotime($request->input('tgl_pay'));else $tgl_pay='';
+        // $datanya=array(
+        //   'tgl_pay'=>$tgl_pay,
+        //   'no_kwn'=>$request->input('no_kwn'),
+        // );
+        // $dddd = DB::table('tb_inv')->where('ppjks_id', $id);
+        // $dddd->update($datanya);
+
+        $responce = array(
+          'status' => "success",
+          'msg' => 'ok',
+        );
+
+      break;
     }
 
     return  Response()->json($responce);
@@ -246,21 +266,6 @@ class InvoiceApiController extends Controller
               'tb_ppjks.*'
             );
         break;
-        case 'invoice-sub':
-          $query = DB::table('tb_dls')
-            ->leftJoin('tb_jettys', function ($join) {
-              $join->on('tb_jettys.id','tb_dls.jettys_id');
-            })
-            ->where(function ($query) use ($id_ppjk){
-              $query->where('tb_dls.ppjks_id',$id_ppjk);
-            })->orderBy('date', 'asc')
-            ->select(
-              'tb_jettys.code as jettyCode',
-              'tb_jettys.name as jettyName',
-              'tb_dls.*'
-            )->get();
-            $dari = $ke = 0;
-        break;
       }
 
       $count = $qu->count();
@@ -321,15 +326,6 @@ class InvoiceApiController extends Controller
               $dkurs,
               $row->tgl_pay,
               $row->no_kwn
-            );
-            $i++;
-          break;
-          case 'invoice-sub':   // Variabel Master
-            $responce['rows'][$i]['id'] = $row->id;
-            $responce['rows'][$i]['cell'] = array(
-              $row->id,
-              $dari,
-              $ke
             );
             $i++;
           break;
@@ -395,13 +391,14 @@ class InvoiceApiController extends Controller
             $responce['rows'][$i]['cell'] = array(
               $row['id'],
               $row['dari'],
-              $row['ke']
+              $row['ke'],
+              $row['jumlahWaktu'],
             );
             $i++;
           break;
         }
       }
-      $responce['cob'] = $qu;
+      $responce['cob'] = $query;
       if(!isset($responce['rows'])){
         $responce['rows'][0]['id'] = '';
         $responce['rows'][0]['cell']=array('');

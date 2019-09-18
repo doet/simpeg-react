@@ -14,9 +14,6 @@
 	<link rel="stylesheet" href="{{ asset('css/bootstrap-multiselect.min.css') }}" />
 	<style>
 		.ui-autocomplete { position: absolute; cursor: default; z-index: 1100 !important;}
-		.editable-input	{
-		    width:120px;
-		}
 	</style>
 @endsection
 
@@ -252,11 +249,8 @@
 							</div>
 						</div>
 					</div>
-					tst
-					<input id="txt" runat="server" value="121212121212121"></input>
 					<table id="grid-table"></table>
 					<div id="grid-pager"></div>
-					<input type="text" id="nilai" name="nilai" value="" class="input-sm form-control"  style="text-align: right;" onkeyup="formatNumber(this);" onchange="formatNumber(this);"/>
           <!-- PAGE CONTENT ENDS -->
         </div><!-- /.col -->
       </div><!-- /.row -->
@@ -283,12 +277,6 @@
 
 	<script type="text/javascript">
 
-	$(document).ready(function () {
-    $("#txt").keypress(function () {
-        alert($("#txt").getCursorPosition());
-				$("#txt").setCursorPosition(5);
-    });
-  });
 	jQuery(function($) {
 		$.mask.definitions["9"] = '';
 		$.mask.definitions["Q"] = '[0-9]';
@@ -303,11 +291,17 @@
 
 		$('#psdate').html(moment().format('D MMMM YYYY'));
 		$('#psdate').editable({
-			type: 'text',
-			title: 'Enter username',
-			success: function(response, newValue) {
-				userModel.set('username', newValue); //update backbone model
-			}
+				type: 'adate',
+				date: {
+						//datepicker plugin options
+								format: 'dd MM yyyy',
+						viewformat: 'dd MM yyyy',
+						 weekStart: 1
+
+						//,nativeUI: true//if true and browser support input[type=date], native browser control will be used
+						//,format: 'yyyy-mm-dd',
+						//viewformat: 'yyyy-mm-dd'
+				}
 		}).on('save', function(e, params) {
 				// $(grid_selector).jqGrid('setGridParam',{postData:{start:params.newValue}}).trigger("reloadGrid");
 				// // $('input[name="start"]').val(params.newValue);
@@ -323,7 +317,6 @@
 		$('#dkurs').on('changeDate', function (ev) {
 			kurs($(this).val());
 		});
-
 		function kurs(dkurs){
 			var posdata= {'datatb':'kurs','search':dkurs};
 			// console.log(tglinv);
@@ -470,79 +463,27 @@
 			},
 			//for this example we are using local data
 			subGridRowExpanded: function (subgridDivId, rowId) {
+				// // alert(rowId);
 				var subgridTableId = subgridDivId + "_t";
-// formatNumber
-
-				var content = '<div class="table-detail">\
-				  <div class="row">\
-						<div class="col-xs-12 col-sm-5">\
-	            <div class="space visible-xs"></div>\
-		            <div class="profile-user-info profile-user-info-striped" id='+ subgridTableId +'>\
-		            </div>\
-			        </div>\
-					  </div>\
-					</div>';
-				$("#" + subgridDivId).html(content)
-
-				var postData = {datatb:'invoice', cari: rowId, _token:'{{ csrf_token() }}'};
-				getparameter("{{url('/api/oprasional/invoice/json')}}",postData,function(data){
-					var i=0;
-					data.data.forEach(function(element){
-						// console.log(element);
-						if(element.jumlahTarif !== 0) element.jumlahTarif = Numbers(element.jumlahTarif);
-						element.jumlahTarif
-						$("#" + subgridTableId ).append('<div class="profile-info-row row">\
-							<div class="profile-info-value col-xs-6 col-sm-5" style="text-align:right"> '+element.dari+' - '+element.ke+' </div>\
-							<div class="profile-info-value col-xs-6 col-sm-7" style="text-align:left">\
-							<span data-array="'+i+'" class="x_edit">'+element.jumlahTarif+'</span>\
-							</div>\
-							</div>');
-						i++;
-					});
-
-					$('.x_edit').editable({
-						type: 'text',
-						pk: rowId,
-						params:function(params) {
-				        params.datatb = 'edit_nilai';
-								params.name = $(this).attr('data-array');
-								// params.id = rowId;
-								return params;
-				    },
-						// params:{datatb:'edit_nilai',b:$(this).attr('data-array')},
-    				url: "{{url('/api/oprasional/invoice/cud')}}",
-						inputclass:'input-sm',
-					}).on('save', function(e, params) {}).on("click",function(){
-						console.log($(this).attr('data-array'));
-			      $(this).next().find(".editable-input input").attr("id",'in_'+rowId);
-						$(this).next().find(".editable-input input").attr("onkeyup",'formatNumber(this);');
-			    });
-
-					// $(".number").keyup(function() {
-					//   console.log('test');
-					// });
+				// grid-table_1314_t
+				// console.log(subgridDivId);
+				$("#" + subgridDivId).html("<table id='" + subgridTableId + "'></table>");
+				$("#" + subgridTableId).jqGrid({
+					datatype: "json",            //supported formats XML, JSON or Arrray
+		      mtype : "post",
+		      postData: {datatb:'invoice', cari: rowId, _token:'{{ csrf_token() }}'},
+					url:"{{url('/api/oprasional/invoice/jqgrid_sub')}}",
+					sortname:'date',
+					sortorder: 'asc',
+					colNames: ['id','dari','ke','Total','Ubah'],
+					colModel: [
+						{ name: 'id' },
+						{ name: 'dari' },
+						{ name: 'ke' },
+						{ name: 'total' },
+						{ name: 'ubah' }
+					]
 				});
-				// $("#" + subgridTableId ).append("<div>test</div>");
-
-				// $("#" + subgridDivId).html("<table id='" + subgridTableId + "'>"+ +"</table>");
-				// $("#" + subgridTableId).jqGrid({
-				// 	datatype: "json",            //supported formats XML, JSON or Arrray
-		    //   mtype : "post",
-		    //   postData: {datatb:'invoice', cari: rowId, _token:'{{ csrf_token() }}'},
-				// 	url:"{{url('/api/oprasional/invoice/jqgrid_sub')}}",
-				// 	sortname:'date',
-				// 	sortorder: 'asc',
-				// 	colNames: ['id','dari','ke','Total','Ubah'],
-				// 	colModel: [
-				// 		{ name: 'id' },
-				// 		{ name: 'dari' },
-				// 		{ name: 'ke' },
-				// 		{ name: 'total' },
-				// 		{ name: 'ubah' }
-				// 	]
-				// });
-
-
 			},
 
 			caption: "Daftar Invoice",

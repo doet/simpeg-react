@@ -1,23 +1,57 @@
 /* Load Page */
+new function ($) {
+  $.fn.getCursorPosition = function () {
+      var pos = 0;
+      var el = $(this).get(0);
+      // IE Support
+      if (document.selection) {
+          el.focus();
+          var Sel = document.selection.createRange();
+          var SelLength = document.selection.createRange().text.length;
+          Sel.moveStart('character', -el.value.length);
+          pos = Sel.text.length - SelLength;
+      }
+      // Firefox support
+      else if (el.selectionStart || el.selectionStart == '0')
+          // console.log(el.selectionStart);
+          pos = el.selectionStart;
+      return pos;
+  }
+  //SET CURSOR POSITION
+  $.fn.setCursorPosition = function(pos) {
+    this.each(function(index, elem) {
+      if (elem.setSelectionRange) {
+        elem.setSelectionRange(pos, pos);
+      } else if (elem.createTextRange) {
+        var range = elem.createTextRange();
+        range.collapse(true);
+        range.moveEnd('character', pos);
+        range.moveStart('character', pos);
+        range.select();
+      }
+    });
+    return this;
+  };
+} (jQuery);
 
 function load(page,div){
     var loading_image_large = site+'/public/images/loading_large.gif' ;
     var image_load = "<div class='ajax_loading'><img src='"+loading_image_large+"' /></div>";
 
     $.ajax({
-        url: site+"/"+page,
-        dataType:"html",
-        beforeSend: function(){
-            $(div).html(image_load);
-        },
-        success: function(response){
-            $(div).html(response);
-        },
-        error:function (xhr, ajaxOptions, thrownError){
-            var msg = "Sorry but <b>"+ page +"</b> was an error: "+ xhr.status ;
+      url: site+"/"+page,
+      dataType:"html",
+      beforeSend: function(){
+        $(div).html(image_load);
+      },
+      success: function(response){
+        $(div).html(response);
+      },
+      error:function (xhr, ajaxOptions, thrownError){
+        var msg = "Sorry but <b>"+ page +"</b> was an error: "+ xhr.status ;
 //            var pesan = msg + xhr.status + " /" + xhr.statusText + "  " + xhr.responseText
-            $(div).html(msg);
-        }
+        $(div).html(msg);
+      }
     });
     return false;
 }
@@ -40,25 +74,44 @@ function load(page,div){
 // }
 function Numbers(x) {
   if (!x) return;
-  return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+  return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 }
 
 function formatNumber(input)
 {
-    var num = input.value.replace(/\,/g,'');
-    if(!isNaN(num)){
+  if(input.id) $this = $("#"+input.id);
+  else if (input.name) $this = $("[name = "+input.name+"]");
+  else  return alert('formatNumber() tidak menemukan key id atau name');
+
+  var p = $this.getCursorPosition();
+
+  var cek = input.value.split('.');
+  var num = input.value.replace(/\,/g,'');
+
+  if(!isNaN(num)){
     if(num.indexOf('.') > -1){
-    num = num.split('.');
-    num[0] = num[0].toString().split('').reverse().join('').replace(/(?=\d*\.?)(\d{3})/g,'$1,').split('').reverse().join('').replace(/^[\,]/,'');
-    if(num[1].length > 2){
-    alert('You may only enter two decimals!');
-    num[1] = num[1].substring(0,num[1].length-1);
-    } input.value = num[0]+'.'+num[1];
-    } else{ input.value = num.toString().split('').reverse().join('').replace(/(?=\d*\.?)(\d{3})/g,'$1,').split('').reverse().join('').replace(/^[\,]/,'') };
-    }
-    else{ alert('Anda hanya diperbolehkan memasukkan angka!');
-    input.value = input.value.substring(0,input.value.length-1);
-    }
+      num = num.split('.');
+      num[0] = num[0].toString().split('').reverse().join('').replace(/(?=\d*\.?)(\d{3})/g,'$1,')
+                                .split('').reverse().join('').replace(/^[\,]/,'');
+      if(num[1].length > 2){
+        alert('Hanya diijinkan dua digit desimal');
+        num[1] = num[1].substring(0,num[1].length-1);
+        // $("#"+input.id).setCursorPosition(p);
+      }
+      input.value = num[0]+'.'+num[1];
+
+      n = num[0].length - cek[0].length;
+      $this.setCursorPosition(p+n);
+    } else {
+      input.value = num.toString().split('').reverse().join('').replace(/(?=\d*\.?)(\d{3})/g,'$1,').split('').reverse().join('').replace(/^[\,]/,'')
+      $this.setCursorPosition(p);
+    };
+  } else {
+    alert('Anda hanya diperbolehkan memasukkan angka!');
+    // input.value = input.value.substring(0,input.value.length-1);
+    input.value = input.value.substring(0,p -1) + input.value.substring(p,input.value.length);
+    $this.setCursorPosition(p-1);
+  }
 }
 
 function addCommas(n){
