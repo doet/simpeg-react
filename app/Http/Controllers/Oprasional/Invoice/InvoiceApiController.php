@@ -74,7 +74,27 @@ class InvoiceApiController extends Controller
       case 'invoice':
         $query = InvoiceHelpers::items_inv($request->cari);
         $responce['data'] = $query;
-        // array_push($responce,$query);
+
+        $qu = DB::table('tb_ppjks')->where('tb_ppjks.id',$request->cari)
+          // ->rightJoin('tb_inv', function ($join) {
+          //   $join->on('tb_inv.ppjks_id','tb_ppjks.id');
+          // })
+          ->select(
+            'tb_ppjks.selisih as selisih'
+            // 'tb_inv.*'
+            )
+          ->first();
+        // if ($qu!=null)$responce['jml'] = $qu; else {
+        //   // $datainv = array(
+        //   //   'ppjks_id'=>0,
+        //   //   // 't_pandu'=>'1',
+        //   //   't_tunda'=>0,
+        //   //   'bht_bnbp'=>0,
+        //   //   'pph'=>0,
+        //   //   't_bht'=>0
+        //   // );
+        //   $responce['jml'] = $datainv;
+        // }
       break;
     }
     return  Response()->json($responce);
@@ -156,7 +176,7 @@ class InvoiceApiController extends Controller
         $dddd = DB::table('tb_ppjks')->where('id', $id);
         $dddd->update($datanya);
 
-        $kurs = str_replace('.', '', $request->input('kurs'));
+        $kurs = str_replace(',','', $request->input('kurs'));
         $datakurs=array(
           'date'=>strtotime($request->input('dkurs')),
           'nilai'=>$kurs,
@@ -168,9 +188,23 @@ class InvoiceApiController extends Controller
             DB::table('tb_kurs')->insert($datakurs);
           }
         }
+        $nilai  = InvoiceHelpers::items_inv($id);
+        $inv = $dddd->first();
+        if ($inv->dkurs == null && $nilai['data']['rute'] != '$')$inv->dkurs = 1;
+        if ($inv->date_issue && $inv->dkurs && $inv->pajak && $inv->noinv && $inv->refno){
+          // dd($nilai['jml_ori']);
+          InvoiceHelpers::nilai_inv(
+            $id,
+            $nilai['jml_ori']['jumlahTarif'],
+            $nilai['jml_ori']['bhtPNBP'],
+            $nilai['jml_ori']['ppn'],
+            $nilai['jml_ori']['totalinv']
+          );
+        };
         $responce = array(
           'status' => "success",
           'msg' => 'ok',
+          'data' => $inv->dkurs
         );
       break;
       case 'kwitansi':
@@ -191,36 +225,57 @@ class InvoiceApiController extends Controller
       break;
       case 'edit_nilai':
         $nilai  = InvoiceHelpers::items_inv($request->pk);
-        $jumlahTarif_old = $nilai[$request->name]['jumlahTarif'];
+        $i = count($nilai['isi']);
+
+        if(empty($nilai['isi'][$request->name])){
+          // $db = DB::table('tb_inv')->where('ppjks_id', $request->pk);
+          // $inv = $db->first();
+          $tmp[$i] = $nilai['isi'][$i]['jumlahTarif'] = (int)$nilai['jml_ori']['jumlahTarif'];
+          $tmp[$i+1] = $nilai['isi'][$i+1]['jumlahTarif'] = (int)$nilai['jml_ori']['bhtPNBP'];
+          $tmp[$i+2] = $nilai['isi'][$i+2]['jumlahTarif'] = (int)$nilai['jml_ori']['ppn'];
+          $tmp[$i+3] = $nilai['isi'][$i+3]['jumlahTarif'] = (int)$nilai['jml_ori']['totalinv'];
+          $tmp[$request->name] = (int)str_replace(",","",$request->value);
+          // dd($tmp);
+          InvoiceHelpers::nilai_inv(
+            $request->pk,
+            $tmp[$i],
+            $tmp[$i+1],
+            $tmp[$i+2],
+            $tmp[$i+3]
+          );
+        }
+        $jumlahTarif_old = $nilai['isi'][$request->name]['jumlahTarif'];
 
         $qu = DB::table('tb_ppjks')->where('id', $request->pk);
         $query = $qu->first();
         if(!empty($query->selisih)) $selisih_old = array_map("floatval",explode(",",$query->selisih)); else $selisih_old = array();
-
-        if (count($selisih_old)>$request->name)$n = count($selisih_old); else $n = $request->name;
+        if (count($selisih_old)>$request->name)$n = count($selisih_old)-1; else $n = $request->name;
         for ($x = 0; $x <= $n; $x++){
           if(empty($selisih_old[$x]))$selisih_old[$x] = 0;
         };
-        // dd($selisih_old);
+        // dd();
 
         // dd($jumlahTarif_new[$request->name]);
         $value = (float)str_replace(",","",$request->value);
-        $margin = $value - $jumlahTarif_old ;
+        $margin = $value - $nilai['isi'][$request->name]['jumlahTarif'];
 
         $selisih_new = $selisih_old;
-        $selisih_new[$request->name] = $margin;
+        $selisih_new[$request->name] = round($margin,2);
         $selisih_new = join(",",$selisih_new);
-        // dd($selisih_new);
+        // dd(round($margin,2));
+        // dd($margin);
 
         $datanya=array(
           'selisih'=>$selisih_new,
         );
 
+        // dd($datanya);
         $qu->update($datanya);
 
         $responce = array(
           'status' => "success",
           'msg' => 'ok',
+          'rowId' => $datanya
         );
 
       break;
@@ -284,6 +339,7 @@ class InvoiceApiController extends Controller
               // // 'tb_jettys.color as jettyColor',
               'tb_ppjks.*'
             );
+            $qu->orderBy('bstdo', 'desc');
         break;
       }
 

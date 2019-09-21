@@ -91,7 +91,7 @@
 									<div class="form-group">
 										<label class="control-label col-xs-12 col-sm-3 no-padding-right" for="comment">Selisih</label>
 										<div class="col-xs-12 col-sm-9">
-											<div class="clearfix"><input class="input-sm col-sm-9" type="text" id="selisih" name="selisih"></div>
+											<div class="clearfix"><input class="input-sm col-sm-9" type="text" id="selisih" name="selisih" disabled></div>
 										</div>
 									</div>
 								</div>
@@ -447,14 +447,8 @@
 			}
 		})
 		*/
-		var subgrid_data =
-		[
-		 {id:"", name:"", qty: ''},
-		];
-
 
 		jQuery(grid_selector).jqGrid({
-
 			//direction: "rtl",
 
 			//subgrid options
@@ -469,34 +463,76 @@
 			//for this example we are using local data
 			subGridRowExpanded: function (subgridDivId, rowId) {
 				var subgridTableId = subgridDivId + "_t";
-// formatNumber
+				var subgridTableId2 = subgridDivId + "_j";
 
 				var content = '<div class="table-detail">\
 				  <div class="row">\
-						<div class="col-xs-12 col-sm-5">\
-	            <div class="space visible-xs"></div>\
-		            <div class="profile-user-info profile-user-info-striped" id='+ subgridTableId +'>\
-		            </div>\
-			        </div>\
-					  </div>\
-					</div>';
+						<div class="col-xs-12 col-sm-6">\
+	            <div class="profile-user-info profile-user-info-striped" id='+ subgridTableId +'></div>\
+		        </div>\
+						<div class="col-xs-12 col-sm-6">\
+	            <div class="profile-user-info profile-user-info-striped" id='+ subgridTableId2 +'>\
+							</div>\
+		        </div>\
+				  </div>\
+				</div>';
 				$("#" + subgridDivId).html(content)
 
 				var postData = {datatb:'invoice', cari: rowId, _token:'{{ csrf_token() }}'};
 				getparameter("{{url('/api/oprasional/invoice/json')}}",postData,function(data){
+					rowData = $(grid_selector).getRowData(rowId);
+					if(rowData['tglinv'] && rowData['pajak'] && rowData['noinv'] && rowData['refno']) x_edit = 'x_edit'; else x_edit = '';
+
 					var i=0;
-					data.data.forEach(function(element){
-						// console.log(element);
-						if(element.jumlahTarif !== 0) element.jumlahTarif = Numbers(element.jumlahTarif);
-						element.jumlahTarif
+					var datanya = data.data;
+					if (datanya.data.selisih === null) datanya.data.selisih = '0';
+					var match = datanya.data.selisih.split(',');
+					datanya.isi.forEach(function(element){
+						console.log(element);
+						if (match[i] === undefined)match[i] = 0;
+						if(element.jumlahTarif !== 0) element.jumlahTarif = Numbers(element.jumlahTarif+Number(match[i]));
+						// element.jumlahTarif
 						$("#" + subgridTableId ).append('<div class="profile-info-row row">\
 							<div class="profile-info-value col-xs-6 col-sm-5" style="text-align:right"> '+element.dari+' - '+element.ke+' </div>\
 							<div class="profile-info-value col-xs-6 col-sm-7" style="text-align:left">\
-							<span data-array="'+i+'" class="x_edit">'+element.jumlahTarif+'</span>\
+							<span data-array="'+i+'" class="'+x_edit+'">'+element.jumlahTarif+'</span>\
 							</div>\
-							</div>');
+						</div>');
 						i++;
 					});
+					if (match[i] === undefined)match[i] = 0;
+					if (match[i+1] === undefined)match[i+1] = 0;
+					if (match[i+2] === undefined)match[i+2] = 0;
+					if (match[i+3] === undefined)match[i+3] = 0;
+					if(datanya.jml_ori.jumlahTarif !== 0)	datanya.jml_ori.jumlahTarif 	= Numbers(datanya.jml_ori.jumlahTarif+Number(match[i]));
+					if(datanya.jml_ori.bhtPNBP !== 0) 		datanya.jml_ori.bhtPNBP				= Numbers(datanya.jml_ori.bhtPNBP+Number(match[i+1]));
+					if(datanya.jml_ori.ppn !== 0) 				datanya.jml_ori.ppn 					= Numbers(datanya.jml_ori.ppn+Number(match[i+2]));
+					if(datanya.jml_ori.totalinv !== 0) 		datanya.jml_ori.totalinv 			= Numbers(datanya.jml_ori.totalinv+Number(match[i+3]));
+
+					$("#" + subgridTableId2 ).append('<div class="profile-info-row row">\
+						<div class="profile-info-value col-xs-6 col-sm-7" style="text-align:right">Total Tunda</div>\
+						<div class="profile-info-value col-xs-6 col-sm-5" style="text-align:left">\
+							<span data-array="'+i+'" class="'+x_edit+'">'+datanya.jml_ori.jumlahTarif+'</span>\
+						</div>\
+					</div>\
+					<div class="profile-info-row row">\
+						<div class="profile-info-value col-xs-6 col-sm-7" style="text-align:right">Bagi Hasil Tunda setelah PNBP</div>\
+						<div class="profile-info-value col-xs-6 col-sm-5" style="text-align:left">\
+							<span data-array="'+ (i + 1) +'" class="'+x_edit+'">'+datanya.jml_ori.bhtPNBP+'</span>\
+						</div>\
+					</div>\
+					<div class="profile-info-row row">\
+						<div class="profile-info-value col-xs-6 col-sm-7" style="text-align:right">PPn / Total after VAT</div>\
+						<div class="profile-info-value col-xs-6 col-sm-5" style="text-align:left">\
+							<span data-array="'+ (i + 2) +'" class="'+x_edit+'">'+datanya.jml_ori.ppn+'</span>\
+						</div>\
+					</div>\
+					<div class="profile-info-row row">\
+						<div class="profile-info-value col-xs-6 col-sm-7" style="text-align:right">Total Tagihan Bagi Hasil / Total Invoice</div>\
+						<div class="profile-info-value col-xs-6 col-sm-5" style="text-align:left">\
+							<span data-array="'+ (i + 3) +'" class="'+x_edit+'">'+datanya.jml_ori.totalinv+'</span>\
+						</div>\
+					</div>');
 
 					$('.x_edit').editable({
 						type: 'text',
@@ -510,15 +546,16 @@
 						// params:{datatb:'edit_nilai',b:$(this).attr('data-array')},
     				url: "{{url('/api/oprasional/invoice/cud')}}",
 						inputclass:'input-sm',
-					}).on('save', function(e, params) {}).on("click",function(){
-						console.log($(this).attr('data-array'));
+					}).on('save', function(e, params) {
+						// jQuery(grid_selector).jqGrid('setGridParam', { postData: {datatb:'invoice',_token:'{{ csrf_token() }}'} }).trigger("reloadGrid");
+						// jQuery(grid_selector).jqGrid('expandSubGridRow', 1299);
+						// console.log( params.response.rowId);
+
+					}).on("click",function(){
+						// console.log($(this).attr('data-array'));
 			      $(this).next().find(".editable-input input").attr("id",'in_'+rowId);
 						$(this).next().find(".editable-input input").attr("onkeyup",'formatNumber(this);');
 			    });
-
-					// $(".number").keyup(function() {
-					//   console.log('test');
-					// });
 				});
 				// $("#" + subgridTableId ).append("<div>test</div>");
 
@@ -549,7 +586,7 @@
       postData: {datatb:'invoice', _token:'{{ csrf_token() }}'},
 			url:"{{url('/api/oprasional/invoice/jqgrid')}}",
 			editurl: "{{url('/api/oprasional/invoice/cud')}}",//nothing is saved
-			sortname:'bstdo',
+			sortname:'ppjk',
 			sortorder: 'desc',
 			height: 'auto',
 			colNames:[' ', 'BSTDO','PPJK','Agen','Kapal','Jalur','Date Doc','Faktur Pajak','No. Invoice','Ref No','Selisih','Status','dkurs','Date Pay','No Kwn'],

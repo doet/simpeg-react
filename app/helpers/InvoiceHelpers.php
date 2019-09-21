@@ -25,6 +25,7 @@ class InvoiceHelpers {
         'tb_kapals.grt as kapalsGrt',
         'tb_ppjks.dkurs as dkurs',
         'tb_ppjks.rute as rute',
+        'tb_ppjks.selisih as selisih',
         'tb_dls.*'
       )->get();
 
@@ -104,7 +105,9 @@ class InvoiceHelpers {
       $kapalsGrt = $row->kapalsGrt;
 
       $kurs=self::kurs($row->dkurs);
-      $tarif = self::tarif($row->rute,$kapalsGrt,$kurs->nilai);
+      // dd($kurs->nilai);
+      if ($row->rute == '$' && $kurs->nilai == 0) $kurs->nilai=1;
+      $tarif=self::tarif($row->rute,$kapalsGrt,$kurs->nilai);
       // dd($tarif);
       $tariffix = $tarif['tariffix'];
       $isi[$i]['jumlahTariffix']=$tariffix*$isi[$i]['jumlahWaktu'];
@@ -117,17 +120,17 @@ class InvoiceHelpers {
 
       if ($row->ops=='Berth'){
         if ($row->shift!='on'){
-          $totalTarif = $isi[$i]['jumlahTarif']+$totalTarif;
+          $jml['jumlahTarif'] = $totalTarif = $isi[$i]['jumlahTarif']+$totalTarif;
           $i++;
         } else {
-          $totalTarif = $isi[$i]['jumlahTarif']+$totalTarif;
+          $jml['jumlahTarif'] = $totalTarif = $isi[$i]['jumlahTarif']+$totalTarif;
           $i++;
         }
       }
 
       if ($row->ops=='Unberth'){
         if ($row->shift!='on'){
-          $totalTarif = $isi[$i]['jumlahTarif']+$totalTarif;
+           $jml['jumlahTarif'] = $totalTarif = $isi[$i]['jumlahTarif']+$totalTarif;
           $i++;
         } else {
 
@@ -135,24 +138,30 @@ class InvoiceHelpers {
       }
     }
 
+    // dd($totalTarif);
+
     if (substr($headstatus,0,8)=='Cigading' || substr($headstatus,0,8)=='CIGADING'){
       // dd($headstatus);
-      $bht99=$totalTarif*(98/100);
-      $bht5=$bht99*(5/100);
-      $bhtPNBP=$bht99-$bht5;
-      $ppn=$bhtPNBP*(10/100);
-      $totalinv=$bhtPNBP+$ppn;
+      $jml['bht99']=$bht99=$totalTarif*(98/100);
+      $jml['bht5']=$bht5=$bht99*(5/100);
+      $jml['bhtPNBP']=$bhtPNBP=$bht99-$bht5;
+      $jml['ppn']=$ppn=$bhtPNBP*(10/100);
+      $jml['totalinv']=$totalinv=$bhtPNBP+$ppn;
     }
 
     if ($headstatus=='NON CIGADING 1' ||$headstatus=='NON CIGADING 2'){
-      $bht99=$totalTarif*(99/100);
-      $bht5=$bht99*(5/100);
-      $bhtPNBP=$bht99-$bht5;
-      $ppn=$bhtPNBP*(10/100);
-      $totalinv=$bhtPNBP+$ppn;
+      $jml['bht99']=$bht99=$totalTarif*(99/100);
+      $jml['bht5']=$bht5=$bht99*(5/100);
+      $jml['bhtPNBP']=$bhtPNBP=$bht99-$bht5;
+      $jml['ppn']=$ppn=$bhtPNBP*(10/100);
+      $jml['totalinv']=$totalinv=$bhtPNBP+$ppn;
     }
+    $responce['isi'] = $isi;
+    $responce['jml_ori'] = array_map(function($v){return round($v);},$jml);
+    $responce['data']['rute'] = $row->rute;
+    $responce['data']['selisih'] = $row->selisih;
 
-    return $isi;
+    return $responce;
   }
 
   public static function kurs($date) {
@@ -183,6 +192,7 @@ class InvoiceHelpers {
     else if ($daria=='S' && $kea=='S') $mobilisasi=2.5;
     return $mobilisasi;
   }
+
   public static function tarif($rute,$kapalsGrt,$kurs) {
     if($rute == '$') {
       // dd($kurs);
