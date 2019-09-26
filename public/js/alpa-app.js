@@ -161,6 +161,44 @@ function formatNumber2(input)
   }
 }
 
+
+function formatNumber2(input)
+{
+  if(input.id) $this = $("#"+input.id);
+  else if (input.name) $this = $("[name = "+input.name+"]");
+  else  return alert('formatNumber() tidak menemukan key id atau name');
+
+  var p = $this.getCursorPosition();
+
+  var cek = input.value.split('.');
+  var num = input.value.replace(/\,/g,'');
+
+  if(!isNaN(num)){
+    if(num.indexOf('.') > -1){
+      num = num.split('.');
+      num[0] = num[0].toString().split('').reverse().join('').replace(/(?=\d*\.?)(\d{3})/g,'$1,')
+                                .split('').reverse().join('').replace(/^[\,]/,'');
+      if(num[1].length > 2){
+        alert('Hanya diijinkan dua digit desimal');
+        num[1] = num[1].substring(0,num[1].length-1);
+        // $("#"+input.id).setCursorPosition(p);
+      }
+      input.value = num[0]+'.'+num[1];
+
+      n = num[0].length - cek[0].length;
+      $this.setCursorPosition(p+n);
+    } else {
+      input.value = num.toString().split('').reverse().join('').replace(/(?=\d*\.?)(\d{3})/g,'$1,').split('').reverse().join('').replace(/^[\,]/,'')
+      $this.setCursorPosition(p);
+    };
+  } else {
+    alert('Anda hanya diperbolehkan memasukkan angka!');
+    // input.value = input.value.substring(0,input.value.length-1);
+    input.value = input.value.substring(0,p -1) + input.value.substring(p,input.value.length);
+    $this.setCursorPosition(p-1);
+  }
+}
+
 function addCommas(n){
     var rx=  /(\d+)(\d{3})/;
     return String(n).replace(/^\d+/, function(w){
