@@ -490,7 +490,7 @@
 					datanya.isi.forEach(function(element){
 						console.log(element);
 						if (match[i] === undefined)match[i] = 0;
-						if(element.jumlahTarif !== 0) element.jumlahTarif = Numbers(Number(element.jumlahTarif.toFixed(2))+Number(match[i]));
+						if(element.jumlahTarif !== 0) element.jumlahTarif = Numbers((Number(element.jumlahTarif)+Number(match[i])).toFixed(2));
 						// element.jumlahTarif
 						$("#" + subgridTableId ).append('<div class="profile-info-row row">\
 							<div class="profile-info-value col-xs-6 col-sm-5" style="text-align:right"> '+element.dari+' - '+element.ke+' </div>\
