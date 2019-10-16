@@ -41,6 +41,9 @@
     <div class="col-xs-12">
       <!-- PAGE CONTENT BEGINS -->
       <div style="width:90%;">
+        <div align="center">Data Report<br />
+          Priode : <span class="editable" id="psdate"></span> s.d. <span class="editable" id="pedate"></span>
+        </div>
         <canvas id="mycanvas"></canvas>
       </div>
       <!-- PAGE CONTENT ENDS -->
@@ -49,8 +52,53 @@
 @endsection
 
 @section('js')
+<script src="{{ asset('/js/moment.min.js') }}"></script>
+<script src="{{ asset('/js/bootstrap-editable.min.js') }}"></script>
+<script src="{{ asset('/js/ace-editable.min.js') }}"></script>
+<script src="{{ asset('/js/bootstrap-datepicker.min.js') }}"></script>
+
 <script src="{{ asset('js/Chart.bundle.js') }}"></script>
 <script>
+//editables on first profile page
+$.fn.editable.defaults.mode = 'inline';
+$.fn.editableform.loading = "<div class='editableform-loading'><i class='ace-icon fa fa-spinner fa-spin fa-2x light-blue'></i></div>";
+$.fn.editableform.buttons = '<button type="submit" class="btn btn-info editable-submit"><i class="ace-icon fa fa-check"></i></button>'+
+                            '<button type="button" class="btn editable-cancel"><i class="ace-icon fa fa-times"></i></button>';
+$('#psdate').html(moment().startOf('month').format('D MMMM YYYY'));
+$('#psdate').editable({
+    type: 'adate',
+    date: {
+        //datepicker plugin options
+            format: 'dd MM yyyy',
+        viewformat: 'dd MM yyyy',
+         weekStart: 1
+
+        //,nativeUI: true//if true and browser support input[type=date], native browser control will be used
+        //,format: 'yyyy-mm-dd',
+        //viewformat: 'yyyy-mm-dd'
+    }
+}).on('save', function(e, params) {
+    // $('input[name="start"]').val(params.newValue);
+    setdate = start = params.newValue;
+});
+
+$('#pedate').html(moment().endOf('month').format('D MMMM YYYY'));
+$('#pedate').editable({
+    type: 'adate',
+    date: {
+        //datepicker plugin options
+            format: 'dd MM yyyy',
+        viewformat: 'dd MM yyyy',
+         weekStart: 1
+
+        //,nativeUI: true//if true and browser support input[type=date], native browser control will be used
+        //,format: 'yyyy-mm-dd',
+        //viewformat: 'yyyy-mm-dd'
+    }
+}).on('save', function(e, params) {
+    // $('input[name="start"]').val(params.newValue);
+    setdate = end = params.newValue;
+});
 
 function CartJetty(fname){
     var postData = {datatb:'gerakanChart',_token:'{{csrf_token()}}'};

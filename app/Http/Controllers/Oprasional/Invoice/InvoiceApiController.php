@@ -339,7 +339,7 @@ class InvoiceApiController extends Controller
               // // 'tb_jettys.color as jettyColor',
               'tb_ppjks.*'
             );
-            $qu->orderBy('bstdo', 'desc');
+            // $qu->orderBy('bstdo', 'desc');
         break;
       }
 
