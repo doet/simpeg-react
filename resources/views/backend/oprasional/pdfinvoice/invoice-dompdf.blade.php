@@ -211,17 +211,17 @@
 
                   if ($row->ops=='Berth'){
                     if ($row->shift!='on'){
-                      $totalTarif = $isi[$i]['jumlahTarif']+$totalTarif;
+                      $totalTarif = $isi[$i]['jumlahTarif']-$match[$i]+$totalTarif;
                       $i++;
                     } else {
-                      $totalTarif = $isi[$i]['jumlahTarif']+$totalTarif;
+                      $totalTarif = $isi[$i]['jumlahTarif']-$match[$i]+$totalTarif;
                       $i++;
                     }
                   }
 
                   if ($row->ops=='Unberth'){
                     if ($row->shift!='on'){
-                      $totalTarif = $isi[$i]['jumlahTarif']+$totalTarif;
+                      $totalTarif = $isi[$i]['jumlahTarif']-$match[$i]+$totalTarif;
                       $i++;
                     } else {
 
