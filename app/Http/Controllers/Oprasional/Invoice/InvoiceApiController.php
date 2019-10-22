@@ -182,13 +182,14 @@ class InvoiceApiController extends Controller
           }
         }
         $nilai  = InvoiceHelpers::items_inv($id);
+        // dd($nilai['jml_ori']);
         $inv = $dddd->first();
         if ($inv->dkurs == null && $nilai['data']['rute'] != '$')$inv->dkurs = 1;
         if ($inv->date_issue && $inv->dkurs && $inv->pajak && $inv->noinv && $inv->refno){
           // dd($nilai['jml_ori']);
           InvoiceHelpers::nilai_inv(
             $id,
-            $nilai['jml_ori']['jumlahTarif'],
+            $nilai['jml_ori']['totalTarif'],
             $nilai['jml_ori']['bhtPNBP'],
             $nilai['jml_ori']['ppn'],
             $nilai['jml_ori']['totalinv']
