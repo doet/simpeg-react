@@ -480,6 +480,7 @@
 
 				var postData = {datatb:'invoice', cari: rowId, _token:'{{ csrf_token() }}'};
 				getparameter("{{url('/api/oprasional/invoice/json')}}",postData,function(data){
+					// console.log(data.data);
 					rowData = $(grid_selector).getRowData(rowId);
 					if(rowData['tglinv'] && rowData['pajak'] && rowData['noinv'] && rowData['refno']) x_edit = 'x_edit'; else x_edit = '';
 
@@ -488,7 +489,7 @@
 					if (datanya.data.selisih === null) datanya.data.selisih = '0';
 					var match = datanya.data.selisih.split(',');
 					datanya.isi.forEach(function(element){
-						console.log(element);
+						// console.log(element);
 						if (match[i] === undefined)match[i] = 0;
 						if(element.jumlahTarif !== 0) element.jumlahTarif = Numbers((Number(element.jumlahTarif)+Number(match[i])).toFixed(2));
 						// element.jumlahTarif
@@ -504,15 +505,15 @@
 					if (match[i+1] === undefined)match[i+1] = 0;
 					if (match[i+2] === undefined)match[i+2] = 0;
 					if (match[i+3] === undefined)match[i+3] = 0;
-					if(datanya.jml_ori.jumlahTarif !== 0)	datanya.jml_ori.jumlahTarif 	= Numbers(datanya.jml_ori.jumlahTarif+Number(match[i]));
+					// totalTarif
+					if(datanya.jml_ori.totalTarif !== 0)	datanya.jml_ori.totalTarif		= Numbers(datanya.jml_ori.totalTarif+Number(match[i]));
 					if(datanya.jml_ori.bhtPNBP !== 0) 		datanya.jml_ori.bhtPNBP				= Numbers(datanya.jml_ori.bhtPNBP+Number(match[i+1]));
 					if(datanya.jml_ori.ppn !== 0) 				datanya.jml_ori.ppn 					= Numbers(datanya.jml_ori.ppn+Number(match[i+2]));
 					if(datanya.jml_ori.totalinv !== 0) 		datanya.jml_ori.totalinv 			= Numbers(datanya.jml_ori.totalinv+Number(match[i+3]));
-
 					$("#" + subgridTableId2 ).append('<div class="profile-info-row row">\
 						<div class="profile-info-value col-xs-6 col-sm-7" style="text-align:right">Total Tunda</div>\
 						<div class="profile-info-value col-xs-6 col-sm-5" style="text-align:left">\
-							<span data-array="'+i+'" class="'+x_edit+'">'+datanya.jml_ori.jumlahTarif+'</span>\
+							<span data-array="'+i+'" class="'+x_edit+'">'+datanya.jml_ori.totalTarif+'</span>\
 						</div>\
 					</div>\
 					<div class="profile-info-row row">\
@@ -546,13 +547,23 @@
 						// params:{datatb:'edit_nilai',b:$(this).attr('data-array')},
     				url: "{{url('/api/oprasional/invoice/cud')}}",
 						inputclass:'input-sm',
+						success: function(response, newValue){
+							if (response.recalculate !== ''){
+								var index_c = Number($(this).attr('data-array'));
+								alert(JSON.stringify('recalculate data'))
+								$('.x_edit[data-array='+ (index_c+1) +']').editable('setValue',Numbers(response.recalculate.bhtPNBP));
+								$('.x_edit[data-array='+ (index_c+2) +']').editable('setValue',Numbers(response.recalculate.ppn));
+								$('.x_edit[data-array='+ (index_c+3) +']').editable('setValue',Numbers(response.recalculate.totalinv));
+							}
+						}
 					}).on('save', function(e, params) {
 						// jQuery(grid_selector).jqGrid('setGridParam', { postData: {datatb:'invoice',_token:'{{ csrf_token() }}'} }).trigger("reloadGrid");
 						// jQuery(grid_selector).jqGrid('expandSubGridRow', 1299);
 						// console.log( params.response.rowId);
 
+						console.log($(this).attr('data-array'));
 					}).on("click",function(){
-						// console.log($(this).attr('data-array'));
+
 			      $(this).next().find(".editable-input input").attr("id",'in_'+rowId);
 						$(this).next().find(".editable-input input").attr("onkeyup",'formatNumber(this);');
 			    });

@@ -40,68 +40,12 @@ class PDFController extends Controller
     $category = $request->input('page', 'unknow');
     switch ($category) {
       case 'invoice-dompdf':
-        $result = DB::table('tb_ppjks')
-          ->leftJoin('tb_agens', function ($join) {
-            $join->on('tb_agens.id','tb_ppjks.agens_id');
-          })
-          ->leftJoin('tb_kapals', function ($join) {
-            $join->on('tb_kapals.id','tb_ppjks.kapals_id');
-          })
-          // ->leftJoin('tb_jettys', function ($join) {
-          //   $join->on('tb_jettys.id','tb_dls.jettys_id');
-          // })
-          // ->RightJoin('tb_ppjks', function ($join) {
-          //   $join->on('tb_ppjks.id','tb_dls.ppjks_id');
-          // })
-          ->where(function ($query) use ($mulai,$akhir,$request){
-            $query->where('tb_ppjks.bstdo','!=','');
-            $query->where('tb_ppjks.id',$request->input('id',''));
-          })
-          ->select(
-            'tb_agens.name as agenName',
-            'tb_agens.alamat as agenAlamat',
-            'tb_agens.tlp as agenTlp',
-            'tb_kapals.name as kapalsName',
-            'tb_kapals.jenis as kapalsJenis',
-            'tb_kapals.grt as kapalsGrt',
-            // 'tb_jettys.code as jettyCode',
-            // 'tb_jettys.color as jettyColor',
-            // 'tb_kapals.loa as kapalsLoa',
-            // 'tb_kapals.bendera as kapalsBendera',
-            // 'tb_jettys.name as jettyName',
-            'tb_ppjks.*'
-            // 'tb_dls.*'
-          )
-          ->first();
-        $query = DB::table('tb_dls')
-          ->leftJoin('tb_jettys', function ($join) {
-            $join->on('tb_jettys.id','tb_dls.jettys_id');
-          })
-          ->where(function ($query) use ($result){
-            $query->where('tb_dls.ppjks_id',$result->id);
-          })
-          ->select(
-            'tb_jettys.code as jettyCode',
-            'tb_jettys.name as jettyName',
-            'tb_dls.*'
-          )
-          ->orderBy('tundaon', 'asc')
-          ->get();
-
-        $kurs = DB::table('tb_kurs')
-          ->where(function ($query) use ($result){
-            $query->where('date',$result->dkurs);
-          })
-          ->first();
-
-        $tempo = strftime("%d %B %Y",cek_libur($result->tglinv,3));
-
-
+        $helperInv = InvoiceHelpers::items_inv($request->id);
         $page = 'backend.oprasional.pdfinvoice.'.$request->input('page');
         $nfile = $request->input('file');
         $orientation = 'landscape';
 
-        $view =  \View::make($page, compact('result','query','kurs','tempo'))->render();
+        $view =  \View::make($page, compact('helperInv'))->render();
         // return view($page, compact('result','mulai'));
         $customPaper = array(0,0,595.276,935.4331);
       break;
@@ -214,26 +158,4 @@ class PDFController extends Controller
 
     // } else { echo "page tidak dapat di diperbaharui, silahkan kembali kehalaman sebelum";}
   }
-}
-function cek_libur($day,$n,$status='false'){
-  $day1=24*60*60;
-
-  if ($n<0){
-    return $day-$day1;
-  } else {
-
-    $libnas = DB::table('tb_libur')
-      ->where(function ($query) use ($day){
-        $query->where('tgllibur',$day);
-      })
-      ->get();
-    if (!empty($libnas[0]) || date('N', $day)==6 || date('N', $day)==7 ){
-      $n++;
-    }
-    $day = $day+$day1;
-
-    $n--;
-    return cek_libur($day,$n,$status);
-  }
-  return $day;
 }

@@ -1,3 +1,4 @@
+
 <html>
     <head>
         <style>
@@ -118,137 +119,11 @@
                   42438  Tel. 0254-574000  Fax. 574894
                 </b>
               </div>
-              <!-- <div style="position:absolute; top:-85; left:400; width:300">
-                <img src="{{public_path().'\\pic\\logo.png'}}" width="200px">
-              </div> -->
-              <?php
-
-              // dd(moment().subtract(5, 'days').format('YYYY-MM-DD'));
-                $totalTarif = 0;
-                $area=$tundaon=$dari=$ke= '';
-
-                $code=$name=$isi=array();
-                $i=0;
-
-                if ($result->selisih!='')$match=explode(",",$result->selisih);
-
-                foreach ($query as $row ) {
-                  $isi[$i]['i']=$i;
-                  if (substr($row->jettyCode,0,1)=='S'){
-                    if(!in_array('Serang',$code))array_push($code,'Serang');
-                    // $area='Serang';
-                  } else {
-                    if(!in_array('Cilegon',$code))array_push($code,'Cilegon');
-                    // $area='Cilegon';
-                  }
-
-                  if(!in_array($row->jettyCode,$name))array_push($name,$row->jettyCode);
-                  if(in_array('12',$name)){
-                    if ($result->rute == '$') $headstatus=$row->jettyName.' .1'; else $headstatus=$row->jettyName.' .2';
-                  } else {
-                    if ($result->rute == '$') $headstatus='NON CIGADING 1'; else $headstatus='NON CIGADING 2';
-                  }
-
-                  if ($row->ops=='Berth'){
-                    if ($row->shift!='on'){
-                      $isi[$i]['dari'] = 'Laut/<i>Sea</i>';
-                      $isi[$i]['ke'] = $row->jettyName;
-                      $dari=$row->jettyName;
-                      $isi[$i]['daria']=$isi[$i]['kea']=substr($row->jettyCode,0,1);
-                    } else {
-                      $isi[$i]['dari'] = $dari;
-                      $isi[$i]['ke'] = $row->jettyName;
-                      $dari=$row->jettyName;
-                      $isi[$i]['daria']=$isi[$i-1]['kea'];
-                      $isi[$i]['kea']=substr($row->jettyCode,0,1);
-                    }
-                  }
-
-                  if ($row->ops=='Unberth'){
-                    if ($row->shift!='on'){
-                      $isi[$i]['dari'] = $dari;
-                      $isi[$i]['ke'] = 'Laut/<i>Sea</i>';
-                      $tundaon='';
-                      $isi[$i]['daria']=$isi[$i-1]['kea'];
-                      $isi[$i]['kea']=$isi[$i-1]['kea'];
-                    } else {
-                      // $isi[$i]['dari'] = $dari;
-                      $dari=$row->jettyName;
-                      $tundaon=$row->tundaon;
-                      $isi[$i]['daria']='';
-                      $isi[$i]['kea']='';
-                    }
-                  }
-
-                  if ($tundaon!=''){
-                    $isi[$i]['tundaon']=date('d/m/y H:i',$tundaon);
-                    $row->tundaon = $tundaon;
-                  } else $isi[$i]['tundaon']=date('d/m/y H:i',$row->tundaon);
-
-                  $isi[$i]['tundaoff']=date('d/m/y H:i',$row->tundaoff);
-
-                  $selisih = InvoiceHelpers::selisih_waktu($row->tundaon,$row->tundaoff);
-                  $isi[$i]['selisihWaktu']=$selisih['selisihWaktu'];
-                  $isi[$i]['selisihWaktu2']=$selisih['selisihWaktu2'];
-
-                  $isi[$i]['mobilisasi']=InvoiceHelpers::mobilisasi($isi[$i]['daria'],$isi[$i]['kea']);
-
-                  $isi[$i]['jumlahWaktu']=$isi[$i]['mobilisasi']+$isi[$i]['selisihWaktu2'];
-
-                  $kapalsGrt = $result->kapalsGrt;
-
-                  if ($kurs==null) $kurs=(object) array('nilai'=>'');
-                  $tarif = InvoiceHelpers::tarif($result->rute,$result->kapalsGrt,$kurs->nilai);
-
-                  $tariffix = $tarif['tariffix'];
-                  $isi[$i]['jumlahTariffix']=$tariffix*$isi[$i]['jumlahWaktu'];
-
-                  $tarifvar=$tarif['tarifvar'];
-                  $isi[$i]['jumlahTarifvar']=$tarifvar*$kapalsGrt*$isi[$i]['jumlahWaktu'];
-
-                  if (empty($match[$i]))$match[$i]=0;
-                  $isi[$i]['jumlahTarif']=$isi[$i]['jumlahTarifvar']+$isi[$i]['jumlahTariffix']+$match[$i];
-
-                  if ($row->ops=='Berth'){
-                    if ($row->shift!='on'){
-                      $totalTarif = $isi[$i]['jumlahTarif']-$match[$i]+$totalTarif;
-                      $i++;
-                    } else {
-                      $totalTarif = $isi[$i]['jumlahTarif']-$match[$i]+$totalTarif;
-                      $i++;
-                    }
-                  }
-
-                  if ($row->ops=='Unberth'){
-                    if ($row->shift!='on'){
-                      $totalTarif = $isi[$i]['jumlahTarif']-$match[$i]+$totalTarif;
-                      $i++;
-                    } else {
-
-                    }
-                  }
-                }
-                if (substr($headstatus,0,8)=='Cigading' || substr($headstatus,0,8)=='CIGADING'){
-                  // dd($headstatus);
-                  $bht99=$totalTarif*(98/100);
-                  $bht5=$bht99*(5/100);
-                  $bhtPNBP=$bht99-$bht5;
-                  $ppn=$bhtPNBP*(10/100);
-                  $totalinv=$bhtPNBP+$ppn;
-                }
-                if ($headstatus=='NON CIGADING 1' ||$headstatus=='NON CIGADING 2'){
-                  $bht99=$totalTarif*(99/100);
-                  $bht5=$bht99*(5/100);
-                  $bhtPNBP=$bht99-$bht5;
-                  $ppn=$bhtPNBP*(10/100);
-                  $totalinv=$bhtPNBP+$ppn;
-                }
-              ?>
 
               <div style="position:absolute; top:-90; left:600;">
                 <table>
                   <tr>
-                    <td class="left top right button" align="center"><b style="font-size:15px"><?php echo $headstatus?></b></td>
+                    <td class="left top right button" align="center"><b style="font-size:15px"><?php echo $helperInv['data']['headstatus']?></b></td>
                     <td width='50px'>&nbsp;</td>
                     <td style="font-size: 10px;">
                       Distribusi/Distribution<br>
@@ -259,6 +134,7 @@
                     </td>
                   </tr>
                 </table>
+
                 <table >
                   <tr style="font-size:11px; font-weight: bold;">
                     <td class="left top right" align="center" style="background-color: #DCDCDC;" height='18px' width='140px'>&nbsp;Nomor Faktur Pajak</td>
@@ -266,11 +142,11 @@
                     <td class="top right" align="center" style="background-color: #DCDCDC;">&nbsp;Tanggal / <i>Date</i></td>
                   </tr>
                   <tr style="font-size:13px">
-                    <td class="left top right button" align="center" height='18px'>&nbsp;<?php echo $result->pajak?></td>
-                    <td class="top right button" align="center">&nbsp;<?php echo $result->noinv?></td>
+                    <td class="left top right button" align="center" height='18px'>&nbsp;<?php echo $helperInv['data']['ppjk']?></td>
+                    <td class="top right button" align="center">&nbsp;<?php echo $helperInv['data']['noinv']?></td>
                     <!-- ; -->
                     <!-- time() -->
-                    <td class="top right button" align="center">&nbsp;<?php echo strftime("%d %B %Y", $result->tglinv)?></i></td>
+                    <td class="top right button" align="center">&nbsp;<?php echo strftime("%d %B %Y", $helperInv['data']['tglinv'])?></i></td>
                   </tr>
                 </table>
               </div>
@@ -286,29 +162,29 @@
                     <td class="left top right" width="150px">&nbsp;Perusahaan / <i>Company</i></td>
                     <td class="top right" width="300px">&nbsp;<?php //echo $result->agenName?>PT Krakatau Bandar Samudera</td>
                     <td class="top right" width="150px">&nbsp;PPJ No.</td>
-                    <td class="top right">&nbsp;<?php echo $result->ppjk?></td>
+                    <td class="top right">&nbsp;<?php echo $helperInv['data']['ppjk'] ?></td>
                     <td class="top right" width="150px">&nbsp;Nama kapal / <i>Vessel name</i></td>
-                    <td class="top right" width="250px">&nbsp;<?php echo $result->kapalsJenis.'. '.$result->kapalsName?></td>
+                    <td class="top right" width="250px">&nbsp;<?php echo $helperInv['data']['kapalsJenis'].'. '.$helperInv['data']['kapalsName']?></td>
                   </tr>
                   <tr>
                     <td class="left top right" rowspan="2">&nbsp;Alamat / <i>Address</i></td>
                     <td class="top right" rowspan="2">&nbsp;<?php //echo $result->agenAlamat?>Jl. May.Jen S.Parman KM.13 Cigading, Cilegon</td>
                     <td class="top right">&nbsp;Ref.No</td>
-                    <td class="top right">&nbsp;<?php echo $result->refno?></td>
+                    <td class="top right">&nbsp;<?php echo $helperInv['data']['refno']?></td>
                     <td class="top right">&nbsp;GRT(Ton)</td>
-                    <td class="top right">&nbsp;<?php echo number_format($result->kapalsGrt)?></td>
+                    <td class="top right">&nbsp;<?php echo number_format($helperInv['data']['kapalsGrt'])?></td>
                   </tr>
                   <tr>
                     <td class="top right">&nbsp;BASTDO No.</td>
-                    <td class="top right">&nbsp;<?php echo $result->bstdo?></td>
+                    <td class="top right">&nbsp;<?php echo $helperInv['data']['bstdo']?></td>
                     <td class="top right">&nbsp;Jalur</td>
-                    <td class="top right">&nbsp;<?php if($result->rute == '$') echo 'International'; else if($result->rute == 'Rp') echo 'Indonesia'?></td>
+                    <td class="top right">&nbsp;<?php if($helperInv['data']['rute'] == '$') echo 'International'; else if($helperInv['data']['rute'] == 'Rp') echo 'Indonesia'?></td>
                   </tr>
                   <tr>
                     <td class="left top right button">&nbsp;Telepon / <i>Telephone</i></td>
                     <td class="top right button">&nbsp;<?php //echo $result->agenTlp?></td>
                     <td class="top right button">&nbsp;Area</td>
-                    <td class="top right button">&nbsp;<?php if (count($code)>1) echo 'Cilegon/Serang'; else echo $code[0]; ?></td>
+                    <td class="top right button">&nbsp;<?php if (count($helperInv['data']['code'])>1) echo 'Cilegon/Serang'; else echo $helperInv['data']['code'][0]; ?></td>
                     <td class="top right button"></td>
                     <td class="top right button"></td>
                   </tr>
@@ -328,17 +204,17 @@
                     <td class="top right" rowspan="3" width='100px'>Total / <i>Total</i></td>
                   </tr>
                   <tr>
-                    <td class="top right" rowspan="2" width='45px'>Waktu/<br><i>Time</i></td>
+                    <td class="top right" rowspan="2" width='35px'>Waktu/<br><i>Time</i></td>
                     <td class="top right" rowspan="2" width='45px'>Terhitung/<br><i>Counted</i></td>
                     <td class="top right" rowspan="2" width='45px'>Mobilisasi/<br><i>Mobilize</i></td>
-                    <td class="top right" rowspan="2" width='40px'>Total/<br><i>Total</i></td>
+                    <td class="top right" rowspan="2" width='35px'>Total/<br><i>Total</i></td>
 
                     <td class="top right" colspan="2">Tetap / <i>Fixed</i></td>
                     <td class="top right" colspan="3">Variabel / <i>Variable</i></td>
                   </tr>
                   <tr>
-                    <td class="top right" width='120px'>Dari / <i>From</i></td>
-                    <td class="top right" width='120px'>Ke / <i>To</i></td>
+                    <td class="top right" width='115px'>Dari / <i>From</i></td>
+                    <td class="top right" width='115px'>Ke / <i>To</i></td>
 
                     <td class="top right" width='85px'>Tarif / <i>Tariff</i></td>
                     <td class="top right" width='85px'>Jumlah / <i>Amount</i></td>
@@ -352,13 +228,12 @@
                 </thead>
                 <tbody>
               <?php
-              // dd($match);
-
+                if ($helperInv['data']['selisih']!='')$match=explode(",",$helperInv['data']['selisih']);
                 $i=0;
-                foreach ($isi as $row) {
+                foreach ($helperInv['isi'] as $row) {
                   if (empty($match[$i]))$match[$i]=0;
                   echo '<tr>';
-                  echo '<td class="left top right" align="center"> '.$result->lstp.' </td>';
+                  echo '<td class="left top right" align="center"> '.$helperInv['data']['lstp'].' </td>';
                   echo '<td class="top right" align="center"> '.$row['dari'].' </td>';
                   echo '<td class="top right" align="center"> '.$row['ke'].' </td>';
                   echo '<td class="top right" align="center"> Tunda/<i>Towing</i> </td>';
@@ -368,14 +243,14 @@
                   echo '<td class="top right" align="right" style="font-size:12px;"> '.number_format($row['selisihWaktu2'],2).'&nbsp;  </td>';
                   echo '<td class="top right" align="right" style="font-size:12px;"> '.number_format($row['mobilisasi'],2).'&nbsp;  </td>';
                   echo '<td class="top right" align="right" style="font-size:12px;"> '.number_format($row['jumlahWaktu'],2).'&nbsp;  </td>';
-                  echo '<td class="top right" align="right" style="font-size:12px;">Rp. '.number_format($tariffix).'&nbsp;</td>';
+                  echo '<td class="top right" align="right" style="font-size:12px;">Rp. '.number_format($helperInv['data']['tariffix']).'&nbsp;</td>';
                   echo '<td class="top right" align="right" style="font-size:12px;">Rp. '.number_format($row['jumlahTariffix']).'&nbsp;</td>';
-                  if($result->rute == '$') {
-                    echo '<td class="top right" align="right" style="font-size:12px;">Rp. '.number_format($tarifvar).'&nbsp;</td>';
+                  if($helperInv['data']['rute'] == '$') {
+                    echo '<td class="top right" align="right" style="font-size:12px;">Rp. '.number_format($helperInv['data']['tarifvar']).'&nbsp;</td>';
                   } else{
                     echo '<td class="top right" align="right" style="font-size:12px;">Rp. '.number_format($tarifvar,2).'&nbsp;</td>';
                   }
-                  echo '<td class="top right" align="right" style="font-size:12px;"> '.number_format($kapalsGrt).'&nbsp;</td>';
+                  echo '<td class="top right" align="right" style="font-size:12px;"> '.number_format($helperInv['data']['kapalsGrt']).'&nbsp;</td>';
                   echo '<td class="top right" align="right" style="font-size:12px;">Rp. '.number_format($row['jumlahTarifvar']).'&nbsp;</td>';
                   echo '<td class="top right" align="right" style="font-size:12px;">Rp. '.number_format($row['jumlahTarif'],2).'&nbsp;</td>';
                   echo '</tr>';
@@ -386,38 +261,38 @@
                 if (empty($match[$i+2]))$match[$i+2]=0;
                 if (empty($match[$i+3]))$match[$i+3]=0;
                 // if (empty($match[$i+4]))$match[$i+4]=0;
+                // dd($helperInv);
               ?>
 
                 </tbody>
                 <?php
-                // dd($match);
+                // dd(InvoiceHelpers::calculate_total($headstatus,));
                 ?>
                 <tr>
                   <td class="top" colspan="6" rowspan="4"> &nbsp; </td>
                   <td class="top" colspan="9" align="right">Total Tunda&nbsp;</td>
-                  <td class="left top right" align="right"  style="font-size:12px;">Rp. <?php echo number_format($totalTarif+$match[$i])?>&nbsp;</td>
+                  <td class="left top right" align="right"  style="font-size:12px;">Rp. <?php echo number_format($helperInv['jml_ori']['totalTarif']+$match[$i])?>&nbsp;</td>
                 </tr>
                 <tr>
                   <td colspan="9" align="right">Bagi Hasil Tunda setelah PNBP&nbsp;</td>
-                  <td class="left top right" align="right"  style="font-size:12px;">Rp. <?php echo number_format($bhtPNBP+$match[$i+1])?>&nbsp;</td>
+                  <td class="left top right" align="right"  style="font-size:12px;">Rp. <?php echo number_format($helperInv['jml_ori']['bhtPNBP']+$match[$i+1])?>&nbsp;</td>
                 </tr>
                 <tr>
                   <td colspan="9" align="right">PPn / Total after VAT&nbsp;</td>
-                  <td class="left top right" align="right"  style="font-size:12px;">Rp. <?php echo number_format($ppn+$match[$i+2])?>&nbsp;</td>
+                  <td class="left top right" align="right"  style="font-size:12px;">Rp. <?php echo number_format($helperInv['jml_ori']['ppn']+$match[$i+2])?>&nbsp;</td>
                 </tr>
                 <tr>
                   <td colspan="9" align="right">Total Tagihan Bagi Hasil / Total Invoice&nbsp;</td>
-                  <td class="left top right button" align="right"  style="font-size:12px;">Rp. <?php echo number_format($totalinv+$match[$i+3])?>&nbsp;</td>
+                  <td class="left top right button" align="right"  style="font-size:12px;">Rp. <?php echo number_format($helperInv['jml_ori']['totalinv']+$match[$i+3])?>&nbsp;</td>
                 </tr>
               </table>
             </div>
-            <?php
-            // InvoiceHelpers::nilai_inv($result->id,$totalTarif+$match[$i+1],$bhtPNBP+$match[$i+2],$ppn+$match[$i+3],$totalinv+$match[$i+4]);
-            ?>
+
             <div style="position:absolute; top:80; left:650; width:300; font-size:11px;">
               <?php
-              if($result->rute == '$') {
-                echo 'Kurs Jual Bank Indonesia 1 USD / '.date('d M Y', $kurs->date).' = Rp. '.number_format($kurs->nilai);
+              // dd($helperInv);
+              if($helperInv['data']['rute']  == '$') {
+                echo 'Kurs Jual Bank Indonesia 1 USD / '.date('d M Y', $helperInv['data']['kurs']->date).' = Rp. '.number_format($helperInv['data']['kurs']->nilai);
               } ?>
             </div>
 
@@ -434,7 +309,7 @@
                     <td class="left top right button">&nbsp;Bank BNI (IDR)</td>
                     <td class="top right button" width="130px">&nbsp;231.05.45</td>
 
-                    <td class="top right button" rowspan="3" align="center">&nbsp;<b style="font-size:15px;"><?php echo $tempo?></b></i></td>
+                    <td class="top right button" rowspan="3" align="center">&nbsp;<b style="font-size:15px;"><?php echo $helperInv['data']['tempo']?></b></i></td>
                   </tr>
                   <tr>
                     <td class="left top right button">&nbsp;Bank Mandiri (IDR)</td>

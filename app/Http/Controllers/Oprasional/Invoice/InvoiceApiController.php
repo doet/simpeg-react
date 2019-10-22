@@ -63,38 +63,31 @@ class InvoiceApiController extends Controller
           ->where(function ($query) use ($request){
               // $query->where('tglinv','!=','');
           })->get();
+
         foreach($query as $row) {
           $faktur[] = substr($row->pajak, -8);
           $noinv[] = substr($row->noinv, 0,4);
+        }
+
+        $qu_faktur =  DB::table('tb_fakturpajak')
+          ->where(function ($query) use ($request){
+              // $query->where('tglinv','!=','');
+          })->get();
+        foreach($qu_faktur as $row) {
+          $row->noawal = explode('.',$row->noawal);
+          $row->noakhir = explode('.',$row->noakhir);
+          $nojumlah = $row->noakhir[3]-$row->noawal[3];
+          for($x=0; $x<=$nojumlah; $x++){
+            $nofaktur[$x]=$row->noawal[0].'.'.$row->noawal[1].'.'.$row->noawal[2].'.'.($row->noawal[3]+$x);
+          };
+          $responce['fakturpajak'][]=$nofaktur;
         }
         $responce['faktur']='010.000.19.'.max($faktur);
         $responce['noinv']=max($noinv)+1;
         array_push($responce,$query);
       break;
       case 'invoice':
-        $query = InvoiceHelpers::items_inv($request->cari);
-        $responce['data'] = $query;
-
-        $qu = DB::table('tb_ppjks')->where('tb_ppjks.id',$request->cari)
-          // ->rightJoin('tb_inv', function ($join) {
-          //   $join->on('tb_inv.ppjks_id','tb_ppjks.id');
-          // })
-          ->select(
-            'tb_ppjks.selisih as selisih'
-            // 'tb_inv.*'
-            )
-          ->first();
-        // if ($qu!=null)$responce['jml'] = $qu; else {
-        //   // $datainv = array(
-        //   //   'ppjks_id'=>0,
-        //   //   // 't_pandu'=>'1',
-        //   //   't_tunda'=>0,
-        //   //   'bht_bnbp'=>0,
-        //   //   'pph'=>0,
-        //   //   't_bht'=>0
-        //   // );
-        //   $responce['jml'] = $datainv;
-        // }
+        $responce['data']  = InvoiceHelpers::items_inv($request->cari);
       break;
     }
     return  Response()->json($responce);
@@ -224,58 +217,75 @@ class InvoiceApiController extends Controller
 
       break;
       case 'edit_nilai':
+        $request->value = str_replace(",","",$request->value);
         $nilai  = InvoiceHelpers::items_inv($request->pk);
         $i = count($nilai['isi']);
 
-        if(empty($nilai['isi'][$request->name])){
-          // $db = DB::table('tb_inv')->where('ppjks_id', $request->pk);
-          // $inv = $db->first();
-          $tmp[$i] = $nilai['isi'][$i]['jumlahTarif'] = (int)$nilai['jml_ori']['jumlahTarif'];
-          $tmp[$i+1] = $nilai['isi'][$i+1]['jumlahTarif'] = (int)$nilai['jml_ori']['bhtPNBP'];
-          $tmp[$i+2] = $nilai['isi'][$i+2]['jumlahTarif'] = (int)$nilai['jml_ori']['ppn'];
-          $tmp[$i+3] = $nilai['isi'][$i+3]['jumlahTarif'] = (int)$nilai['jml_ori']['totalinv'];
-          $tmp[$request->name] = (int)str_replace(",","",$request->value);
-          // dd($tmp);
-          InvoiceHelpers::nilai_inv(
-            $request->pk,
-            $tmp[$i],
-            $tmp[$i+1],
-            $tmp[$i+2],
-            $tmp[$i+3]
-          );
+        //maping Selisih
+        if (empty($nilai['data']['selisih'])){
+          for ($x = 0; $x <= $i+3; $x++) $selisih[$x]=0;
+        } else {
+          $tmp['selisih'] = explode(',',$nilai['data']['selisih']);
+          for ($x = 0; $x <= $i+3; $x++){
+            if(empty($tmp['selisih'][$x]))$tmp['selisih'][$x]=0;
+            $selisih[$x]=$tmp['selisih'][$x];
+          }
         }
-        $jumlahTarif_old = $nilai['isi'][$request->name]['jumlahTarif'];
 
-        $qu = DB::table('tb_ppjks')->where('id', $request->pk);
-        $query = $qu->first();
-        if(!empty($query->selisih)) $selisih_old = array_map("floatval",explode(",",$query->selisih)); else $selisih_old = array();
-        if (count($selisih_old)>$request->name)$n = count($selisih_old)-1; else $n = $request->name;
-        for ($x = 0; $x <= $n; $x++){
-          if(empty($selisih_old[$x]))$selisih_old[$x] = 0;
-        };
-        // dd();
+        //ganti nilai resume selisih (recalculate) jika nilai total tunda diubah
+        if ($i==$request->name){
+          $new_calculate = InvoiceHelpers::calculate_total($nilai['data']['headstatus'],$request->value);
 
-        // dd($jumlahTarif_new[$request->name]);
-        $value = (float)str_replace(",","",$request->value);
-        $margin = $value - $nilai['isi'][$request->name]['jumlahTarif'];
+          $selisih[$i]   = round($request->value-$nilai['jml_ori']['totalTarif']);
+          $selisih[$i+1] = round($new_calculate['bhtPNBP']-$nilai['jml_ori']['bhtPNBP']);
+          $selisih[$i+2] = round($new_calculate['ppn']-$nilai['jml_ori']['ppn']);
+          $selisih[$i+3] = round($new_calculate['totalinv']-$nilai['jml_ori']['totalinv']);
+        } else {
+          $selisih[$request->name] = 0;
+          $tmp = array_map(function($v){return round($v['jumlahTarif'],2);}, $nilai['isi']);
+          for ($x = 0; $x < $i; $x++){
+            $tmp[$x] = $tmp[$x]+$selisih[$x];
+            // +isset($selisih[$x]);
+          }
+          $tmp[$i]   = $nilai['jml_ori']['totalTarif']+$selisih[$i];
+          $tmp[$i+1] = $nilai['jml_ori']['bhtPNBP']+$selisih[$i+1];
+          $tmp[$i+2] = $nilai['jml_ori']['ppn']+$selisih[$i+2];
+          $tmp[$i+3] = $nilai['jml_ori']['totalinv']+$selisih[$i+3];
 
-        $selisih_new = $selisih_old;
-        $selisih_new[$request->name] = round($margin,2);
-        $selisih_new = join(",",$selisih_new);
-        // dd(round($margin,2));
-        // dd($margin);
+          $selisih[$request->name] = round($request->value - $tmp[$request->name],2);
+        }
 
+
+        // $i = count($nilai['isi']);
+        // if(empty($nilai['isi'][$request->name])){
+        //   $tmp[$i]   = InvoiceHelpers::items_inv($request->pk)['jml_ori']['totalTarif']+isset($selisih[$i]);
+        //
+        //   if ($i == $request->name){
+        //
+        //   }
+        //
+        // //   // dd($tmp);
+        // //   InvoiceHelpers::nilai_inv(
+        // //     $request->pk,
+        // //     $tmp[$i],
+        // //     $tmp[$i+1],
+        // //     $tmp[$i+2],
+        // //     $tmp[$i+3]
+        // //   );
+        // }
+        //
         $datanya=array(
-          'selisih'=>$selisih_new,
+          'selisih'=> implode(',',$selisih),
         );
-
-        // dd($datanya);
+        //
+        $qu = DB::table('tb_ppjks')->where('id', $request->pk);
         $qu->update($datanya);
-
+        if (!isset($new_calculate))$new_calculate = ''; else $new_calculate = array_map(function($v){return round($v);}, $new_calculate);
         $responce = array(
           'status' => "success",
-          'msg' => 'ok',
-          'rowId' => $datanya
+          'msg' => $datanya,
+          'rowId' => $new_calculate,
+          'recalculate' => $new_calculate
         );
 
       break;

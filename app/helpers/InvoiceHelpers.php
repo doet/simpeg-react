@@ -6,6 +6,42 @@ use DB;
 
 class InvoiceHelpers {
   public static function items_inv($id_ppjk) {
+    $responce['data'] = DB::table('tb_ppjks')
+      ->leftJoin('tb_agens', function ($join) {
+        $join->on('tb_agens.id','tb_ppjks.agens_id');
+      })
+      ->leftJoin('tb_kapals', function ($join) {
+        $join->on('tb_kapals.id','tb_ppjks.kapals_id');
+      })
+      ->where(function ($query) use ($id_ppjk){
+        $query->where('tb_ppjks.bstdo','!=','');
+        $query->where('tb_ppjks.id',$id_ppjk);
+      })
+      ->select(
+        'tb_agens.name as agenName',
+        'tb_agens.alamat as agenAlamat',
+        'tb_agens.tlp as agenTlp',
+        'tb_kapals.name as kapalsName',
+        'tb_kapals.jenis as kapalsJenis',
+        'tb_kapals.grt as kapalsGrt',
+        'tb_ppjks.*'
+      )
+      ->first();
+      $responce['data'] = (array)$responce['data'];
+      // $query = DB::table('tb_dls')
+      //   ->leftJoin('tb_jettys', function ($join) {
+      //     $join->on('tb_jettys.id','tb_dls.jettys_id');
+      //   })
+      //   ->where(function ($query) use ($id_ppjk){
+      //     $query->where('tb_dls.ppjks_id',$id_ppjk);
+      //   })
+      //   ->select(
+      //     'tb_jettys.code as jettyCode',
+      //     'tb_jettys.name as jettyName',
+      //     'tb_dls.*'
+      //   )
+      //   ->orderBy('tundaon', 'asc')
+      //   ->get();
     $query = DB::table('tb_dls')
       ->leftJoin('tb_jettys', function ($join) {
         $join->on('tb_jettys.id','tb_dls.jettys_id');
@@ -25,7 +61,6 @@ class InvoiceHelpers {
         'tb_kapals.grt as kapalsGrt',
         'tb_ppjks.dkurs as dkurs',
         'tb_ppjks.rute as rute',
-        'tb_ppjks.selisih as selisih',
         'tb_dls.*'
       )->get();
 
@@ -138,29 +173,35 @@ class InvoiceHelpers {
       }
     }
 
-    // dd($totalTarif);
+    $responce['isi'] = $isi;
+    $responce['jml_ori'] = array_map(function($v){return round($v);}, self::calculate_total($headstatus,$totalTarif));
+    $responce['data']['headstatus'] = $headstatus;
+    $responce['data']['code'] = $code;
+    $responce['data']['tariffix'] = $tariffix;
+    $responce['data']['tarifvar'] = $tarifvar;
+    $responce['data']['kurs'] = $kurs;
+    $responce['data']['tempo'] = strftime("%d %B %Y",self::cek_libur($responce['data']['tglinv'],3));
 
+    return $responce;
+  }
+
+  public static function calculate_total($headstatus,$totalTarif) {
+    $responce['totalTarif']=$totalTarif;
     if (substr($headstatus,0,8)=='Cigading' || substr($headstatus,0,8)=='CIGADING'){
-      // dd($headstatus);
-      $jml['bht99']=$bht99=$totalTarif*(98/100);
-      $jml['bht5']=$bht5=$bht99*(5/100);
-      $jml['bhtPNBP']=$bhtPNBP=$bht99-$bht5;
-      $jml['ppn']=$ppn=$bhtPNBP*(10/100);
-      $jml['totalinv']=$totalinv=$bhtPNBP+$ppn;
+      $responce['bht99']=$bht99=$totalTarif*(98/100);
+      $responce['bht5']=$bht5=$bht99*(5/100);
+      $responce['bhtPNBP']=$bhtPNBP=$bht99-$bht5;
+      $responce['ppn']=$ppn=$bhtPNBP*(10/100);
+      $responce['totalinv']=$totalinv=$bhtPNBP+$ppn;
     }
 
     if ($headstatus=='NON CIGADING 1' ||$headstatus=='NON CIGADING 2'){
-      $jml['bht99']=$bht99=$totalTarif*(99/100);
-      $jml['bht5']=$bht5=$bht99*(5/100);
-      $jml['bhtPNBP']=$bhtPNBP=$bht99-$bht5;
-      $jml['ppn']=$ppn=$bhtPNBP*(10/100);
-      $jml['totalinv']=$totalinv=$bhtPNBP+$ppn;
+      $responce['bht99']=$bht99=$totalTarif*(99/100);
+      $responce['bht5']=$bht5=$bht99*(5/100);
+      $responce['bhtPNBP']=$bhtPNBP=$bht99-$bht5;
+      $responce['ppn']=$ppn=$bhtPNBP*(10/100);
+      $responce['totalinv']=$totalinv=$bhtPNBP+$ppn;
     }
-    $responce['isi'] = $isi;
-    $responce['jml_ori'] = array_map(function($v){return round($v);},$jml);
-    $responce['data']['rute'] = $row->rute;
-    $responce['data']['selisih'] = $row->selisih;
-
     return $responce;
   }
 
@@ -239,5 +280,28 @@ class InvoiceHelpers {
       DB::table('tb_inv')->insert($datainv);
     }
     return $datainv;
+  }
+
+  public static function cek_libur($day,$n,$status='false'){
+    $day1=24*60*60;
+
+    if ($n<0){
+      return $day-$day1;
+    } else {
+
+      $libnas = DB::table('tb_libur')
+      ->where(function ($query) use ($day){
+        $query->where('tgllibur',$day);
+      })
+      ->get();
+      if (!empty($libnas[0]) || date('N', $day)==6 || date('N', $day)==7 ){
+        $n++;
+      }
+      $day = $day+$day1;
+
+      $n--;
+      return self::cek_libur($day,$n,$status);
+    }
+    return $day;
   }
 }
