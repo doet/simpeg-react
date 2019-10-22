@@ -248,13 +248,13 @@
                   if($helperInv['data']['rute'] == '$') {
                     echo '<td class="top right" align="right" style="font-size:12px;">Rp. '.number_format($helperInv['data']['tarifvar']).'&nbsp;</td>';
                   } else{
-                    echo '<td class="top right" align="right" style="font-size:12px;">Rp. '.number_format($tarifvar,2).'&nbsp;</td>';
+                    echo '<td class="top right" align="right" style="font-size:12px;">Rp. '.number_format($helperInv['data']['tarifvar'],2).'&nbsp;</td>';
                   }
                   echo '<td class="top right" align="right" style="font-size:12px;"> '.number_format($helperInv['data']['kapalsGrt']).'&nbsp;</td>';
                   echo '<td class="top right" align="right" style="font-size:12px;">Rp. '.number_format($row['jumlahTarifvar']).'&nbsp;</td>';
                   echo '<td class="top right" align="right" style="font-size:12px;">Rp. '.number_format($row['jumlahTarif'],2).'&nbsp;</td>';
                   echo '</tr>';
-                  
+
                   $i++;
                 }
                 if (empty($match[$i]))$match[$i]=0;
