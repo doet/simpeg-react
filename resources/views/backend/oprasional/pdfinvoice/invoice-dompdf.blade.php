@@ -254,6 +254,7 @@
                   echo '<td class="top right" align="right" style="font-size:12px;">Rp. '.number_format($row['jumlahTarifvar']).'&nbsp;</td>';
                   echo '<td class="top right" align="right" style="font-size:12px;">Rp. '.number_format($row['jumlahTarif'],2).'&nbsp;</td>';
                   echo '</tr>';
+                  
                   $i++;
                 }
                 if (empty($match[$i]))$match[$i]=0;
