@@ -230,6 +230,7 @@
               <?php
                 if ($helperInv['data']['selisih']!='')$match=explode(",",$helperInv['data']['selisih']);
                 $i=0;
+                // dd($match);
                 foreach ($helperInv['isi'] as $row) {
                   if (empty($match[$i]))$match[$i]=0;
                   echo '<tr>';

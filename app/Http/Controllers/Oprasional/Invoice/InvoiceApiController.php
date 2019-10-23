@@ -59,8 +59,8 @@ class InvoiceApiController extends Controller
         array_push($responce,$query);
       break;
       case 'nomor_akhir':
-        $query = DB::table('tb_ppjks')
-          ->where(function ($query) use ($request){
+        $qu = DB::table('tb_ppjks');
+        $query = $qu->where(function ($query) use ($request){
               // $query->where('tglinv','!=','');
           })->get();
 
@@ -69,18 +69,28 @@ class InvoiceApiController extends Controller
           $noinv[] = substr($row->noinv, 0,4);
         }
 
+        $fakturakhir =  $qu->orderBy('tglinv', 'desc')->get('pajak');
         $qu_faktur =  DB::table('tb_fakturpajak')
+          ->orderBy('id', 'asc')
           ->where(function ($query) use ($request){
               // $query->where('tglinv','!=','');
           })->get();
+        $findindex = '';
+        $responce['dicari'] =$fakturakhir;
         foreach($qu_faktur as $row) {
           $row->noawal = explode('.',$row->noawal);
           $row->noakhir = explode('.',$row->noakhir);
           $nojumlah = $row->noakhir[3]-$row->noawal[3];
           for($x=0; $x<=$nojumlah; $x++){
             $nofaktur[$x]=$row->noawal[0].'.'.$row->noawal[1].'.'.$row->noawal[2].'.'.($row->noawal[3]+$x);
+            $responce['nextfaktur'] = $nofaktur[$x];
+            if ($findindex=='found') break;
+            if ($fakturakhir === $nofaktur[$x]){
+              $findindex = 'found';
+            }
           };
-          $responce['fakturpajak'][]=$nofaktur;
+          if (($findindex=='found')&&($responce['nextfaktur'] != $fakturakhir)) break;
+          $responce['result']['foreach'][] = $row;
         }
         $responce['faktur']='010.000.19.'.max($faktur);
         $responce['noinv']=max($noinv)+1;
