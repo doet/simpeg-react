@@ -544,7 +544,24 @@ class OprasionalApiController extends Controller
           'msg' => 'ok',
         );
       break;
+      case 'faktur':
+        if ($request->date)$request->date=strtotime($request->date);
+        $datanya=array(
+          'date'=>$request->date,
+          'noawal'=>$request->noawal,
+          'noakhir'=>$request->noakhir,
+        );
 
+        if ($oper=='add')DB::table('tb_fakturpajak')->insert($datanya);
+        if ($oper=='edit')DB::table('tb_fakturpajak')->where('id', $id)->update($datanya);
+        if ($oper=='del')DB::table('tb_fakturpajak')->delete($id);
+
+        $responce = array(
+          'status' => 'success',
+          //"suscces",
+          'msg' => 'ok',
+        );
+      break;
       case 'mkapal':
 
         $datanya=array(
@@ -794,6 +811,9 @@ class OprasionalApiController extends Controller
               'tb_dls.*'
             );
         break;
+        case 'faktur':   // Vaariabel Master
+          $qu = DB::table('tb_fakturpajak');
+        break;
         case 'mkapal':
           $qu = DB::table('tb_kapals');
         break;
@@ -928,6 +948,18 @@ class OprasionalApiController extends Controller
               '',
               $row->lstp,
               $row->moring
+            );
+            $i++;
+          break;
+          case 'faktur':   // Variabel Master
+            // if ($row->date!='')$row->date=date("d M Y",$row->date);
+            if ($row->date!='')$row->date=date("d M Y",$row->date);
+            $responce['rows'][$i]['id'] = $row->id;
+            $responce['rows'][$i]['cell'] = array(
+              $row->id,
+              $row->date,
+              $row->noawal,
+              $row->noakhir
             );
             $i++;
           break;

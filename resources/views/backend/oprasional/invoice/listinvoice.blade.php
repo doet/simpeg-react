@@ -825,8 +825,8 @@
 
 						var posdata= {'datatb':'nomor_akhir'};
 						getparameter("{{url('/api/oprasional/invoice/json')}}",posdata,function(data){
-							if (pajak === "")$('#pajak').val(data.faktur); else $('#pajak').val(pajak);
-							if (noinv === "")$('#noinv').val(data.noinv+'-00/AF19.XX'); else $('#noinv').val(noinv);
+							if (pajak === "")$('#pajak').val(data.nextfaktur); else $('#pajak').val(pajak);
+							if (noinv === "")$('#noinv').val(data.nextinvoice); else $('#noinv').val(noinv);
 						});
 
 						// if (noinv)$('#noinv').val(noinv); else $('#noinv').val("0000-00/AF19.XX");

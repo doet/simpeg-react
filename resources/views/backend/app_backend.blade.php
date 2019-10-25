@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
 	<head>
-		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
 		<meta charset="utf-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
 		<title>Blank Page - Ace Admin</title>
 
 		<meta name="csrf-token" content="{{ csrf_token() }}">
@@ -43,7 +43,7 @@
 		<script src="{{asset('js/html5shiv.min.js')}}"></script>
 		<script src="{{asset('js/respond.min.js')}}"></script>
 		<![endif]-->
-		<script src="http://localhost:6001/socket.io/socket.io.js"></script>
+		<!-- <script src="http://localhost:6001/socket.io/socket.io.js"></script> -->
 	</head>
 
 	<body class="no-skin">
@@ -475,7 +475,7 @@
 			var site = '{{url('')}}';
 		</script>
 		<!-- basic scripts -->
-		<script src="{{asset('/js/app.js')}}"></script>
+		<!-- <script src="{{asset('/js/app.js')}}"></script> -->
 
 		<!--[if !IE]> -->
 		<script src="{{asset('js/jquery-2.1.4.min.js')}}"></script>
