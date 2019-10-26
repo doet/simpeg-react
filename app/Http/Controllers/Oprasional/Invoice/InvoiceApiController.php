@@ -106,7 +106,7 @@ class InvoiceApiController extends Controller
         foreach($invoice as $row) {
           $array_noinv[] = explode('-',$row->noinv)[0];
         }
-        $responce['nextinvoice']=max($array_noinv).'-'. explode('-',$row->noinv)[1];
+        $responce['nextinvoice']= (max($array_noinv)+1) .'-'. explode('-',$row->noinv)[1];
       break;
       case 'invoice':
         $responce['data']  = InvoiceHelpers::items_inv($request->cari);
