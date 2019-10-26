@@ -141,8 +141,9 @@
                     <td class="top right" align="center" style="background-color: #DCDCDC;" width='120px'>&nbsp;Nomor Invoice</td>
                     <td class="top right" align="center" style="background-color: #DCDCDC;">&nbsp;Tanggal / <i>Date</i></td>
                   </tr>
+                
                   <tr style="font-size:13px">
-                    <td class="left top right button" align="center" height='18px'>&nbsp;<?php echo $helperInv['data']['ppjk']?></td>
+                    <td class="left top right button" align="center" height='18px'>&nbsp;<?php echo $helperInv['data']['pajak']?></td>
                     <td class="top right button" align="center">&nbsp;<?php echo $helperInv['data']['noinv']?></td>
                     <!-- ; -->
                     <!-- time() -->
