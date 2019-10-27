@@ -14,9 +14,9 @@
 	<link rel="stylesheet" href="{{ asset('css/bootstrap-multiselect.min.css') }}" />
 	<style>
 		.ui-autocomplete { position: absolute; cursor: default; z-index: 1100 !important;}
-		.editable-input	{
+		/* .editable-input	{
 		    width:120px;
-		}
+		} */
 	</style>
 @endsection
 
@@ -299,19 +299,29 @@
     $.fn.editableform.buttons = '<button type="submit" class="btn btn-info editable-submit"><i class="ace-icon fa fa-check"></i></button>'+
                                 '<button type="button" class="btn editable-cancel"><i class="ace-icon fa fa-times"></i></button>';
 
-		$('#psdate').html(moment().format('D MMMM YYYY'));
+		// $('#psdate').html(moment().format('D MMMM YYYY'));
 		$('#psdate').editable({
-			type: 'text',
-			title: 'Enter username',
+			type: 'adate',
+			date: {
+					//datepicker plugin options
+							format: 'dd MM yyyy',
+					viewformat: 'dd MM yyyy',
+					 weekStart: 1
+
+					//,nativeUI: true//if true and browser support input[type=date], native browser control will be used
+					//,format: 'yyyy-mm-dd',
+					//viewformat: 'yyyy-mm-dd'
+			},
 			success: function(response, newValue) {
-				userModel.set('username', newValue); //update backbone model
+
 			}
 		}).on('save', function(e, params) {
-				// $(grid_selector).jqGrid('setGridParam',{postData:{start:params.newValue}}).trigger("reloadGrid");
+				$(grid_selector).jqGrid('setGridParam',{postData:{start:params.newValue}}).trigger("reloadGrid");
 				// // $('input[name="start"]').val(params.newValue);
 				setdate = params.newValue;
+
 		});
-		var setdate = moment().format('D MMMM YYYY');
+		var setdate ='';
 
 		$('.tgl').datepicker({
 			format:'dd-mm-yyyy',
@@ -594,7 +604,7 @@
 			caption: "Daftar Invoice",
       datatype: "json",            //supported formats XML, JSON or Arrray
       mtype : "post",
-      postData: {datatb:'invoice', _token:'{{ csrf_token() }}'},
+      postData: {datatb:'invoice', start:setdate, _token:'{{ csrf_token() }}'},
 			url:"{{url('/api/oprasional/invoice/jqgrid')}}",
 			editurl: "{{url('/api/oprasional/invoice/cud')}}",//nothing is saved
 			sortname:'ppjk',

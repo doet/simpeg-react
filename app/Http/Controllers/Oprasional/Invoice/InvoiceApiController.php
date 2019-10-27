@@ -341,6 +341,7 @@ class InvoiceApiController extends Controller
               $join->on('tb_ppjks.id','tb_inv.ppjks_id');
             })
             ->where(function ($query) use ($mulai,$akhir,$request){
+              if ($mulai!='')$query->where('tb_ppjks.tglinv', strtotime($mulai));
               $query->where('tb_ppjks.bstdo','!=','');
               if ($request->input('s_id')) {
                 $query->where('tb_ppjks.id', $request->input('s_id'));

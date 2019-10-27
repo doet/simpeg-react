@@ -14,6 +14,9 @@
 	<link rel="stylesheet" href="{{ asset('css/bootstrap-multiselect.min.css') }}" />
 	<style>
 		.ui-autocomplete { position: absolute; cursor: default; z-index: 1100 !important;}
+		.editable-input	{
+		    width:120px;
+		}
 	</style>
 @endsection
 
@@ -88,7 +91,7 @@
 									<div class="form-group">
 										<label class="control-label col-xs-12 col-sm-3 no-padding-right" for="comment">Selisih</label>
 										<div class="col-xs-12 col-sm-9">
-											<div class="clearfix"><input class="input-sm col-sm-9" type="text" id="selisih" name="selisih"></div>
+											<div class="clearfix"><input class="input-sm col-sm-9" type="text" id="selisih" name="selisih" disabled></div>
 										</div>
 									</div>
 								</div>
@@ -249,9 +252,10 @@
 							</div>
 						</div>
 					</div>
+
 					<table id="grid-table"></table>
 					<div id="grid-pager"></div>
-          <!-- PAGE CONTENT ENDS -->
+					 <!-- PAGE CONTENT ENDS -->
         </div><!-- /.col -->
       </div><!-- /.row -->
 @endsection
@@ -277,6 +281,12 @@
 
 	<script type="text/javascript">
 
+	$(document).ready(function () {
+    $("#txt").keypress(function () {
+        alert($("#txt").getCursorPosition());
+				$("#txt").setCursorPosition(5);
+    });
+  });
 	jQuery(function($) {
 		$.mask.definitions["9"] = '';
 		$.mask.definitions["Q"] = '[0-9]';
@@ -291,17 +301,20 @@
 
 		$('#psdate').html(moment().format('D MMMM YYYY'));
 		$('#psdate').editable({
-				type: 'adate',
-				date: {
-						//datepicker plugin options
-								format: 'dd MM yyyy',
-						viewformat: 'dd MM yyyy',
-						 weekStart: 1
+			type: 'adate',
+			date: {
+					//datepicker plugin options
+							format: 'dd MM yyyy',
+					viewformat: 'dd MM yyyy',
+					 weekStart: 1
 
-						//,nativeUI: true//if true and browser support input[type=date], native browser control will be used
-						//,format: 'yyyy-mm-dd',
-						//viewformat: 'yyyy-mm-dd'
-				}
+					//,nativeUI: true//if true and browser support input[type=date], native browser control will be used
+					//,format: 'yyyy-mm-dd',
+					//viewformat: 'yyyy-mm-dd'
+			},
+			success: function(response, newValue) {
+
+			}
 		}).on('save', function(e, params) {
 				// $(grid_selector).jqGrid('setGridParam',{postData:{start:params.newValue}}).trigger("reloadGrid");
 				// // $('input[name="start"]').val(params.newValue);
@@ -317,6 +330,7 @@
 		$('#dkurs').on('changeDate', function (ev) {
 			kurs($(this).val());
 		});
+
 		function kurs(dkurs){
 			var posdata= {'datatb':'kurs','search':dkurs};
 			// console.log(tglinv);
@@ -442,14 +456,8 @@
 			}
 		})
 		*/
-		var subgrid_data =
-		[
-		 {id:"", name:"", qty: ''},
-		];
-
 
 		jQuery(grid_selector).jqGrid({
-
 			//direction: "rtl",
 
 			//subgrid options
@@ -463,27 +471,133 @@
 			},
 			//for this example we are using local data
 			subGridRowExpanded: function (subgridDivId, rowId) {
-				// // alert(rowId);
 				var subgridTableId = subgridDivId + "_t";
-				// grid-table_1314_t
-				// console.log(subgridDivId);
-				$("#" + subgridDivId).html("<table id='" + subgridTableId + "'></table>");
-				$("#" + subgridTableId).jqGrid({
-					datatype: "json",            //supported formats XML, JSON or Arrray
-		      mtype : "post",
-		      postData: {datatb:'invoice', cari: rowId, _token:'{{ csrf_token() }}'},
-					url:"{{url('/api/oprasional/invoice/jqgrid_sub')}}",
-					sortname:'date',
-					sortorder: 'asc',
-					colNames: ['id','dari','ke','Total','Ubah'],
-					colModel: [
-						{ name: 'id' },
-						{ name: 'dari' },
-						{ name: 'ke' },
-						{ name: 'total' },
-						{ name: 'ubah' }
-					]
+				var subgridTableId2 = subgridDivId + "_j";
+
+				var content = '<div class="table-detail">\
+				  <div class="row">\
+						<div class="col-xs-12 col-sm-6">\
+	            <div class="profile-user-info profile-user-info-striped" id='+ subgridTableId +'></div>\
+		        </div>\
+						<div class="col-xs-12 col-sm-6">\
+	            <div class="profile-user-info profile-user-info-striped" id='+ subgridTableId2 +'>\
+							</div>\
+		        </div>\
+				  </div>\
+				</div>';
+				$("#" + subgridDivId).html(content)
+
+				var postData = {datatb:'invoice', cari: rowId, _token:'{{ csrf_token() }}'};
+				getparameter("{{url('/api/oprasional/invoice/json')}}",postData,function(data){
+					// console.log(data.data);
+					rowData = $(grid_selector).getRowData(rowId);
+					if(rowData['tglinv'] && rowData['pajak'] && rowData['noinv'] && rowData['refno']) x_edit = 'x_edit'; else x_edit = '';
+
+					var i=0;
+					var datanya = data.data;
+					if (datanya.data.selisih === null) datanya.data.selisih = '0';
+					var match = datanya.data.selisih.split(',');
+					datanya.isi.forEach(function(element){
+						// console.log(element);
+						if (match[i] === undefined)match[i] = 0;
+						if(element.jumlahTarif !== 0) element.jumlahTarif = Numbers((Number(element.jumlahTarif)+Number(match[i])).toFixed(2));
+						// element.jumlahTarif
+						$("#" + subgridTableId ).append('<div class="profile-info-row row">\
+							<div class="profile-info-value col-xs-6 col-sm-5" style="text-align:right"> '+element.dari+' - '+element.ke+' </div>\
+							<div class="profile-info-value col-xs-6 col-sm-7" style="text-align:left">\
+							<span data-array="'+i+'" class="'+x_edit+'">'+element.jumlahTarif+'</span>\
+							</div>\
+						</div>');
+						i++;
+					});
+					if (match[i] === undefined)match[i] = 0;
+					if (match[i+1] === undefined)match[i+1] = 0;
+					if (match[i+2] === undefined)match[i+2] = 0;
+					if (match[i+3] === undefined)match[i+3] = 0;
+					// totalTarif
+					if(datanya.jml_ori.totalTarif !== 0)	datanya.jml_ori.totalTarif		= Numbers(datanya.jml_ori.totalTarif+Number(match[i]));
+					if(datanya.jml_ori.bhtPNBP !== 0) 		datanya.jml_ori.bhtPNBP				= Numbers(datanya.jml_ori.bhtPNBP+Number(match[i+1]));
+					if(datanya.jml_ori.ppn !== 0) 				datanya.jml_ori.ppn 					= Numbers(datanya.jml_ori.ppn+Number(match[i+2]));
+					if(datanya.jml_ori.totalinv !== 0) 		datanya.jml_ori.totalinv 			= Numbers(datanya.jml_ori.totalinv+Number(match[i+3]));
+					$("#" + subgridTableId2 ).append('<div class="profile-info-row row">\
+						<div class="profile-info-value col-xs-6 col-sm-7" style="text-align:right">Total Tunda</div>\
+						<div class="profile-info-value col-xs-6 col-sm-5" style="text-align:left">\
+							<span data-array="'+i+'" class="'+x_edit+'">'+datanya.jml_ori.totalTarif+'</span>\
+						</div>\
+					</div>\
+					<div class="profile-info-row row">\
+						<div class="profile-info-value col-xs-6 col-sm-7" style="text-align:right">Bagi Hasil Tunda setelah PNBP</div>\
+						<div class="profile-info-value col-xs-6 col-sm-5" style="text-align:left">\
+							<span data-array="'+ (i + 1) +'" class="'+x_edit+'">'+datanya.jml_ori.bhtPNBP+'</span>\
+						</div>\
+					</div>\
+					<div class="profile-info-row row">\
+						<div class="profile-info-value col-xs-6 col-sm-7" style="text-align:right">PPn / Total after VAT</div>\
+						<div class="profile-info-value col-xs-6 col-sm-5" style="text-align:left">\
+							<span data-array="'+ (i + 2) +'" class="'+x_edit+'">'+datanya.jml_ori.ppn+'</span>\
+						</div>\
+					</div>\
+					<div class="profile-info-row row">\
+						<div class="profile-info-value col-xs-6 col-sm-7" style="text-align:right">Total Tagihan Bagi Hasil / Total Invoice</div>\
+						<div class="profile-info-value col-xs-6 col-sm-5" style="text-align:left">\
+							<span data-array="'+ (i + 3) +'" class="'+x_edit+'">'+datanya.jml_ori.totalinv+'</span>\
+						</div>\
+					</div>');
+
+					$('.x_edit').editable({
+						type: 'text',
+						pk: rowId,
+						params:function(params) {
+				        params.datatb = 'edit_nilai';
+								params.name = $(this).attr('data-array');
+								// params.id = rowId;
+								return params;
+				    },
+						// params:{datatb:'edit_nilai',b:$(this).attr('data-array')},
+    				url: "{{url('/api/oprasional/invoice/cud')}}",
+						inputclass:'input-sm',
+						success: function(response, newValue){
+							if (response.recalculate !== ''){
+								var index_c = Number($(this).attr('data-array'));
+								alert(JSON.stringify('recalculate data'))
+								$('.x_edit[data-array='+ (index_c+1) +']').editable('setValue',Numbers(response.recalculate.bhtPNBP));
+								$('.x_edit[data-array='+ (index_c+2) +']').editable('setValue',Numbers(response.recalculate.ppn));
+								$('.x_edit[data-array='+ (index_c+3) +']').editable('setValue',Numbers(response.recalculate.totalinv));
+							}
+						}
+					}).on('save', function(e, params) {
+						// jQuery(grid_selector).jqGrid('setGridParam', { postData: {datatb:'invoice',_token:'{{ csrf_token() }}'} }).trigger("reloadGrid");
+						// jQuery(grid_selector).jqGrid('expandSubGridRow', 1299);
+						// console.log( params.response.rowId);
+
+						console.log($(this).attr('data-array'));
+					}).on("click",function(){
+
+			      $(this).next().find(".editable-input input").attr("id",'in_'+rowId);
+						$(this).next().find(".editable-input input").attr("onkeyup",'formatNumber(this);');
+			    });
 				});
+				// $("#" + subgridTableId ).append("<div>test</div>");
+
+				// $("#" + subgridDivId).html("<table id='" + subgridTableId + "'>"+ +"</table>");
+				// $("#" + subgridTableId).jqGrid({
+				// 	datatype: "json",            //supported formats XML, JSON or Arrray
+		    //   mtype : "post",
+		    //   postData: {datatb:'invoice', cari: rowId, _token:'{{ csrf_token() }}'},
+				// 	url:"{{url('/api/oprasional/invoice/jqgrid_sub')}}",
+				// 	sortname:'date',
+				// 	sortorder: 'asc',
+				// 	colNames: ['id','dari','ke','Total','Ubah'],
+				// 	colModel: [
+				// 		{ name: 'id' },
+				// 		{ name: 'dari' },
+				// 		{ name: 'ke' },
+				// 		{ name: 'total' },
+				// 		{ name: 'ubah' }
+				// 	]
+				// });
+
+
 			},
 
 			caption: "Daftar Invoice",
@@ -492,7 +606,7 @@
       postData: {datatb:'invoice', _token:'{{ csrf_token() }}'},
 			url:"{{url('/api/oprasional/invoice/jqgrid')}}",
 			editurl: "{{url('/api/oprasional/invoice/cud')}}",//nothing is saved
-			sortname:'bstdo',
+			sortname:'ppjk',
 			sortorder: 'desc',
 			height: 'auto',
 			colNames:[' ', 'BSTDO','PPJK','Agen','Kapal','Jalur','Date Doc','Faktur Pajak','No. Invoice','Ref No','Selisih','Status','dkurs','Date Pay','No Kwn'],
@@ -720,8 +834,8 @@
 
 						var posdata= {'datatb':'nomor_akhir'};
 						getparameter("{{url('/api/oprasional/invoice/json')}}",posdata,function(data){
-							if (pajak === "")$('#pajak').val(data.faktur); else $('#pajak').val(pajak);
-							if (noinv === "")$('#noinv').val(data.noinv+'-00/AF19.XX'); else $('#noinv').val(noinv);
+							if (pajak === "")$('#pajak').val(data.nextfaktur); else $('#pajak').val(pajak);
+							if (noinv === "")$('#noinv').val(data.nextinvoice); else $('#noinv').val(noinv);
 						});
 
 						// if (noinv)$('#noinv').val(noinv); else $('#noinv').val("0000-00/AF19.XX");
