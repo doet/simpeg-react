@@ -693,12 +693,12 @@
 				url2="href='{{ url('oprasional/PDFInvoice') }}?page=invoice-dompdf2&id="+cellvalue+"'";
 			}// var gsr = $(this).jqGrid('getGridParam','selrow');
 			// tglinv = $(this).jqGrid('getCell',gsr,'tglinv');
-			if (cell[13]!==''&&cell[14]!==null){
+			if (cell[13]!==''&&cell[13]!==undefined&&cell[14]!==null&&cell[14]!==undefined){
 				pay_c="orange";
 				on_click = "kwitansi('"+cellvalue+"','"+cell[13]+"','"+cell[14]+"')";
 				url3="href='{{ url('oprasional/PDFInvoice') }}?page=kwitansi-dompdf&id="+cell[14]+"'";
 			}
-			// console.log(cell);
+			console.log(cell[14]);
 			return '<div><a class="fa fa-file-pdf-o '+ file_c +'" '+url+'  method="POST" target="_blank"></a> <a class="fa fa-file-pdf-o '+
 			file_c +'" '+url2+' method="POST" target="_blank"></a> <a class="fa fa-credit-card '+
 			pay_c +'" onclick="'+on_click+'"></a> <a class="fa fa-file-pdf-o '+
@@ -862,6 +862,28 @@
 						$('#modal').modal('show');
 					} else {
 						alert("pilih tabel")
+					}
+				}
+		}).jqGrid('navButtonAdd',pager_selector,{
+				keys: true,
+				caption:"",
+				buttonicon:"ace-icon fa fa-file-pdf-o orange",
+				position:"last",
+				onClickButton:function(){
+					if (setdate !== ''){
+						window.open("{{url('oprasional/PDFInvoice')}}/?page=report_invoice-dompdf&mulai="+setdate, '_blank');
+
+						// var posdata= {page:'report_invoice-dompdf',mulai:setdate, _token:'{{ csrf_token() }}'};
+						// $.ajax({
+						// 	type: "POST",
+						//   url: "{{url('oprasional/PDFInvoice')}}",
+						// 	data: posdata,
+						//   success: function(data) {
+						//
+						// 	}
+						// });
+					}else{
+						alert('tetntukan tanggal terlebih dahulu');
 					}
 				}
 		});
