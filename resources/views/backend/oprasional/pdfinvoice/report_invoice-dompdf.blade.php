@@ -156,10 +156,10 @@
                       $sum_cigading = $sum_cigading+$cigading+$cigading;
                       $sum_noncigading = $sum_noncigading+$noncigading+$noncigading;
 
-                      if ($international!=0)number_format($international); else $international = '';
-                      if ($domestic!=0)number_format($domestic); else $domestic = '';
-                      if ($cigading!=0)number_format($cigading); else $cigading = '';
-                      if ($noncigading!=0)number_format($noncigading); else $noncigading = '';
+                      if ($international!=0)$international = number_format($international); else $international = '';
+                      if ($domestic!=0)$domestic = number_format($domestic); else $domestic = '';
+                      if ($cigading!=0)$cigading = number_format($cigading); else $cigading = '';
+                      if ($noncigading!=0)$noncigading = number_format($noncigading); else $noncigading = '';
 
                       echo "<tr>
                         <td style='text-align: center;'>".$qu['data']['id']."</td>
