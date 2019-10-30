@@ -162,20 +162,20 @@
                       if ($noncigading!=0)$noncigading = number_format($noncigading); else $noncigading = '';
 
                       echo "<tr>
-                        <td style='text-align: center;'>".$qu['data']['id']."</td>
-                        <td style='text-align: center;'>".$qu['data']['noinv']."</td>
-                        <td style='text-align: center;'>".$qu['data']['pajak']."</td>
-                        <td style='text-align: center;'>".$qu['data']['ppjk']."</td>
-                        <td style='text-align: center;'>".$qu['data']['bstdo']."</td>
-                        <td style='text-align: center;'>".$qu['data']['lstp']."</td>
-                        <td style='text-align: center;'>".$qu['data']['refno']."</td>
+                        <td style='text-align: center; width:30px;'>".$qu['data']['id']."</td>
+                        <td style='text-align: center; width:90px;'>".$qu['data']['noinv']."</td>
+                        <td style='text-align: center; width:100px;'>".$qu['data']['pajak']."</td>
+                        <td style='text-align: center; width:80px;'>".$qu['data']['ppjk']."</td>
+                        <td style='text-align: center; width:40px;'>".$qu['data']['bstdo']."</td>
+                        <td style='text-align: center; width:55px;'>".$qu['data']['lstp']."</td>
+                        <td style='text-align: center; width:85px;'>".$qu['data']['refno']."</td>
                         <td style='text-align: center;'>".$qu['data']['agenName']."</td>
                         <td style='text-align: center;'>".$qu['data']['kapalsName']."</td>
-                        <td style='text-align: center;'>".number_format($qu['data']['kapalsGrt'])."</td>
-                        <td style='text-align: right;'>".$international."&nbsp;</td>
-                        <td style='text-align: right;'>".$domestic."&nbsp;</td>
-                        <td style='text-align: right;'>".$cigading."&nbsp;</td>
-                        <td style='text-align: right;'>".$noncigading."&nbsp;</td>
+                        <td style='text-align: center; width:45px;'>".number_format($qu['data']['kapalsGrt'])."</td>
+                        <td style='text-align: right; width:80px;'>".$international."&nbsp;</td>
+                        <td style='text-align: right; width:80px;'>".$domestic."&nbsp;</td>
+                        <td style='text-align: right; width:80px;'>".$cigading."&nbsp;</td>
+                        <td style='text-align: right; width:80px;'>".$noncigading."&nbsp;</td>
                       </tr>";
                     }
                     echo "<tr>
