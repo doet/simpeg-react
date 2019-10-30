@@ -170,7 +170,7 @@
                         <td style='text-align: center; width:55px;'>".$qu['data']['lstp']."</td>
                         <td style='text-align: center; width:85px;'>".$qu['data']['refno']."</td>
                         <td style='text-align: center;'>".$qu['data']['agenName']."</td>
-                        <td style='text-align: center;'>".$qu['data']['kapalsName']."</td>
+                        <td style='text-align: center; word-wrap:break-word;'>".$qu['data']['kapalsName']."</td>
                         <td style='text-align: center; width:45px;'>".number_format($qu['data']['kapalsGrt'])."</td>
                         <td style='text-align: right; width:80px;'>".$international."&nbsp;</td>
                         <td style='text-align: right; width:80px;'>".$domestic."&nbsp;</td>
@@ -179,16 +179,7 @@
                       </tr>";
                     }
                     echo "<tr>
-                      <td style='text-align: center;'> </td>
-                      <td style='text-align: center;'> </td>
-                      <td style='text-align: center;'> </td>
-                      <td style='text-align: center;'> </td>
-                      <td style='text-align: center;'> </td>
-                      <td style='text-align: center;'> </td>
-                      <td style='text-align: center;'> </td>
-                      <td style='text-align: center;'> </td>
-                      <td style='text-align: center;'> </td>
-                      <td style='text-align: center;'> </td>
+                      <td style='text-align: center;' colspan='10'> </td>
                       <td style='text-align: right;'>".number_format($sum_international)."&nbsp;</td>
                       <td style='text-align: right;'>".number_format($sum_domestic)."&nbsp;</td>
                       <td style='text-align: right;'>".number_format($sum_cigading)."&nbsp;</td>
