@@ -169,7 +169,7 @@
                         <td style='text-align: center; width:40px;'>".$qu['data']['bstdo']."</td>
                         <td style='text-align: center; width:55px;'>".$qu['data']['lstp']."</td>
                         <td style='text-align: center; width:85px;'>".$qu['data']['refno']."</td>
-                        <td style='text-align: center;'>".$qu['data']['agenName']."</td>
+                        <td style='text-align: center; text-overflow: ellipsis;'>".$qu['data']['agenName']."</td>
                         <td style='text-align: center; word-wrap:break-word;'>".$qu['data']['kapalsName']."</td>
                         <td style='text-align: center; width:45px;'>".number_format($qu['data']['kapalsGrt'])."</td>
                         <td style='text-align: right; width:80px;'>".$international."&nbsp;</td>
