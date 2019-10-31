@@ -138,9 +138,11 @@
                   </thead>
                   <tbody>
                   <?php
-                  $sum_international = $sum_domestic = $sum_cigading = $sum_noncigading = 0;
+                  $international = $domestic = $cigading = $noncigading = $x = 0;
+                  $sum_international = $sum_domestic = $sum_cigading = $sum_noncigading =  0;
                   // dd($query);
                     foreach($query as $row){
+                      $x++;
                       $qu =  InvoiceHelpers::items_inv($row->id);
                       if ($qu['data']['kapalsGrt']=='')$qu['data']['kapalsGrt'] = 0;
 
@@ -153,18 +155,19 @@
                       if ($qu['data']['tujuan']=='CIGADING')$cigading = $qu['jml_ori']['bhtPNBP']+$match[$i]; else $cigading = 0;
                       if ($qu['data']['tujuan']!='CIGADING')$noncigading = $qu['jml_ori']['bhtPNBP']+$match[$i]; else $noncigading = 0;
 
-                      $sum_international = $sum_international+$international;
-                      $sum_domestic = $sum_domestic+$domestic+$domestic;
-                      $sum_cigading = $sum_cigading+$cigading+$cigading;
-                      $sum_noncigading = $sum_noncigading+$noncigading+$noncigading;
 
+                      $sum_international = $sum_international;
+                      $sum_domestic = $sum_domestic+$domestic;
+                      $sum_cigading = $sum_cigading+$cigading;
+                      $sum_noncigading = $sum_noncigading+$noncigading;
+                      //
                       if ($international!=0)$international = number_format($international); else $international = '';
                       if ($domestic!=0)$domestic = number_format($domestic); else $domestic = '';
                       if ($cigading!=0)$cigading = number_format($cigading); else $cigading = '';
                       if ($noncigading!=0)$noncigading = number_format($noncigading); else $noncigading = '';
 
                       echo "<tr>
-                        <td style='text-align: center; width:30px;'>".$qu['data']['id']."</td>
+                        <td style='text-align: center; width:30px;'>".$x."</td>
                         <td style='text-align: center; width:90px;'>".$qu['data']['noinv']."</td>
                         <td style='text-align: center; width:100px;'>".$qu['data']['pajak']."</td>
                         <td style='text-align: center; width:80px;'>".$qu['data']['ppjk']."</td>
@@ -179,6 +182,7 @@
                         <td style='text-align: right; width:75px;'>".$cigading."&nbsp;</td>
                         <td style='text-align: right; width:75px;'>".$noncigading."&nbsp;</td>
                       </tr>";
+
                     }
                     echo "<tr>
                       <td style='text-align: center;' colspan='10'> </td>
