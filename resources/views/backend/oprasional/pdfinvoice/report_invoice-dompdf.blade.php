@@ -151,7 +151,7 @@
                       if ($qu['data']['rute']=='$')$international = $qu['jml_ori']['bhtPNBP']+$match[$i]; else $international = 0;
                       if ($qu['data']['rute']=='Rp')$domestic = $qu['jml_ori']['bhtPNBP']+$match[$i]; else $domestic = 0;
                       if ($qu['data']['tujuan']=='CIGADING')$cigading = $qu['jml_ori']['bhtPNBP']+$match[$i]; else $cigading = 0;
-                      if ($qu['data']['tujuan']=='NON CIGADING')$noncigading = $qu['jml_ori']['bhtPNBP']+$match[$i]; else $noncigading = 0;
+                      if ($qu['data']['tujuan']!='CIGADING')$noncigading = $qu['jml_ori']['bhtPNBP']+$match[$i]; else $noncigading = 0;
 
                       $sum_international = $sum_international+$international;
                       $sum_domestic = $sum_domestic+$domestic+$domestic;
@@ -174,10 +174,10 @@
                         <td style='text-align: center; '>".$qu['data']['agenName']."</td>
                         <td style='text-align: center; '>".$qu['data']['kapalsName']."</td>
                         <td style='text-align: center; width:45px;'>".number_format($qu['data']['kapalsGrt'])."</td>
-                        <td style='text-align: right; width:80px;'>".$international."&nbsp;</td>
-                        <td style='text-align: right; width:80px;'>".$domestic."&nbsp;</td>
-                        <td style='text-align: right; width:80px;'>".$cigading."&nbsp;</td>
-                        <td style='text-align: right; width:80px;'>".$noncigading."&nbsp;</td>
+                        <td style='text-align: right; width:75px;'>".$international."&nbsp;</td>
+                        <td style='text-align: right; width:75px;'>".$domestic."&nbsp;</td>
+                        <td style='text-align: right; width:75px;'>".$cigading."&nbsp;</td>
+                        <td style='text-align: right; width:75px;'>".$noncigading."&nbsp;</td>
                       </tr>";
                     }
                     echo "<tr>
