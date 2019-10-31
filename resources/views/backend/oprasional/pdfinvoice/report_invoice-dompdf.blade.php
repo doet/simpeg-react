@@ -139,6 +139,7 @@
                   <tbody>
                   <?php
                   $sum_international = $sum_domestic = $sum_cigading = $sum_noncigading = 0;
+                  // dd($query);
                     foreach($query as $row){
                       $qu =  InvoiceHelpers::items_inv($row->id);
                       if ($qu['data']['kapalsGrt']=='')$qu['data']['kapalsGrt'] = 0;
@@ -148,7 +149,7 @@
                       if (empty($match[$i]))$match[$i]=0;
 
                       if ($qu['data']['rute']=='$')$international = $qu['jml_ori']['bhtPNBP']+$match[$i]; else $international = 0;
-                      if ($qu['data']['rute']=='rp')$domestic = $qu['jml_ori']['bhtPNBP']+$match[$i]; else $domestic = 0;
+                      if ($qu['data']['rute']=='Rp')$domestic = $qu['jml_ori']['bhtPNBP']+$match[$i]; else $domestic = 0;
                       if ($qu['data']['tujuan']=='CIGADING')$cigading = $qu['jml_ori']['bhtPNBP']+$match[$i]; else $cigading = 0;
                       if ($qu['data']['tujuan']=='NON CIGADING')$noncigading = $qu['jml_ori']['bhtPNBP']+$match[$i]; else $noncigading = 0;
 
