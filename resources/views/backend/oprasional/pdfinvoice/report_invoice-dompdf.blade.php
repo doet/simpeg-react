@@ -48,7 +48,7 @@
             table {
               border-collapse: collapse;
               /* border: 1px dotted; */
-
+              /* table-layout: fixed; */
               border-spacing: 0;
               margin-top:10px;
               width: 100%;
@@ -60,6 +60,7 @@
             }
             td {
               border: 1px dotted;
+
             }
             .right{
                 border-right: 1px dotted;
@@ -169,8 +170,8 @@
                         <td style='text-align: center; width:40px;'>".$qu['data']['bstdo']."</td>
                         <td style='text-align: center; width:55px;'>".$qu['data']['lstp']."</td>
                         <td style='text-align: center; width:85px;'>".$qu['data']['refno']."</td>
-                        <td style='text-align: center; text-overflow: ellipsis;'>".$qu['data']['agenName']."</td>
-                        <td style='text-align: center; word-wrap:break-word;'>".$qu['data']['kapalsName']."</td>
+                        <td style='text-align: center; '>".$qu['data']['agenName']."</td>
+                        <td style='text-align: center; '>".$qu['data']['kapalsName']."</td>
                         <td style='text-align: center; width:45px;'>".number_format($qu['data']['kapalsGrt'])."</td>
                         <td style='text-align: right; width:80px;'>".$international."&nbsp;</td>
                         <td style='text-align: right; width:80px;'>".$domestic."&nbsp;</td>
@@ -185,7 +186,7 @@
                       <td style='text-align: right;'>".number_format($sum_cigading)."&nbsp;</td>
                       <td style='text-align: right;'>".number_format($sum_noncigading)."&nbsp;</td>
                     </tr>";
-                  //   dd($qu);
+                    // dd($qu);
                   // dd($query[0]);
                   ?>
 
