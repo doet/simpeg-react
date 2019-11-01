@@ -106,7 +106,11 @@ class InvoiceApiController extends Controller
         foreach($invoice as $row) {
           $array_noinv[] = explode('-',$row->noinv)[0];
         }
-        $responce['nextinvoice']= (max($array_noinv)+1) .'-'. explode('-',$row->noinv)[1];
+        $InvoiceHelpers = InvoiceHelpers::items_inv($request->cari)['data']['headstatus'];
+        if (substr($InvoiceHelpers,0,3)=='NON')$prefix = 'LC' ;else $prefix = 'CG';
+        // substr($row->jettyCode,0,1)
+        $responce['invoiceakhir'] = max($array_noinv)
+        $responce['nextinvoice']= (max($array_noinv)+1) .'-'. explode('.',explode('-',$row->noinv)[1])[0].'.'.$prefix;
       break;
       case 'invoice':
         $responce['data']  = InvoiceHelpers::items_inv($request->cari);

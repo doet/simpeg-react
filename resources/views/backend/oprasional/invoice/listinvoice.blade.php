@@ -833,7 +833,7 @@
 						rute = $(this).jqGrid('getCell',gsr,'rute');
 						selisih = $(this).jqGrid('getCell',gsr,'selisih');
 
-						var posdata= {'datatb':'nomor_akhir'};
+						var posdata= {'datatb':'nomor_akhir',cari:gsr};
 						getparameter("{{url('/api/oprasional/invoice/json')}}",posdata,function(data){
 							if (pajak === "")$('#pajak').val(data.nextfaktur); else $('#pajak').val(pajak);
 							if (noinv === "")$('#noinv').val(data.nextinvoice); else $('#noinv').val(noinv);

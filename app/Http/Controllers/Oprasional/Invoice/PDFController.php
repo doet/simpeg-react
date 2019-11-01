@@ -149,7 +149,7 @@ class PDFController extends Controller
             if ($request->input('s_id')) {
               $query->where('tb_ppjks.id', $request->input('s_id'));
             }
-          })->get();
+          })->orderBy('noinv','asc')->get();
 
           // dd($request->input());
         $page = 'backend.oprasional.pdfinvoice.'.$request->input('page');

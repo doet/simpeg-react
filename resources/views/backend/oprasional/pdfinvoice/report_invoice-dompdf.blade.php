@@ -121,26 +121,26 @@
                       <td rowspan="2">No. Inv&nbsp;</td>
                       <td rowspan="2">No. Faktur&nbsp;</td>
                       <td rowspan="2">No. PPJ&nbsp;</td>
-                      <td rowspan="2">BSTDO&nbsp;</td>
-                      <td rowspan="2">LSTP&nbsp;</td>
                       <td rowspan="2">No. Ref&nbsp;</td>
                       <td rowspan="2">Agen&nbsp;</td>
                       <td rowspan="2">Kapal&nbsp;</td>
                       <td rowspan="2">GRT&nbsp;</td>
-                      <td colspan="4">Bagi Hasil Setelah PNBP&nbsp;</td>
+                      <td colspan="6">Bagi Hasil Setelah PNBP&nbsp;</td>
                     </tr>
                     <tr>
-                      <td>INTERNTL&nbsp;</td>
-                      <td>DOMESTIK&nbsp;</td>
-                      <td>CIGADING&nbsp;</td>
-                      <td>NON CIGADING&nbsp;</td>
+                      <td>LC VESSEL&nbsp;</td>
+                      <td>LC BARGE&nbsp;</td>
+                      <td>CG VESSEL&nbsp;</td>
+                      <td>CG BARGE&nbsp;</td>
+                      <td>KHUSUS&nbsp;</td>
+                      <td>TOTAL&nbsp;</td>
                     </tr>
                   </thead>
                   <tbody>
                   <?php
-                  $international = $domestic = $cigading = $noncigading = $x = 0;
-                  $sum_international = $sum_domestic = $sum_cigading = $sum_noncigading =  0;
-                  // dd($query);
+                  $lcv = $lcb = $cgv = $cgb = $x = 0;
+                  $sum_lcv = $sum_lcb = $sum_cgv = $sum_cgb = $sum_total =  0;
+
                     foreach($query as $row){
                       $x++;
                       $qu =  InvoiceHelpers::items_inv($row->id);
@@ -150,46 +150,75 @@
                       if ($qu['data']['selisih']!='')$match=explode(",",$qu['data']['selisih']);
                       if (empty($match[$i]))$match[$i]=0;
 
-                      if ($qu['data']['rute']=='$')$international = $qu['jml_ori']['bhtPNBP']+$match[$i]; else $international = 0;
-                      if ($qu['data']['rute']=='Rp')$domestic = $qu['jml_ori']['bhtPNBP']+$match[$i]; else $domestic = 0;
-                      if ($qu['data']['tujuan']=='CIGADING')$cigading = $qu['jml_ori']['bhtPNBP']+$match[$i]; else $cigading = 0;
-                      if ($qu['data']['tujuan']!='CIGADING')$noncigading = $qu['jml_ori']['bhtPNBP']+$match[$i]; else $noncigading = 0;
+                      $nilai_match = $qu['jml_ori']['bhtPNBP']+$match[$i];
+                      if (substr($qu['data']['headstatus'],0,3)=='NON'){
+                        if ($qu['data']['kapalsJenis']=='BG'){
+                          $lcb = $nilai_match;
+                          $lcv = 0;
+                          $cgb = 0;
+                          $cgv = 0;
+                        } else {
+                          $lcv = $nilai_match;
+                          $lcb = 0;
+                          $cgb = 0;
+                          $cgv = 0;
+                        }
+                      } else{
+                        if ($qu['data']['kapalsJenis']=='BG'){
+                          $cgv = $nilai_match;
+                          $cgb = 0;
+                          $lcv = 0;
+                          $lcb = 0;
+                        } else {
+                          $cgb = $nilai_match;
+                          $cgv = 0;
+                          $lcv = 0;
+                          $lcb = 0;
+                        }
+                      }
 
 
-                      $sum_international = $sum_international;
-                      $sum_domestic = $sum_domestic+$domestic;
-                      $sum_cigading = $sum_cigading+$cigading;
-                      $sum_noncigading = $sum_noncigading+$noncigading;
+                      $sum_lcv = $sum_lcv+$lcv;
+                      $sum_lcb = $sum_lcb+$lcb;
+                      $sum_cgv = $sum_cgv+$cgv;
+                      $sum_cgb = $sum_cgb+$cgb;
+                      $sum_total = $sum_total+$nilai_match;
                       //
-                      if ($international!=0)$international = number_format($international); else $international = '';
-                      if ($domestic!=0)$domestic = number_format($domestic); else $domestic = '';
-                      if ($cigading!=0)$cigading = number_format($cigading); else $cigading = '';
-                      if ($noncigading!=0)$noncigading = number_format($noncigading); else $noncigading = '';
-
+                      if ($lcv!=0)$lcv = number_format($lcv); else $lcv = '';
+                      if ($lcb!=0)$lcb = number_format($lcb); else $lcb = '';
+                      if ($cgv!=0)$cgv = number_format($cgv); else $cgv = '';
+                      if ($cgb!=0)$cgb = number_format($cgb); else $cgb = '';
                       echo "<tr>
                         <td style='text-align: center; width:30px;'>".$x."</td>
                         <td style='text-align: center; width:90px;'>".$qu['data']['noinv']."</td>
                         <td style='text-align: center; width:100px;'>".$qu['data']['pajak']."</td>
                         <td style='text-align: center; width:80px;'>".$qu['data']['ppjk']."</td>
-                        <td style='text-align: center; width:40px;'>".$qu['data']['bstdo']."</td>
-                        <td style='text-align: center; width:55px;'>".$qu['data']['lstp']."</td>
                         <td style='text-align: center; width:85px;'>".$qu['data']['refno']."</td>
                         <td style='text-align: center; '>".$qu['data']['agenName']."</td>
                         <td style='text-align: center; '>".$qu['data']['kapalsName']."</td>
                         <td style='text-align: center; width:45px;'>".number_format($qu['data']['kapalsGrt'])."</td>
-                        <td style='text-align: right; width:75px;'>".$international."&nbsp;</td>
-                        <td style='text-align: right; width:75px;'>".$domestic."&nbsp;</td>
-                        <td style='text-align: right; width:75px;'>".$cigading."&nbsp;</td>
-                        <td style='text-align: right; width:75px;'>".$noncigading."&nbsp;</td>
+                        <td style='text-align: right; width:75px;'>".$lcv."&nbsp;</td>
+                        <td style='text-align: right; width:75px;'>".$lcb."&nbsp;</td>
+                        <td style='text-align: right; width:75px;'>".$cgv."&nbsp;</td>
+                        <td style='text-align: right; width:75px;'>".$cgb."&nbsp;</td>
+                        <td style='text-align: right; width:75px;'>&nbsp;</td>
+                        <td style='text-align: right; width:75px;'>".number_format($nilai_match)."&nbsp;</td>
                       </tr>";
 
+                      // dd($qu['data']);
                     }
+                    if ($sum_lcv!=0)$sum_lcv = number_format($sum_lcv); else $sum_lcv = '';
+                    if ($sum_lcb!=0)$sum_lcb = number_format($sum_lcb); else $sum_lcb = '';
+                    if ($sum_cgv!=0)$sum_cgv = number_format($sum_cgv); else $sum_cgv = '';
+                    if ($sum_cgb!=0)$sum_cgb = number_format($sum_cgb); else $sum_cgb = '';
                     echo "<tr>
-                      <td style='text-align: center;' colspan='10'> </td>
-                      <td style='text-align: right;'>".number_format($sum_international)."&nbsp;</td>
-                      <td style='text-align: right;'>".number_format($sum_domestic)."&nbsp;</td>
-                      <td style='text-align: right;'>".number_format($sum_cigading)."&nbsp;</td>
-                      <td style='text-align: right;'>".number_format($sum_noncigading)."&nbsp;</td>
+                      <td style='text-align: center;' colspan='8'> </td>
+                      <td style='text-align: right;'>".$sum_lcv."&nbsp;</td>
+                      <td style='text-align: right;'>".$sum_lcb."&nbsp;</td>
+                      <td style='text-align: right;'>".$sum_cgv."&nbsp;</td>
+                      <td style='text-align: right;'>".$sum_cgb."&nbsp;</td>
+                      <td style='text-align: right;'>&nbsp;</td>
+                      <td style='text-align: right;'>".number_format($sum_total)."&nbsp;</td>
                     </tr>";
                     // dd($qu);
                   // dd($query[0]);
