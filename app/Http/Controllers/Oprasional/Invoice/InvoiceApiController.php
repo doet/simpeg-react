@@ -109,7 +109,7 @@ class InvoiceApiController extends Controller
         $InvoiceHelpers = InvoiceHelpers::items_inv($request->cari)['data']['headstatus'];
         if (substr($InvoiceHelpers,0,3)=='NON')$prefix = 'LC' ;else $prefix = 'CG';
         // substr($row->jettyCode,0,1)
-        $responce['invoiceakhir'] = max($array_noinv)
+        $responce['invoiceakhir'] = max($array_noinv);
         $responce['nextinvoice']= (max($array_noinv)+1) .'-'. explode('.',explode('-',$row->noinv)[1])[0].'.'.$prefix;
       break;
       case 'invoice':
