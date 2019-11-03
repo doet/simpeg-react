@@ -141,7 +141,7 @@
                     <td class="top right" align="center" style="background-color: #DCDCDC;" width='120px'>&nbsp;Nomor Invoice</td>
                     <td class="top right" align="center" style="background-color: #DCDCDC;">&nbsp;Tanggal / <i>Date</i></td>
                   </tr>
-                
+
                   <tr style="font-size:13px">
                     <td class="left top right button" align="center" height='18px'>&nbsp;<?php echo $helperInv['data']['pajak']?></td>
                     <td class="top right button" align="center">&nbsp;<?php echo $helperInv['data']['noinv']?></td>
@@ -232,7 +232,12 @@
                 if ($helperInv['data']['selisih']!='')$match=explode(",",$helperInv['data']['selisih']);
                 $i=0;
                 // dd($match);
+                // dd($helperInv['isi']);
+                 // = '';
                 foreach ($helperInv['isi'] as $row) {
+                  if (empty($row['dari']))$row['dari']="";
+                  if (empty($row['ke']))$row['ke']="";
+                  
                   if (empty($match[$i]))$match[$i]=0;
                   echo '<tr>';
                   echo '<td class="left top right" align="center"> '.$helperInv['data']['lstp'].' </td>';
@@ -266,7 +271,6 @@
                 // if (empty($match[$i+4]))$match[$i+4]=0;
                 // dd($helperInv);
               ?>
-
                 </tbody>
                 <?php
                 // dd(InvoiceHelpers::calculate_total($headstatus,));

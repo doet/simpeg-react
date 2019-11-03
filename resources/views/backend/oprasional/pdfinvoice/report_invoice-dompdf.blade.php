@@ -147,8 +147,9 @@
                       if ($qu['data']['kapalsGrt']=='')$qu['data']['kapalsGrt'] = 0;
 
                       $i = count($qu['isi'])+1;
+                      // if (empty($match[$i]))$match[$i]=0;
+                      $match[$i]=0;
                       if ($qu['data']['selisih']!='')$match=explode(",",$qu['data']['selisih']);
-                      if (empty($match[$i]))$match[$i]=0;
 
                       $nilai_match = $qu['jml_ori']['bhtPNBP']+$match[$i];
                       if (substr($qu['data']['headstatus'],0,3)=='NON'){

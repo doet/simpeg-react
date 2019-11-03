@@ -92,6 +92,7 @@ class InvoiceHelpers {
         if ($row->rute == '$') $headstatus='NON CIGADING 1'; else $headstatus='NON CIGADING 2';
       }
 
+      $isi[$i]['daria'] = $isi[$i]['kea'] = '';
       if ($row->ops=='Berth'){
         if ($row->shift!='on'){
           $isi[$i]['dari'] = 'Laut/<i>Sea</i>';
