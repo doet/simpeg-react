@@ -166,13 +166,13 @@
                         }
                       } else{
                         if ($qu['data']['kapalsJenis']=='BG'){
-                          $cgv = $nilai_match;
-                          $cgb = 0;
+                          $cgb = $nilai_match;
+                          $cgv = 0;
                           $lcv = 0;
                           $lcb = 0;
                         } else {
-                          $cgb = $nilai_match;
-                          $cgv = 0;
+                          $cgv = $nilai_match;
+                          $cgb = 0;
                           $lcv = 0;
                           $lcb = 0;
                         }
