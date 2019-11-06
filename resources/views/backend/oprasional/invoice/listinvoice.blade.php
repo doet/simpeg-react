@@ -687,10 +687,16 @@
 				url="href='{{ url('oprasional/PDFInvoice') }}?page=invoice-dompdf&id="+cellvalue+"'";
 				url2="href='{{ url('oprasional/PDFInvoice') }}?page=invoice-dompdf2&id="+cellvalue+"'";
 			} else if (cell[5]=="Internasional" && cell[6]!=="" && cell[7]!==null && cell[8]!==null && cell[9]!==null && cell[12]!==""){
+				console.log();
 				file_c="orange";
 				on_click = "kwitansi('"+cellvalue+"','"+cell[13]+"','"+cell[14]+"')";
-				url="href='{{ url('oprasional/PDFInvoice') }}?page=invoice-dompdf&id="+cellvalue+"'";
-				url2="href='{{ url('oprasional/PDFInvoice') }}?page=invoice-dompdf2&id="+cellvalue+"'";
+				if (cell[2].indexOf('PCM-') === 0){
+					url="href='{{ url('oprasional/PDFInvoice') }}?page=inv_khusus-dompdf&id="+cellvalue+"'";
+					url2="href='{{ url('oprasional/PDFInvoice') }}?page=inv_khusus-dompdf2&id="+cellvalue+"'";
+				} else {
+					url="href='{{ url('oprasional/PDFInvoice') }}?page=invoice-dompdf&id="+cellvalue+"'";
+					url2="href='{{ url('oprasional/PDFInvoice') }}?page=invoice-dompdf2&id="+cellvalue+"'";
+				}
 			}// var gsr = $(this).jqGrid('getGridParam','selrow');
 			// tglinv = $(this).jqGrid('getCell',gsr,'tglinv');
 			if (cell[13]!==''&&cell[13]!==undefined&&cell[14]!==null&&cell[14]!==undefined){

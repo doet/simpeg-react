@@ -141,6 +141,18 @@ class PDFController extends Controller
 
         $customPaper = array(0,0,459.213,566.929);
       break;
+
+      case 'inv_khusus-dompdf':
+        $helperInv = InvoiceHelpers::items_inv($request->id);
+        $page = 'backend.oprasional.pdfinvoice.'.$request->input('page');
+        $nfile = $request->input('file');
+        $orientation = 'landscape';
+
+        $view =  \View::make($page, compact('helperInv'))->render();
+        // return view($page, compact('result','mulai'));
+        $customPaper = array(0,0,595.276,935.4331);
+      break;
+      
       case 'report_invoice-dompdf':
         $query = DB::table('tb_ppjks')
           ->where(function ($query) use ($request){

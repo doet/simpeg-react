@@ -24,6 +24,7 @@ class InvoiceHelpers {
         'tb_kapals.name as kapalsName',
         'tb_kapals.jenis as kapalsJenis',
         'tb_kapals.grt as kapalsGrt',
+        'tb_kapals.bendera as kapalsBendera',
         'tb_ppjks.*'
       )
       ->first();
@@ -92,6 +93,7 @@ class InvoiceHelpers {
         if ($row->rute == '$') $headstatus='NON CIGADING 1'; else $headstatus='NON CIGADING 2';
       }
 
+      $isi[$i]['bapp'] = $row->bapp;
       $isi[$i]['daria'] = $isi[$i]['kea'] = '';
       if ($row->ops=='Berth'){
         if ($row->shift!='on'){
@@ -123,6 +125,25 @@ class InvoiceHelpers {
           $isi[$i]['kea']='';
         }
       }
+
+      if ($row->ops=='Khusus'){
+        $isi[$i]['dari'] = $row->jettyName;
+        $isi[$i]['ke'] = $row->jettyName;
+        // if ($row->shift!='on'){
+        //   $isi[$i]['dari'] = $dari;
+        //   $isi[$i]['ke'] = 'Laut/<i>Sea</i>';
+        //   $tundaon='';
+        //   $isi[$i]['daria']=$isi[$i-1]['kea'];
+        //   $isi[$i]['kea']=$isi[$i-1]['kea'];
+        // } else {
+        //   // $isi[$i]['dari'] = $dari;
+        //   $dari=$row->jettyName;
+        //   $tundaon=$row->tundaon;
+        //   $isi[$i]['daria']='';
+        //   $isi[$i]['kea']='';
+        // }
+      }
+
       if ($tundaon!=''){
         $isi[$i]['tundaon']=date('d/m/y H:i',$tundaon);
         $row->tundaon = $tundaon;
