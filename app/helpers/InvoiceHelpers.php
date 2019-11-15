@@ -161,9 +161,8 @@ class InvoiceHelpers {
       $kapalsGrt = $row->kapalsGrt;
 
       $kurs=self::kurs($row->dkurs);
-      // dd($kurs->nilai);
       if ($row->rute == '$' && $kurs->nilai == 0) $kurs->nilai=1;
-      $tarif=self::tarif($row->rute,$kapalsGrt,$kurs->nilai);
+      $tarif=self::tarif($row->rute,$kapalsGrt,$kurs->nilai,$row->tundaon);
       // dd($tarif);
       $tariffix = $tarif['tariffix'];
       $isi[$i]['jumlahTariffix']=$tariffix*$isi[$i]['jumlahWaktu'];
@@ -255,35 +254,72 @@ class InvoiceHelpers {
     return $mobilisasi;
   }
 
-  public static function tarif($rute,$kapalsGrt,$kurs) {
+  public static function tarif($rute,$kapalsGrt,$kurs,$tgl) {
+    $qu_tariffix = DB::table('tb_nilaiinv')
+      ->where(function ($qu) use ($tgl,$rute,$kapalsGrt){
+        if ($rute == '$')$prefix = 'it_%'; else $prefix = 'dt_%';
+        $desc = $qu->where('date','<=',$tgl)->where('desc','like',$prefix);
+
+        $qu_desc = $desc->get();
+        foreach ($qu_desc as $row) {
+          $d=str_replace("dt_","",$row->desc);
+          $d_id=$row->id;
+          if($kapalsGrt<=$d)break;
+        }
+
+        $qu->where('id',$d_id);
+        // $qu->where('desc',$d);
+      })->orderBy('date', 'asc')
+      ->first();
+
     if($rute == '$') {
-      // dd($kurs);
-      if ($kapalsGrt<=3500)$tariffix = 152.25*$kurs;
-      else if ($kapalsGrt<=8000)$tariffix = 386.25*$kurs;
-      else if ($kapalsGrt<=14000)$tariffix = 587.1*$kurs;
-      else if ($kapalsGrt<=18000)$tariffix = 770*$kurs;
-      else if ($kapalsGrt<=40000)$tariffix = 1220*$kurs;
-      else if ($kapalsGrt<=75000)$tariffix = 1300*$kurs;
-      else if ($kapalsGrt>75000)$tariffix = 1700*$kurs;
+      // if ($kapalsGrt<=3500)$tariffix = 152.25*$kurs;
+      // else if ($kapalsGrt<=8000)$tariffix = 386.25*$kurs;
+      // else if ($kapalsGrt<=14000)$tariffix = 587.1*$kurs;
+      // else if ($kapalsGrt<=18000)$tariffix = 770*$kurs;
+      // else if ($kapalsGrt<=40000)$tariffix = 1220*$kurs;
+      // else if ($kapalsGrt<=75000)$tariffix = 1300*$kurs;
+      // else if ($kapalsGrt>75000)$tariffix = 1700*$kurs;
+      $tariffix = $qu_tariffix->value*$kurs;
     } else {
-      if ($kapalsGrt<=3500)$tariffix = 495000;
-      else if ($kapalsGrt<=8000)$tariffix = 577500;
-      else if ($kapalsGrt<=14000)$tariffix = 825000;
-      else if ($kapalsGrt<=18000)$tariffix = 1031250;
+      $tariffix = $qu_tariffix->value;
+      // if ($kapalsGrt<=3500)$tariffix = 495000;
+      // else if ($kapalsGrt<=8000)$tariffix = 577500;
+      // else if ($kapalsGrt<=14000)$tariffix = 825000;
+      // else if ($kapalsGrt<=18000)$tariffix = 1031250;
     }
     $responce['tariffix'] = $tariffix;
 
+
+    $qu_tarifvar = DB::table('tb_nilaiinv')
+      ->where(function ($qu) use ($tgl,$rute,$kapalsGrt){
+        if ($rute == '$')$prefix = 'iv_%'; else $prefix = 'dv_%';
+        $desc = $qu->where('date','<=',$tgl)->where('desc','like',$prefix);
+
+        $qu_desc = $desc->get();
+        foreach ($qu_desc as $row) {
+          $d=str_replace("dv_","",$row->desc);
+          $d_id=$row->id;
+          if($kapalsGrt<=$d)break;
+        }
+
+        $qu->where('id',$d_id);
+        // $qu->where('desc',$d);
+      })->orderBy('date', 'asc')
+      ->first();
+    // dd($qu_tarifvar);
     if($rute == '$') {
-      if ($kapalsGrt<=14000)$tarifvar=0.005*$kurs;
-      else if ($kapalsGrt<=40000)$tarifvar=0.004*$kurs;
-      else if ($kapalsGrt>40000)$tarifvar=0.002*$kurs;
+      $tarifvar=$qu_tarifvar->value*$kurs;
+      // if ($kapalsGrt<=14000)$tarifvar=0.005*$kurs;
+      // else if ($kapalsGrt<=40000)$tarifvar=0.004*$kurs;
+      // else if ($kapalsGrt>40000)$tarifvar=0.002*$kurs;
     } else {
-      $tarifvar=3.30;
+      $tarifvar=$qu_tarifvar->value;
+      // $tarifvar=3.30;
     }
     $responce['tarifvar'] = $tarifvar;
     return $responce;
   }
-
 
   public static function nilai_inv($ppjks_id,$totalTarif,$bhtPNBP,$ppn,$totalinv){
     $datainv = array(

@@ -77,6 +77,11 @@ Route::prefix('oprasional')->group(function(){
   Route::get('/mdermaga',     'Oprasional\OprasionalController@mdermaga');
   Route::get('/mmooring',     'Oprasional\OprasionalController@mmooring');
 
+  Route::get('/nilai',        'Oprasional\OprasionalController@nilai');
+  Route::get('/mdnilai',      'Oprasional\OprasionalController@mdnilai');
+  Route::get('/minilai',      'Oprasional\OprasionalController@minilai');
+
+
   Route::match(['get', 'post'],   'FileUpload',					'Oprasional\FilesCrudController@save');
   Route::match(['get', 'post'],   'FilesJson',					'Oprasional\FilesCrudController@json');
   Route::match(['get', 'post'],   'FilesSave',		  		'Oprasional\FilesCrudController@save');

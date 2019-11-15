@@ -350,6 +350,8 @@ class InvoiceApiController extends Controller
               if ($request->input('s_id')) {
                 $query->where('tb_ppjks.id', $request->input('s_id'));
               }
+
+
             //   if (array_key_exists("lhp",$request->input())){
             //     $query->where('tb_ppjks.lhp', strtotime($request->input('lhp')));
             //   } else if (array_key_exists("bstdo",$request->input())){

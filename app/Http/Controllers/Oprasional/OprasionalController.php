@@ -95,6 +95,7 @@ class OprasionalController extends Controller
     $aktif_menu = menuadmins::aktif_menu($index['id']);
     return view('backend.oprasional.manifest', compact('multilevel','aktif_menu'));
   }
+
   public function masteroper()
   {
     $multilevel = menuadmins::get_data();
@@ -107,15 +108,30 @@ class OprasionalController extends Controller
     return view('backend.oprasional.submasterdata.mkapal');
   }
   public function magen(){
-      return view('backend.oprasional.submasterdata.magen');
+    return view('backend.oprasional.submasterdata.magen');
   }
   public function mpc(){
     return view('backend.oprasional.submasterdata.mpc');
   }
   public function mdermaga(){
-      return view('backend.oprasional.submasterdata.mdermaga');
+    return view('backend.oprasional.submasterdata.mdermaga');
   }
   public function mmooring(){
-      return view('backend.oprasional.submasterdata.mmooring');
+    return view('backend.oprasional.submasterdata.mmooring');
   }
+
+  public function nilai()
+  {
+    $multilevel = menuadmins::get_data();
+    $index      = menuadmins::where('part','oprasional\nilai')->first();
+    $aktif_menu = menuadmins::aktif_menu($index['id']);
+    return view('backend.oprasional.nilai', compact('multilevel','aktif_menu'));
+  }
+  public function mdnilai(){
+    return view('backend.oprasional.submasternilai.mdnilai');
+  }
+  public function minilai(){
+    return view('backend.oprasional.submasternilai.minilai');
+  }
+
 }

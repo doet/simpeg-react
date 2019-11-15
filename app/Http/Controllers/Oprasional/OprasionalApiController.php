@@ -243,6 +243,11 @@ class OprasionalApiController extends Controller
         $responce[2]['color']="#FEE074";
 
       break;
+      case 'mkurs':
+        $query = DB::table('tb_nilaiinv')->orderBy('date', 'asc')->get();
+        $responce=$query;
+
+      break;
     }
     return  Response()->json($responce);
   }
@@ -656,12 +661,46 @@ class OprasionalApiController extends Controller
           'msg' => 'ok',
         );
       break;
-
+      case 'mnilai':
+        foreach ($request->value as $key=>$value) {
+          if ($value!=''){
+            if ($request->f == 'grt_d')$prfix = 'dt';else if ($request->f == 'grt_i')$prfix = 'it';
+            $datanya=array(
+              'date'=>$request->date ,
+              'desc'=>$prfix.'_'.$request->grt[$key],
+              'value'=>$value
+            );
+            if ($oper=='add')DB::table('tb_nilaiinv')->insert($datanya);
+            if ($oper=='edit')DB::table('tb_nilaiinv')->where('id', $id)->update($datanya);
+            if ($oper=='del')DB::table('tb_nilaiinv')->delete($id);
+          }
+        }
+        foreach ($request->var as $key=>$value) {
+          if ($value!=''){
+            if ($request->f == 'grt_d')$prfix = 'dv';else if ($request->f == 'grt_i')$prfix = 'iv';
+            $datanya=array(
+              'date'=>$request->date ,
+              'desc'=>$prfix.'_'.$request->grt[$key],
+              'value'=>$value
+            );
+            if ($oper=='add')DB::table('tb_nilaiinv')->insert($datanya);
+            if ($oper=='edit')DB::table('tb_nilaiinv')->where('id', $id)->update($datanya);
+            if ($oper=='del')DB::table('tb_nilaiinv')->delete($id);
+          }
+        }
+        // dd($grt_i);
+        $responce = array(
+          'status' => 'success',
+          //"suscces",
+          'msg' => 'ok',
+        );
+      break;
 
     }
 
     return  Response()->json($responce);
   }
+
   public function jqgrid(Request $request){
 
       $datatb = $request->input('datatb', '');
