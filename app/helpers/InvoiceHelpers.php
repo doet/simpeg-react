@@ -261,17 +261,21 @@ class InvoiceHelpers {
         $desc = $qu->where('date','<=',$tgl)->where('desc','like',$prefix);
 
         $qu_desc = $desc->get();
+        $i=0;
         foreach ($qu_desc as $row) {
-          $d=str_replace("dt_","",$row->desc);
-          $d_id=$row->id;
-          if($kapalsGrt<=$d)break;
+          $d[$i]=substr($row->desc,3);
+          sort($d);
+          $i++;
         }
-
-        $qu->where('id',$d_id);
+        foreach ($d as $row) {
+          $f_id=$row;
+          if($kapalsGrt<=$row)break;
+        }
+        $qu->where('desc','like','%'.$f_id);
         // $qu->where('desc',$d);
       })->orderBy('date', 'asc')
       ->first();
-
+      // dd($qu_tariffix);
     if($rute == '$') {
       // if ($kapalsGrt<=3500)$tariffix = 152.25*$kurs;
       // else if ($kapalsGrt<=8000)$tariffix = 386.25*$kurs;
@@ -281,6 +285,7 @@ class InvoiceHelpers {
       // else if ($kapalsGrt<=75000)$tariffix = 1300*$kurs;
       // else if ($kapalsGrt>75000)$tariffix = 1700*$kurs;
       $tariffix = $qu_tariffix->value*$kurs;
+      // $tariffix = $qu_tariffix->date;
     } else {
       $tariffix = $qu_tariffix->value;
       // if ($kapalsGrt<=3500)$tariffix = 495000;
@@ -297,13 +302,17 @@ class InvoiceHelpers {
         $desc = $qu->where('date','<=',$tgl)->where('desc','like',$prefix);
 
         $qu_desc = $desc->get();
+        $i=0;
         foreach ($qu_desc as $row) {
-          $d=str_replace("dv_","",$row->desc);
-          $d_id=$row->id;
-          if($kapalsGrt<=$d)break;
+          $d[$i]=substr($row->desc,3);
+          sort($d);
+          $i++;
         }
-
-        $qu->where('id',$d_id);
+        foreach ($d as $row) {
+          $f_id=$row;
+          if($kapalsGrt<=$row)break;
+        }
+        $qu->where('desc','like','%'.$f_id);
         // $qu->where('desc',$d);
       })->orderBy('date', 'asc')
       ->first();
