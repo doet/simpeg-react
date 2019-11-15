@@ -105,6 +105,7 @@
       onClick: function(date, nb) {
         tgl = moment(date).unix();
         $('#tgl').html(moment.unix(tgl).format("ll"));
+        $('[name=tgl]').val(tgl);
      }
     });
 
