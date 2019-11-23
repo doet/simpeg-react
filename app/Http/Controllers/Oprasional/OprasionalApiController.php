@@ -243,10 +243,63 @@ class OprasionalApiController extends Controller
         $responce[2]['color']="#FEE074";
 
       break;
-      case 'mkurs':
-        $query = DB::table('tb_nilaiinv')->orderBy('date', 'asc')->get();
-        $responce=$query;
+      case 'mtarif':
+        $query = DB::table('tb_nilaiinv')
+          ->where(function ($qu) use ($request){
+            if ($request->search != '') {
+              $getdate = $qu->where('date','<=',$request->search)->orderBy('date', 'desc')->first();
+              if ($getdate) $qu->where('date',$getdate->date);
+            }
+            if ($request->group != '') $qu->where('desc','like',$request->group.'%');
+          })
+          ->orderBy('desc', 'asc')
+          ->get();
+          $i=0;
+          foreach ($query as $row) {
+            if (substr($row->desc,0,3) == substr($row->desc,0,1).'t_'){
+              $responce['data'][$i]['id'] = $row->id;
+              $responce['data'][$i]['date'] = $row->date;
+              $responce['data'][$i]['grp'] = substr($row->desc,0,3);
+              $responce['data'][$i]['desc'] = substr($row->desc,3);
+              $responce['data'][$i]['value'] = $row->value;
 
+            } else if (substr($row->desc,0,3) == substr($row->desc,0,1).'v_'){
+              $responce['data'][$i]['id'] = $row->id;
+              $responce['data'][$i]['date'] = $row->date;
+              $responce['data'][$i]['grp'] = substr($row->desc,0,3);
+              $responce['data'][$i]['desc'] = substr($row->desc,3);
+              $responce['data'][$i]['value'] = $row->value;
+            } else if (substr($row->desc,0,3) == 'bht'){
+              $responce['data'][$i]['id'] = $row->id;
+              $responce['data'][$i]['date'] = $row->date;
+              $responce['data'][$i]['desc'] = $row->desc;
+              $responce['data'][$i]['value'] = $row->value;
+            }
+
+            $i++;
+          }
+          if(isset($responce['data'])) {
+            if ($request->search == ''){
+              foreach ($responce['data'] as $rw) {
+                $responce['date'][]=$rw['date'];
+              }
+              $responce['date'] = array_count_values($responce['date']);
+            } else {
+              if (substr($row->desc,0,3) == 'bht'){} else {
+                foreach ($responce['data'] as $rw) {
+                  $responce['rd'][$rw['desc']]['grt']=$rw['desc'];
+                  if ($rw['grp'] == substr($row->desc,0,1).'t_'){
+                    $responce['rd'][$rw['desc']]['value']=$rw['value'];
+                  }
+                  if ($rw['grp'] == substr($row->desc,0,1).'v_'){
+                    $responce['rd'][$rw['desc']]['var']=$rw['value'];
+                  }
+                }
+                ksort($responce['rd']);
+                $responce['rd'] = array_values($responce['rd']);
+              }
+            }
+          }
       break;
     }
     return  Response()->json($responce);
@@ -662,33 +715,96 @@ class OprasionalApiController extends Controller
         );
       break;
       case 'mnilai':
-        foreach ($request->value as $key=>$value) {
-          if ($value!=''){
-            if ($request->f == 'grt_d')$prfix = 'dt';else if ($request->f == 'grt_i')$prfix = 'it';
-            $datanya=array(
-              'date'=>$request->date ,
-              'desc'=>$prfix.'_'.$request->grt[$key],
-              'value'=>$value
-            );
-            if ($oper=='add')DB::table('tb_nilaiinv')->insert($datanya);
-            if ($oper=='edit')DB::table('tb_nilaiinv')->where('id', $id)->update($datanya);
-            if ($oper=='del')DB::table('tb_nilaiinv')->delete($id);
+
+        if ($request->group == 'bht_'){
+          foreach ($request->bht as $key=>$value) {
+            $id ='';
+            $query = DB::table('tb_nilaiinv')
+              ->where(function ($qu) use ($request,$key){
+                $qu->where('date',$request->date);
+                $qu->where('desc',$request->group.''.$key);
+              })
+              ->first();
+            if($query != null){
+              if ($value!='')$oper = 'edit'; else $oper = 'del';
+              $id = $query->id;
+            }
+
+            if ($value!=''){
+              $datanya=array(
+                'date'=>$request->date ,
+                'desc'=>$request->group.''.$key,
+                'value'=>$value
+              );
+              // dd($datanya);
+              if ($oper=='add')DB::table('tb_nilaiinv')->insert($datanya);
+              if ($oper=='edit')DB::table('tb_nilaiinv')->where('id', $id)->update($datanya);
+            } else if($id!=''){
+              // dd('t',$id);
+              if ($oper=='del')DB::table('tb_nilaiinv')->delete($id);
+            }
+
+          }
+
+        } else {
+          foreach ($request->value as $key=>$value) {
+            $id ='';
+            $query = DB::table('tb_nilaiinv')
+            ->where(function ($qu) use ($request,$key){
+              $qu->where('date',$request->date);
+              $qu->where('desc',$request->group.'t_'.$request->grt[$key]);
+            })
+            ->first();
+            if($query != null){
+              if ($value!='')$oper = 'edit'; else $oper = 'del';
+              $id = $query->id;
+            }
+
+            if ($value!='' && $request->grt[$key]!=''){
+              if ($request->f == 'grt_d')$prfix = 'dt';else if ($request->f == 'grt_i')$prfix = 'it';
+              $datanya=array(
+                'date'=>$request->date ,
+                'desc'=>$prfix.'_'.$request->grt[$key],
+                'value'=>$value
+              );
+              if ($oper=='add')DB::table('tb_nilaiinv')->insert($datanya);
+              if ($oper=='edit')DB::table('tb_nilaiinv')->where('id', $id)->update($datanya);
+            } else if($id!=''){
+              // dd('t',$id);
+              if ($oper=='del')DB::table('tb_nilaiinv')->delete($id);
+            }
+
+          }
+
+          foreach ($request->var as $key=>$value) {
+            $id ='';
+            $query = DB::table('tb_nilaiinv')
+            ->where(function ($qu) use ($request,$key){
+              $qu->where('date',$request->date);
+              $qu->where('desc',$request->group.'v_'.$request->grt[$key]);
+            })
+            ->first();
+            if($query != null){
+              if ($value!='')$oper = 'edit'; else $oper = 'del';
+              $id = $query->id;
+            }
+
+            if ($value!='' && $request->grt[$key]!=''){
+              if ($request->f == 'grt_d')$prfix = 'dv';else if ($request->f == 'grt_i')$prfix = 'iv';
+              $datanya=array(
+                'date'=>$request->date ,
+                'desc'=>$prfix.'_'.$request->grt[$key],
+                'value'=>$value
+              );
+              if ($oper=='add')DB::table('tb_nilaiinv')->insert($datanya);
+              if ($oper=='edit')DB::table('tb_nilaiinv')->where('id', $id)->update($datanya);
+            } else if($id!=''){
+              // dd('v'.$request->group);
+              if ($oper=='del')DB::table('tb_nilaiinv')->delete($id);
+            }
           }
         }
-        foreach ($request->var as $key=>$value) {
-          if ($value!=''){
-            if ($request->f == 'grt_d')$prfix = 'dv';else if ($request->f == 'grt_i')$prfix = 'iv';
-            $datanya=array(
-              'date'=>$request->date ,
-              'desc'=>$prfix.'_'.$request->grt[$key],
-              'value'=>$value
-            );
-            if ($oper=='add')DB::table('tb_nilaiinv')->insert($datanya);
-            if ($oper=='edit')DB::table('tb_nilaiinv')->where('id', $id)->update($datanya);
-            if ($oper=='del')DB::table('tb_nilaiinv')->delete($id);
-          }
-        }
-        // dd($grt_i);
+        // dd($request->input());
         $responce = array(
           'status' => 'success',
           //"suscces",

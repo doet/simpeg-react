@@ -1,111 +1,111 @@
-date : <span id='tgl'></span>
-
+Tanggal berlaku harga <span id='tgl_b'></span>, saat ini anda memilih tanggal <span id='tgl'></span>
+<div class="space-4"></div>
 <form class="form-horizontal" role="form" id="pn">
-    <input name="f" type="hidden" value="grt_d"/>
+
     <div class="form-group">
       <div class="col-xs-4">
-          <input type="text" placeholder="<= BebanGRT" name="grt[]" class="col-xs-10 col-sm-5" />
+          <input type="text" placeholder="<= BebanGRT" name="grt[]" class="form-control input-sm" />
       </div>
       <div class="col-xs-4">
-          <input type="text" placeholder="Tarif.ttp" name="value[]" class="col-xs-10 col-sm-5" />
+          <input type="text" placeholder="Tarif.ttp" name="value[]" class="form-control input-sm" />
       </div>
       <div class="col-xs-4">
-          <input type="text" placeholder="Tarif.var" name="var[]" class="col-xs-10 col-sm-5" />
+          <input type="text" placeholder="Tarif.var" name="var[]" class="form-control input-sm" />
       </div>
     </div>
     <div class="space-4"></div>
 
     <div class="form-group">
       <div class="col-xs-4">
-          <input type="text" placeholder="<= BebanGRT" name="grt[]" class="col-xs-10 col-sm-5" />
+          <input type="text" placeholder="<= BebanGRT" name="grt[]" class="form-control input-sm" />
       </div>
       <div class="col-xs-4">
-          <input type="text" placeholder="Tarif.ttp" name="value[]" class="col-xs-10 col-sm-5" />
+          <input type="text" placeholder="Tarif.ttp" name="value[]" class="form-control input-sm" />
       </div>
       <div class="col-xs-4">
-          <input type="text" placeholder="Tarif.var" name="var[]" class="col-xs-10 col-sm-5" />
+          <input type="text" placeholder="Tarif.var" name="var[]" class="form-control input-sm" />
       </div>
     </div>
     <div class="space-4"></div>
 
     <div class="form-group">
       <div class="col-xs-4">
-          <input type="text" placeholder="<= BebanGRT" name="grt[]" class="col-xs-10 col-sm-5" />
+          <input type="text" placeholder="<= BebanGRT" name="grt[]" class="form-control input-sm" />
       </div>
       <div class="col-xs-4">
-          <input type="text" placeholder="Tarif.ttp" name="value[]" class="col-xs-10 col-sm-5" />
+          <input type="text" placeholder="Tarif.ttp" name="value[]" class="form-control input-sm" />
       </div>
       <div class="col-xs-4">
-          <input type="text" placeholder="Tarif.var" name="var[]" class="col-xs-10 col-sm-5" />
+          <input type="text" placeholder="Tarif.var" name="var[]" class="form-control input-sm" />
       </div>
     </div>
     <div class="space-4"></div>
 
     <div class="form-group">
       <div class="col-xs-4">
-          <input type="text" placeholder="<= BebanGRT" name="grt[]" class="col-xs-10 col-sm-5" />
+          <input type="text" placeholder="<= BebanGRT" name="grt[]" class="form-control input-sm" />
       </div>
       <div class="col-xs-4">
-          <input type="text" placeholder="Tarif.ttp" name="value[]" class="col-xs-10 col-sm-5" />
+          <input type="text" placeholder="Tarif.ttp" name="value[]" class="form-control input-sm" />
       </div>
       <div class="col-xs-4">
-          <input type="text" placeholder="Tarif.var" name="var[]" class="col-xs-10 col-sm-5" />
+          <input type="text" placeholder="Tarif.var" name="var[]" class="form-control input-sm" />
       </div>
     </div>
     <div class="space-4"></div>
 
     <div class="form-group">
       <div class="col-xs-4">
-          <input type="text" placeholder="<= BebanGRT" name="grt[]" class="col-xs-10 col-sm-5" />
+          <input type="text" placeholder="<= BebanGRT" name="grt[]" class="form-control input-sm" />
       </div>
       <div class="col-xs-4">
-          <input type="text" placeholder="Tarif.ttp" name="value[]" class="col-xs-10 col-sm-5" />
+          <input type="text" placeholder="Tarif.ttp" name="value[]" class="form-control input-sm" />
       </div>
       <div class="col-xs-4">
-          <input type="text" placeholder="Tarif.var" name="var[]" class="col-xs-10 col-sm-5" />
+          <input type="text" placeholder="Tarif.var" name="var[]" class="form-control input-sm" />
       </div>
     </div>
     <div class="space-4"></div>
 
     <div class="form-group">
       <div class="col-xs-4">
-          <input type="text" placeholder="<= BebanGRT" name="grt[]" class="col-xs-10 col-sm-5" />
+          <input type="text" placeholder="<= BebanGRT" name="grt[]" class="form-control input-sm" />
       </div>
       <div class="col-xs-4">
-          <input type="text" placeholder="Tarif.ttp" name="value[]" class="col-xs-10 col-sm-5" />
+          <input type="text" placeholder="Tarif.ttp" name="value[]" class="form-control input-sm" />
       </div>
       <div class="col-xs-4">
-          <input type="text" placeholder="Tarif.var" name="var[]" class="col-xs-10 col-sm-5" />
+          <input type="text" placeholder="Tarif.var" name="var[]" class="form-control input-sm" />
       </div>
     </div>
     <div class="space-4"></div>
 
     <div class="form-group">
       <div class="col-xs-4">
-          <input type="text" placeholder="<= BebanGRT" name="grt[]" class="col-xs-10 col-sm-5" />
+          <input type="text" placeholder="<= BebanGRT" name="grt[]" class="form-control input-sm" />
       </div>
       <div class="col-xs-4">
-          <input type="text" placeholder="Tarif.ttp" name="value[]" class="col-xs-10 col-sm-5" />
+          <input type="text" placeholder="Tarif.ttp" name="value[]" class="form-control input-sm" />
       </div>
       <div class="col-xs-4">
-          <input type="text" placeholder="Tarif.var" name="var[]" class="col-xs-10 col-sm-5" />
+          <input type="text" placeholder="Tarif.var" name="var[]" class="form-control input-sm" />
       </div>
     </div>
     <div class="space-4"></div>
 
     <div class="form-group">
       <div class="col-xs-4">
-          <input type="text" placeholder="<= BebanGRT" name="grt[]" class="col-xs-10 col-sm-5" />
+          <input type="text" placeholder="<= BebanGRT" name="grt[]" class="form-control input-sm" />
       </div>
       <div class="col-xs-4">
-          <input type="text" placeholder="Tarif.ttp" name="value[]" class="col-xs-10 col-sm-5" />
+          <input type="text" placeholder="Tarif.ttp" name="value[]" class="form-control input-sm" />
       </div>
       <div class="col-xs-4">
-          <input type="text" placeholder="Tarif.var" name="var[]" class="col-xs-10 col-sm-5" />
+          <input type="text" placeholder="Tarif.var" name="var[]" class="form-control input-sm" />
       </div>
     </div>
     <div class="space-4"></div>
-    note: - untuk beban tak terhingga isikan nilai 0 pada input beban GRT
+
     <div class="clearfix form-actions">
         <div class="col-md-offset-3 col-md-9">
             <button class="btn btn-info" type="submit" id="save">
@@ -120,6 +120,8 @@ date : <span id='tgl'></span>
             </button>
         </div>
     </div>
+    <input name="f" type="hidden" value="grt_d"/>
+    <input name="group" type="hidden" value="d"/>
 </form>
 
 
@@ -127,8 +129,12 @@ date : <span id='tgl'></span>
 <script type="text/javascript">
   jQuery(function($) {
     tgl = $('[name=tgl]').val();
-    $('#tgl').html(moment.unix(tgl).format("ll"));
-    
+    $('#tgl').html(moment.unix(tgl).format("DD MMM Y"));
+
+    loadcal($('[name=group]').val());
+    loadinput($('[name=group]').val(),tgl);
+    // console.log();
+
     $("#pn").submit(function(e) {
       e.preventDefault();
       var oper = 'add';
@@ -148,7 +154,7 @@ date : <span id='tgl'></span>
           alert(msg.id);
 
           if(msg.status == "success"){
-              loaddata()
+              loadcal()
               // document.getElementById("form-1").reset();
           } else {
               alert (msg.msg);
@@ -161,20 +167,5 @@ date : <span id='tgl'></span>
         }
       })
     })
-    //
-    // // var date = new Date();
-    // var cal = new CalHeatMap();
-    // var calData = {} ;
-    // function loaddata(){
-    //   var posdata= {'datatb':'mkurs','search':1};
-    //   getparameter("{{url('/api/oprasional/json')}}",posdata,function(data){
-    //     data.map(function(element, index, array) {
-    //       if (calData[element.date] === undefined)calData[element.date]=1; else calData[element.date] += 1;
-    //     });
-    //     console.log(calData);
-    //     cal.update(calData);
-    //   })
-    // }
-
   })
 </script>

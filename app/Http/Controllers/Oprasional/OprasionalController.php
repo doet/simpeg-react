@@ -133,5 +133,8 @@ class OprasionalController extends Controller
   public function minilai(){
     return view('backend.oprasional.submasternilai.minilai');
   }
+  public function msum(){
+    return view('backend.oprasional.submasternilai.msum');
+  }
 
 }

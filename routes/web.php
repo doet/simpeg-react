@@ -80,6 +80,7 @@ Route::prefix('oprasional')->group(function(){
   Route::get('/nilai',        'Oprasional\OprasionalController@nilai');
   Route::get('/mdnilai',      'Oprasional\OprasionalController@mdnilai');
   Route::get('/minilai',      'Oprasional\OprasionalController@minilai');
+  Route::get('/msum',         'Oprasional\OprasionalController@msum');
 
 
   Route::match(['get', 'post'],   'FileUpload',					'Oprasional\FilesCrudController@save');

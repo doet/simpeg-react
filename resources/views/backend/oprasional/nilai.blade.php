@@ -57,6 +57,14 @@
                                     T.Internasional
                                 </a>
                             </li>
+
+                            <li class="">
+                                <a data-toggle="tab" href="#home" onclick="load('oprasional/msum','#isi')">
+                                    <i class="green ace-icon fa fa-home bigger-120"></i>
+                                    Sharing
+                                </a>
+                            </li>
+
                         </ul>
 
                         <div class="tab-content">
@@ -96,28 +104,53 @@
       range: 6,
       domainGutter: 10,
       displayLegend: false,
-      legend: [1, 2, 3, 4],
+      legend: [1, 9, 12, 15, 18],
       onComplete: function() {
-        loaddata();
+        // loadcal();
       },
       afterLoad: function() {
+        // setTimeout(function(){
+        //   loadinput(tgl);
+        // }, 1000);
       },
       onClick: function(date, nb) {
         tgl = moment(date).unix();
-        $('#tgl').html(moment.unix(tgl).format("ll"));
+
+        $('#tgl').html(moment.unix(tgl).format("DD MMM Y"));
         $('[name=tgl]').val(tgl);
+        $('#pn').trigger("reset");
+
+        loadinput($('[name=group]').val(),tgl);
+
      }
     });
 
-    function loaddata(){
+    function loadcal(group=''){
       var calData = {} ;
-      var posdata= {'datatb':'mkurs','search':1};
+      var posdata= {'datatb':'mtarif','search':'','group':group};
       getparameter("{{url('/api/oprasional/json')}}",posdata,function(data){
-        data.map(function(element, index, array) {
-          if (calData[element.date] === undefined)calData[element.date]=1; else calData[element.date] += 1;
-        });
-        cal.update(calData);
-        // console.log(calData);
+        cal.update(data.date);
+      })
+    }
+
+    function loadinput(group='',search=''){
+      var posdata= {'datatb':'mtarif','group':group,'search':search};
+      getparameter("{{url('/api/oprasional/json')}}",posdata,function(data){
+        if (typeof data.data !== 'undefined'){
+          $('#tgl_b').html(moment.unix(data.data[0]['date']).format("DD MMM Y"));
+          if (data.data[0].desc.includes("bht_")) {
+            data.data.map(function(a,i){
+              d = a.desc.split("_");
+              $('[name="bht['+ d[1] +']"]').val( a.value );
+            })
+          } else {
+            data.rd.map(function(a,i){
+              $( "#pn" ).children('div').children('div').children('[name="grt[]"]').eq(i).val(a.grt);
+              $( "#pn" ).children('div').children('div').children('[name="value[]"]').eq(i).val(a.value);
+              $( "#pn" ).children('div').children('div').children('[name="var[]"]').eq(i).val(a.var);
+            });
+          }
+        }
       })
     }
 
