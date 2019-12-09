@@ -237,7 +237,7 @@
                 foreach ($helperInv['isi'] as $row) {
                   if (empty($row['dari']))$row['dari']="";
                   if (empty($row['ke']))$row['ke']="";
-                  
+
                   if (empty($match[$i]))$match[$i]=0;
                   echo '<tr>';
                   echo '<td class="left top right" align="center"> '.$helperInv['data']['lstp'].' </td>';

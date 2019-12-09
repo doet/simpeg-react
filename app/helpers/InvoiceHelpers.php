@@ -146,9 +146,14 @@ class InvoiceHelpers {
 
       if ($tundaon!=''){
         $isi[$i]['tundaon']=date('d/m/y H:i',$tundaon);
+        $isi[$i]['unix_on']=$tundaon;
         $row->tundaon = $tundaon;
-      } else $isi[$i]['tundaon']=date('d/m/y H:i',$row->tundaon);
+      } else {
+        $isi[$i]['tundaon']=date('d/m/y H:i',$row->tundaon);
+        $isi[$i]['unix_on']=$row->tundaon;
+      }
       $isi[$i]['tundaoff']=date('d/m/y H:i',$row->tundaoff);
+      $isi[$i]['unix_off']=$row->tundaoff;
 
       $selisih = self::selisih_waktu($row->tundaon,$row->tundaoff);
       $isi[$i]['selisihWaktu']=$selisih['selisihWaktu'];
@@ -162,8 +167,8 @@ class InvoiceHelpers {
 
       $kurs=self::kurs($row->dkurs);
       if ($row->rute == '$' && $kurs->nilai == 0) $kurs->nilai=1;
-      $tarif=self::tarif($row->rute,$kapalsGrt,$kurs->nilai,$row->tundaon);
-      // dd($tarif);
+
+      $tarif=self::tarif($row->rute,$kapalsGrt,$kurs->nilai,$query[0]->tundaon);
       $tariffix = $tarif['tariffix'];
       $isi[$i]['jumlahTariffix']=$tariffix*$isi[$i]['jumlahWaktu'];
 
@@ -194,7 +199,7 @@ class InvoiceHelpers {
     }
 
     $responce['isi'] = $isi;
-    $responce['jml_ori'] = array_map(function($v){return round($v);}, self::calculate_total($headstatus,$totalTarif));
+    $responce['jml_ori'] = array_map(function($v){return round($v);}, self::calculate_total($headstatus,$totalTarif,$row->rute,$row->tundaoff));
     $responce['data']['headstatus'] = $headstatus;
     $responce['data']['code'] = $code;
     $responce['data']['tariffix'] = $tariffix;
@@ -205,23 +210,39 @@ class InvoiceHelpers {
     return $responce;
   }
 
-  public static function calculate_total($headstatus,$totalTarif) {
-    $responce['totalTarif']=$totalTarif;
-    if (substr($headstatus,0,8)=='Cigading' || substr($headstatus,0,8)=='CIGADING'){
-      $responce['bht99']    = $responce['totalTarif']*(98/100);
-      $responce['bht5']     = $responce['bht99']*(5/100);
-      $responce['bhtPNBP']  = $responce['bht99']-$responce['bht5'];
-      $responce['ppn']      = $responce['bhtPNBP']*(10/100);
-      $responce['totalinv'] = $responce['bhtPNBP']+$responce['ppn'];
-    }
+  public static function calculate_total($headstatus,$totalTarif,$rute,$tgl) {
 
-    if ($headstatus=='NON CIGADING 1' ||$headstatus=='NON CIGADING 2'){
-      $responce['bht99']    = $responce['totalTarif']*(99/100);
-      $responce['bht5']     = $responce['bht99']*(5/100);
-      $responce['bhtPNBP']  = $responce['bht99']-$responce['bht5'];
-      $responce['ppn']      = $responce['bhtPNBP']*(10/100);
-      $responce['totalinv'] = $responce['bhtPNBP']+$responce['ppn'];
-    }
+    $qu_sharing = DB::table('tb_nilaiinv')
+      ->where(function ($qu) use ($headstatus,$rute,$tgl){
+        if (substr($headstatus,0,8)=='Cigading' || substr($headstatus,0,8)=='CIGADING') $prefix = 'bht_c'; else $prefix = 'bht_c';
+        if ($rute == '$')$prefix = $prefix.'i'; else $prefix = $prefix.'d';
+
+       $qu->where('date','<=',$tgl)->where('desc',$prefix);
+
+      })->orderBy('date', 'asc')
+      ->first();
+    // dd($qu_sharing->value);
+    $responce['totalTarif']=$totalTarif;
+    $responce['bht99']    = $responce['totalTarif']*($qu_sharing->value/100);
+    $responce['bht5']     = $responce['bht99']*(5/100);
+    $responce['bhtPNBP']  = $responce['bht99']-$responce['bht5'];
+    $responce['ppn']      = $responce['bhtPNBP']*(10/100);
+    $responce['totalinv'] = $responce['bhtPNBP']+$responce['ppn'];
+    // if (substr($headstatus,0,8)=='Cigading' || substr($headstatus,0,8)=='CIGADING'){
+    //   $responce['bht99']    = $responce['totalTarif']*(98/100);
+    //   $responce['bht5']     = $responce['bht99']*(5/100);
+    //   $responce['bhtPNBP']  = $responce['bht99']-$responce['bht5'];
+    //   $responce['ppn']      = $responce['bhtPNBP']*(10/100);
+    //   $responce['totalinv'] = $responce['bhtPNBP']+$responce['ppn'];
+    // }
+    //
+    // if ($headstatus=='NON CIGADING 1' ||$headstatus=='NON CIGADING 2'){
+    //   $responce['bht99']    = $responce['totalTarif']*(99/100);
+    //   $responce['bht5']     = $responce['bht99']*(5/100);
+    //   $responce['bhtPNBP']  = $responce['bht99']-$responce['bht5'];
+    //   $responce['ppn']      = $responce['bhtPNBP']*(10/100);
+    //   $responce['totalinv'] = $responce['bhtPNBP']+$responce['ppn'];
+    // }
     return $responce;
   }
 
@@ -280,6 +301,7 @@ class InvoiceHelpers {
       })->orderBy('date', 'asc')
       ->first();
       // dd($qu_tariffix);
+
     if($rute == '$') {
       // if ($kapalsGrt<=3500)$tariffix = 152.25*$kurs;
       // else if ($kapalsGrt<=8000)$tariffix = 386.25*$kurs;
@@ -288,7 +310,8 @@ class InvoiceHelpers {
       // else if ($kapalsGrt<=40000)$tariffix = 1220*$kurs;
       // else if ($kapalsGrt<=75000)$tariffix = 1300*$kurs;
       // else if ($kapalsGrt>75000)$tariffix = 1700*$kurs;
-      if($qu_tariffix == null)$qu_tariffix_value = 0;
+      if($qu_tariffix == null)$qu_tariffix_value = 0; else $qu_tariffix_value = $qu_tariffix->value;
+      // dd($qu_tariffix_value);
       $tariffix = $qu_tariffix_value*$kurs;
       // $tariffix = $qu_tariffix->date;
     } else {
@@ -325,7 +348,7 @@ class InvoiceHelpers {
       ->first();
     // dd($qu_tarifvar);
     if($rute == '$') {
-      if($qu_tariffix == null)$qu_tariffix_value = 0;
+      if($qu_tariffix == null)$qu_tariffix_value = 0; else $qu_tariffix_value = $qu_tariffix->value;
       $tarifvar=$qu_tariffix_value*$kurs;
       // if ($kapalsGrt<=14000)$tarifvar=0.005*$kurs;
       // else if ($kapalsGrt<=40000)$tarifvar=0.004*$kurs;

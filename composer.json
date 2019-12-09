@@ -42,7 +42,7 @@
         "classmap": [
             "database/seeds",
             "database/factories",
-            "app/helpers"
+            "app/helpers"            
         ]
     },
     "autoload-dev": {

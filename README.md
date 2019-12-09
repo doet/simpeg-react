@@ -40,8 +40,8 @@ c. buat server redist
     /app/helpers/
     /app/Models/
     /app/Event/
-    /app/Http/Controller/
     /public/
+    /app/Http/Controller/
     /resources/views
     /resources/assets/js/components
     /resources/assets/js/app.js
@@ -64,6 +64,11 @@ c. buat server redist
     },
     </p>
 <!-- 5c. $ composer dump-autoload  -->
+php artisan cache:clear
+php artisan route:clear
+php artisan config:clear
+php artisan view:clear
+
 6. composer require ramsey/uuid
   composer require box/spout
 7. composer require barryvdh/laravel-dompdf

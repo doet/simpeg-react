@@ -247,9 +247,10 @@ class OprasionalApiController extends Controller
         $query = DB::table('tb_nilaiinv')
           ->where(function ($qu) use ($request){
             if ($request->search != '') {
-              $getdate = $qu->where('date','<=',$request->search)->orderBy('date', 'desc')->first();
+              $getdate = $qu->where('desc','like',$request->group.'%')->where('date','<=',$request->search)->orderBy('date', 'desc')->first();
               if ($getdate) $qu->where('date',$getdate->date);
             }
+            // dd($getdate);
             if ($request->group != '') $qu->where('desc','like',$request->group.'%');
           })
           ->orderBy('desc', 'asc')
@@ -300,6 +301,7 @@ class OprasionalApiController extends Controller
               }
             }
           }
+          // dd($responce);
       break;
     }
     return  Response()->json($responce);
@@ -715,7 +717,6 @@ class OprasionalApiController extends Controller
         );
       break;
       case 'mnilai':
-
         if ($request->group == 'bht_'){
           foreach ($request->bht as $key=>$value) {
             $id ='';
@@ -736,7 +737,6 @@ class OprasionalApiController extends Controller
                 'desc'=>$request->group.''.$key,
                 'value'=>$value
               );
-              // dd($datanya);
               if ($oper=='add')DB::table('tb_nilaiinv')->insert($datanya);
               if ($oper=='edit')DB::table('tb_nilaiinv')->where('id', $id)->update($datanya);
             } else if($id!=''){

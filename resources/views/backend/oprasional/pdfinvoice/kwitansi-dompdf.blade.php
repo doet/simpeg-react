@@ -35,29 +35,29 @@
             }
           ?>
           <div style="page-break-after: avoid;">
-            <div style="position:absolute; top:126; left:240;"><?php echo $query[0]->no_kwn ?></div>
-            <div style="position:absolute; top:141; left:141;"><b><?php echo "PT. KRAKATAU BANDAR SAMUDRA"?></b></div>
-            <div style="position:absolute; top:155; left:141;"><?php echo Terbilang($total)?></div>
-            <div style="position:absolute; top:175; right:270; font-size: 14px;"><?php echo number_format($total) ?></div>
+            <div style="position:absolute; top:116; left:248;"><?php echo $query[0]->no_kwn ?></div>
+            <div style="position:absolute; top:135; left:130;"><b><?php echo "PT. KRAKATAU BANDAR SAMUDRA"?></b></div>
+            <div style="position:absolute; top:149; left:130;"><?php echo Terbilang($total)?></div>
+            <div style="position:absolute; top:170; right:348; font-size: 14px;"><?php echo number_format($total) ?></div>
 
 
               <!--  left:42; -->
             <?php
-            $top = 226;
+            $top = 220;
             $i=1;
               foreach ($query as $row ) {
                 // echo number_format($row->t_bht);
                 echo '<div style="position:absolute; top:'.$top.'; left:41;">'.$i.'</div>';
                 echo '<div style="position:absolute; top:'.$top.'; left:55; font-size: 11px;">'.$row->noinv.'</div>';
                 echo '<div style="position:absolute; top:'.$top.'; left:126;">'.$row->name.'</div>';
-                echo '<div style="position:absolute; top:'.$top.'; right:270;">'.number_format($row->t_bht).'</div>';
+                echo '<div style="position:absolute; top:'.$top.'; right:340;">'.number_format($row->t_bht).'</div>';
                 $top = $top + 14;
                 $i++;
               }
             ?>
 
-            <div style="position:absolute; top:354; left:440;"><?php echo date('d - M - Y',$query[0]->tgl_pay) ?></div>
-            <div style="position:absolute; top:435; left:421; text-align: center; font-size: 10px;"><b>H.ARIEF RIVA'I, SH, MH, M.SI</b><br>Derektur Utama<</div>
+            <div style="position:absolute; top:345; left:440;"><?php echo date('d - M - Y',$query[0]->tgl_pay) ?></div>
+            <div style="position:absolute; top:430; left:425; text-align: center; font-size: 10px;"><b>H.ARIEF RIVA'I, SH, MH, M.SI</b><br>Derektur Utama<</div>
           </div>
 
             <!-- <p style="page-break-after: never;">

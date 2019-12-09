@@ -261,7 +261,7 @@ class InvoiceApiController extends Controller
 
         //ganti nilai resume selisih (recalculate) jika nilai total tunda diubah
         if ($i==$request->name){
-          $new_calculate = InvoiceHelpers::calculate_total($nilai['data']['headstatus'],$request->value);
+          $new_calculate = InvoiceHelpers::calculate_total($nilai['data']['headstatus'],$request->value,$nilai['data']['rute'],end($nilai['isi'])['unix_on']);
 
           $selisih[$i]   = round($request->value-$nilai['jml_ori']['totalTarif']);
           $selisih[$i+1] = round($new_calculate['bhtPNBP']-$nilai['jml_ori']['bhtPNBP']);
@@ -282,25 +282,6 @@ class InvoiceApiController extends Controller
           $selisih[$request->name] = round($request->value - $tmp[$request->name],2);
         }
 
-
-        // $i = count($nilai['isi']);
-        // if(empty($nilai['isi'][$request->name])){
-        //   $tmp[$i]   = InvoiceHelpers::items_inv($request->pk)['jml_ori']['totalTarif']+isset($selisih[$i]);
-        //
-        //   if ($i == $request->name){
-        //
-        //   }
-        //
-        // //   // dd($tmp);
-        // //   InvoiceHelpers::nilai_inv(
-        // //     $request->pk,
-        // //     $tmp[$i],
-        // //     $tmp[$i+1],
-        // //     $tmp[$i+2],
-        // //     $tmp[$i+3]
-        // //   );
-        // }
-        //
         $datanya=array(
           'selisih'=> implode(',',$selisih),
         );

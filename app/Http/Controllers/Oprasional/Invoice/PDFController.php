@@ -139,7 +139,8 @@ class PDFController extends Controller
         $view =  \View::make($page, compact('query','request'))->render();
         // return view($page, compact('result','mulai'));
 
-        $customPaper = array(0,0,459.213,566.929);
+        $customPaper = array(0,0,462.047,609.449);
+
       break;
 
       case 'inv_khusus-dompdf':
@@ -152,7 +153,7 @@ class PDFController extends Controller
         // return view($page, compact('result','mulai'));
         $customPaper = array(0,0,595.276,935.4331);
       break;
-      
+
       case 'report_invoice-dompdf':
         $query = DB::table('tb_ppjks')
           ->where(function ($query) use ($request){
