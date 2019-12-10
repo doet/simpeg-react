@@ -206,7 +206,7 @@ class InvoiceHelpers {
     $responce['data']['tarifvar'] = $tarifvar;
     $responce['data']['kurs'] = $kurs;
     $responce['data']['tempo'] = strftime("%d %B %Y",self::cek_libur($responce['data']['tglinv'],3));
-
+    // dd($responce);
     return $responce;
   }
 
@@ -281,8 +281,11 @@ class InvoiceHelpers {
       ->where(function ($qu) use ($tgl,$rute,$kapalsGrt){
 
         if ($rute == '$')$prefix = 'it_%'; else $prefix = 'dt_%';
-        $desc = $qu->where('date','<=',$tgl)->where('desc','like',$prefix);
-        $qu_desc = $desc->get();
+        $qu_desc = $qu->where('desc','like',$prefix)
+            ->where(function ($sub_a) use ($tgl){
+                $get_date = $sub_a->where('date','<=',$tgl)->orderBy('date','desc')->first()->date;
+                $sub_a->where('date',$get_date);
+            })->get();
 
         $d=array();
         $i=0;
@@ -301,7 +304,6 @@ class InvoiceHelpers {
       })->orderBy('date', 'asc')
       ->first();
       // dd($qu_tariffix);
-
     if($rute == '$') {
       // if ($kapalsGrt<=3500)$tariffix = 152.25*$kurs;
       // else if ($kapalsGrt<=8000)$tariffix = 386.25*$kurs;
@@ -313,6 +315,7 @@ class InvoiceHelpers {
       if($qu_tariffix == null)$qu_tariffix_value = 0; else $qu_tariffix_value = $qu_tariffix->value;
       // dd($qu_tariffix_value);
       $tariffix = $qu_tariffix_value*$kurs;
+      // dd($qu_tariffix_value);
       // $tariffix = $qu_tariffix->date;
     } else {
       $tariffix = $qu_tariffix->value;
