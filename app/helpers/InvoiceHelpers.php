@@ -329,9 +329,13 @@ class InvoiceHelpers {
 
     $qu_tarifvar = DB::table('tb_nilaiinv')
       ->where(function ($qu) use ($tgl,$rute,$kapalsGrt){
+
         if ($rute == '$')$prefix = 'iv_%'; else $prefix = 'dv_%';
-        $desc = $qu->where('date','<=',$tgl)->where('desc','like',$prefix);
-        $qu_desc = $desc->get();
+        $qu_desc = $qu->where('desc','like',$prefix)
+            ->where(function ($sub_a) use ($tgl){
+                $get_date = $sub_a->where('date','<=',$tgl)->orderBy('date','desc')->first()->date;
+                $sub_a->where('date',$get_date);
+            })->get();
 
         $d=array();
         $i=0;
@@ -349,10 +353,10 @@ class InvoiceHelpers {
         // $qu->where('desc',$d);
       })->orderBy('date', 'asc')
       ->first();
-    // dd($qu_tarifvar);
+
     if($rute == '$') {
-      if($qu_tariffix == null)$qu_tariffix_value = 0; else $qu_tariffix_value = $qu_tariffix->value;
-      $tarifvar=$qu_tariffix_value*$kurs;
+      if($qu_tariffix == null)$qu_tarifvar_value = 0; else $qu_tarifvar_value = $qu_tarifvar->value;
+      $tarifvar=$qu_tarifvar_value*$kurs;
       // if ($kapalsGrt<=14000)$tarifvar=0.005*$kurs;
       // else if ($kapalsGrt<=40000)$tarifvar=0.004*$kurs;
       // else if ($kapalsGrt>40000)$tarifvar=0.002*$kurs;
@@ -361,6 +365,7 @@ class InvoiceHelpers {
       // $tarifvar=3.30;
     }
     $responce['tarifvar'] = $tarifvar;
+    // dd($tarifvar);
     return $responce;
   }
 
