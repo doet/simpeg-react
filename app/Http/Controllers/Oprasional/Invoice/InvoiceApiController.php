@@ -274,14 +274,29 @@ class InvoiceApiController extends Controller
             $tmp[$x] = $tmp[$x]+$selisih[$x];
             // +isset($selisih[$x]);
           }
-          $tmp[$i]   = $nilai['jml_ori']['totalTarif']+$selisih[$i];
-          $tmp[$i+1] = $nilai['jml_ori']['bhtPNBP']+$selisih[$i+1];
-          $tmp[$i+2] = $nilai['jml_ori']['ppn']+$selisih[$i+2];
-          $tmp[$i+3] = $nilai['jml_ori']['totalinv']+$selisih[$i+3];
 
-          $selisih[$request->name] = round($request->value - $tmp[$request->name],2);
+          if (isset($tmp[$request->name])) $selisih[$request->name] = round($request->value - $tmp[$request->name],2);
+
+          $new_value = $tmp;
+          $new_value[$request->name] = $request->value;
+          $new_tt = 0;
+          foreach ($new_value as $value) {
+            $new_tt = $value + $new_tt;
+          }
+          if ($i+1 == $request->name || $i+2 == $request->name || $i+3 == $request->name) {
+              $tmp[$i]   = $nilai['jml_ori']['totalTarif'];
+              $tmp[$i+1] = $nilai['jml_ori']['bhtPNBP'];
+              $tmp[$i+2] = $nilai['jml_ori']['ppn'];
+              $tmp[$i+3] = $nilai['jml_ori']['totalinv'];
+              $selisih[$request->name] =  round($request->value - $tmp[$request->name],2);
+          } else {
+            $new_calculate = InvoiceHelpers::calculate_total($nilai['data']['headstatus'],round($new_tt),$nilai['data']['rute'],end($nilai['isi'])['unix_on']);
+            $selisih[$i] =  round($new_tt-$nilai['jml_ori']['totalTarif']);
+            $selisih[$i+1] = round($new_calculate['bhtPNBP']-$nilai['jml_ori']['bhtPNBP']);
+            $selisih[$i+2] = round($new_calculate['ppn']-$nilai['jml_ori']['ppn']);
+            $selisih[$i+3] = round($new_calculate['totalinv']-$nilai['jml_ori']['totalinv']);
+          }
         }
-
         $datanya=array(
           'selisih'=> implode(',',$selisih),
         );
@@ -289,6 +304,7 @@ class InvoiceApiController extends Controller
         $qu = DB::table('tb_ppjks')->where('id', $request->pk);
         $qu->update($datanya);
         if (!isset($new_calculate))$new_calculate = ''; else $new_calculate = array_map(function($v){return round($v);}, $new_calculate);
+        // dd($new_calculate);
         $responce = array(
           'status' => "success",
           'msg' => $datanya,

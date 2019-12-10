@@ -560,10 +560,13 @@
 						success: function(response, newValue){
 							if (response.recalculate !== ''){
 								var index_c = Number($(this).attr('data-array'));
-								alert(JSON.stringify('recalculate data'))
-								$('.x_edit[data-array='+ (index_c+1) +']').editable('setValue',Numbers(response.recalculate.bhtPNBP));
-								$('.x_edit[data-array='+ (index_c+2) +']').editable('setValue',Numbers(response.recalculate.ppn));
-								$('.x_edit[data-array='+ (index_c+3) +']').editable('setValue',Numbers(response.recalculate.totalinv));
+								// alert(JSON.stringify('recalculate data'))
+								// alert(JSON.stringify(response))
+								// console.log(index_c);
+								$('.x_edit[data-array='+ (index_c+1) +']').editable('setValue',Numbers(response.recalculate.totalTarif));
+								$('.x_edit[data-array='+ (index_c+2) +']').editable('setValue',Numbers(response.recalculate.bhtPNBP));
+								$('.x_edit[data-array='+ (index_c+3) +']').editable('setValue',Numbers(response.recalculate.ppn));
+								$('.x_edit[data-array='+ (index_c+4) +']').editable('setValue',Numbers(response.recalculate.totalinv));
 							}
 						}
 					}).on('save', function(e, params) {

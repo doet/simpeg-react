@@ -134,12 +134,12 @@ class PDFController extends Controller
 
         $page = 'backend.oprasional.pdfinvoice.'.$request->input('page');
         $nfile = $request->input('file');
-        $orientation = 'landscape';
+        $orientation = 'portrait';
 
         $view =  \View::make($page, compact('query','request'))->render();
         // return view($page, compact('result','mulai'));
 
-        $customPaper = array(0,0,462.047,609.449);
+        $customPaper = array(0,0,609.449,462.047);
 
       break;
 

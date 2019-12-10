@@ -71,8 +71,8 @@ class InvoiceHelpers {
     $code=$name=$isi=array();
     $i=0;
 
-    if ($responce['data']['selisih']!='')$match=explode(",",$responce['data']['selisih']);
-    // $match = 0;
+    // if ($responce['data']['selisih']!='')$match=explode(",",$responce['data']['selisih']);
+
     foreach ($query as $row ) {
       $isi[$i]['id']=$i;
 
@@ -174,16 +174,16 @@ class InvoiceHelpers {
 
       $tarifvar=$tarif['tarifvar'];
       $isi[$i]['jumlahTarifvar']=$tarifvar*$kapalsGrt*$isi[$i]['jumlahWaktu'];
-      if (empty($match[$i]))$match[$i]=0;
-      // dd($match);
-      $isi[$i]['jumlahTarif']=$isi[$i]['jumlahTarifvar']+$isi[$i]['jumlahTariffix']+$match[$i];
+      // if (empty($match[$i]))$match[$i]=0;
+
+      $isi[$i]['jumlahTarif']=$isi[$i]['jumlahTarifvar']+$isi[$i]['jumlahTariffix'];
 
       if ($row->ops=='Berth'){
         if ($row->shift!='on'){
-          $jml['jumlahTarif'] = $totalTarif = ($isi[$i]['jumlahTarif']-$match[$i])+$totalTarif;
+          $jml['jumlahTarif'] = $totalTarif = $isi[$i]['jumlahTarif']+$totalTarif;
           $i++;
         } else {
-          $jml['jumlahTarif'] = $totalTarif = ($isi[$i]['jumlahTarif']-$match[$i])+$totalTarif;
+          $jml['jumlahTarif'] = $totalTarif = $isi[$i]['jumlahTarif']+$totalTarif;
           $i++;
         }
       }

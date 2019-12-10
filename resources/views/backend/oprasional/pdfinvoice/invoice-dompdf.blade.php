@@ -259,7 +259,7 @@
                   }
                   echo '<td class="top right" align="right" style="font-size:12px;"> '.number_format($helperInv['data']['kapalsGrt']).'&nbsp;</td>';
                   echo '<td class="top right" align="right" style="font-size:12px;">Rp. '.number_format($row['jumlahTarifvar']).'&nbsp;</td>';
-                  echo '<td class="top right" align="right" style="font-size:12px;">Rp. '.number_format($row['jumlahTarif'],2).'&nbsp;</td>';
+                  echo '<td class="top right" align="right" style="font-size:12px;">Rp. '.number_format($row['jumlahTarif']+$match[$i],2).'&nbsp;</td>';
                   echo '</tr>';
 
                   $i++;
