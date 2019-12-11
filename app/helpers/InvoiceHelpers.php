@@ -214,14 +214,14 @@ class InvoiceHelpers {
 
     $qu_sharing = DB::table('tb_nilaiinv')
       ->where(function ($qu) use ($headstatus,$rute,$tgl){
-        if (substr($headstatus,0,8)=='Cigading' || substr($headstatus,0,8)=='CIGADING') $prefix = 'bht_c'; else $prefix = 'bht_c';
+        if (substr($headstatus,0,8)=='Cigading' || substr($headstatus,0,8)=='CIGADING') $prefix = 'bht_c'; else $prefix = 'bht_nc';
         if ($rute == '$')$prefix = $prefix.'i'; else $prefix = $prefix.'d';
 
-       $qu->where('date','<=',$tgl)->where('desc',$prefix);
+        $qu->where('date','<=',$tgl)->where('desc',$prefix);
+
 
       })->orderBy('date', 'asc')
       ->first();
-    // dd($qu_sharing->value);
     $responce['totalTarif']=$totalTarif;
     $responce['bht99']    = $responce['totalTarif']*($qu_sharing->value/100);
     $responce['bht5']     = $responce['bht99']*(5/100);
