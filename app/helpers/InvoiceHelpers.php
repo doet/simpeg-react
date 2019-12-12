@@ -222,6 +222,7 @@ class InvoiceHelpers {
 
       })->orderBy('date', 'asc')
       ->first();
+    
     $responce['totalTarif']=$totalTarif;
     $responce['bht99']    = $responce['totalTarif']*($qu_sharing->value/100);
     $responce['bht5']     = $responce['bht99']*(5/100);
@@ -276,14 +277,15 @@ class InvoiceHelpers {
   }
 
   public static function tarif($rute,$kapalsGrt,$kurs,$tgl) {
-
+    if ($tgl == null)$tgl=0;
     $qu_tariffix = DB::table('tb_nilaiinv')
       ->where(function ($qu) use ($tgl,$rute,$kapalsGrt){
 
         if ($rute == '$')$prefix = 'it_%'; else $prefix = 'dt_%';
         $qu_desc = $qu->where('desc','like',$prefix)
             ->where(function ($sub_a) use ($tgl){
-                $get_date = $sub_a->where('date','<=',$tgl)->orderBy('date','desc')->first()->date;
+                $get_date = $sub_a->where('date','<=',$tgl)->orderBy('date','desc')->first();
+                if ($get_date != null)$get_date = $get_date->date;
                 $sub_a->where('date',$get_date);
             })->get();
 
@@ -303,6 +305,7 @@ class InvoiceHelpers {
         // $qu->where('desc',$d);
       })->orderBy('date', 'asc')
       ->first();
+      if($qu_tariffix == null)$qu_tariffix_value = 0; else $qu_tariffix_value = $qu_tariffix->value;
       // dd($qu_tariffix);
     if($rute == '$') {
       // if ($kapalsGrt<=3500)$tariffix = 152.25*$kurs;
@@ -312,13 +315,13 @@ class InvoiceHelpers {
       // else if ($kapalsGrt<=40000)$tariffix = 1220*$kurs;
       // else if ($kapalsGrt<=75000)$tariffix = 1300*$kurs;
       // else if ($kapalsGrt>75000)$tariffix = 1700*$kurs;
-      if($qu_tariffix == null)$qu_tariffix_value = 0; else $qu_tariffix_value = $qu_tariffix->value;
+
       // dd($qu_tariffix_value);
       $tariffix = $qu_tariffix_value*$kurs;
       // dd($qu_tariffix_value);
       // $tariffix = $qu_tariffix->date;
     } else {
-      $tariffix = $qu_tariffix->value;
+      $tariffix = $qu_tariffix_value;
       // if ($kapalsGrt<=3500)$tariffix = 495000;
       // else if ($kapalsGrt<=8000)$tariffix = 577500;
       // else if ($kapalsGrt<=14000)$tariffix = 825000;
@@ -333,7 +336,8 @@ class InvoiceHelpers {
         if ($rute == '$')$prefix = 'iv_%'; else $prefix = 'dv_%';
         $qu_desc = $qu->where('desc','like',$prefix)
             ->where(function ($sub_a) use ($tgl){
-                $get_date = $sub_a->where('date','<=',$tgl)->orderBy('date','desc')->first()->date;
+                $get_date = $sub_a->where('date','<=',$tgl)->orderBy('date','desc')->first();
+                if ($get_date != null)$get_date = $get_date->date;
                 $sub_a->where('date',$get_date);
             })->get();
 

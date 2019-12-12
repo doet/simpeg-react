@@ -490,7 +490,7 @@
 
 				var postData = {datatb:'invoice', cari: rowId, _token:'{{ csrf_token() }}'};
 				getparameter("{{url('/api/oprasional/invoice/json')}}",postData,function(data){
-					// console.log(data.data);
+
 					rowData = $(grid_selector).getRowData(rowId);
 					if(rowData['tglinv'] && rowData['pajak'] && rowData['noinv'] && rowData['refno']) x_edit = 'x_edit'; else x_edit = '';
 
@@ -559,14 +559,15 @@
 						inputclass:'input-sm',
 						success: function(response, newValue){
 							if (response.recalculate !== ''){
-								var index_c = Number($(this).attr('data-array'));
-								// alert(JSON.stringify('recalculate data'))
+								var index_c = $('#'+subgridTableId).children().length;
+								// alert(JSON.stringify(index_c));
+								// alert(JSON.stringify();
 								// alert(JSON.stringify(response))
 								// console.log(index_c);
-								$('.x_edit[data-array='+ (index_c+1) +']').editable('setValue',Numbers(response.recalculate.totalTarif));
-								$('.x_edit[data-array='+ (index_c+2) +']').editable('setValue',Numbers(response.recalculate.bhtPNBP));
-								$('.x_edit[data-array='+ (index_c+3) +']').editable('setValue',Numbers(response.recalculate.ppn));
-								$('.x_edit[data-array='+ (index_c+4) +']').editable('setValue',Numbers(response.recalculate.totalinv));
+								$('.x_edit[data-array='+ (index_c) +']').editable('setValue',Numbers(response.recalculate.totalTarif));
+								$('.x_edit[data-array='+ (index_c+1) +']').editable('setValue',Numbers(response.recalculate.bhtPNBP));
+								$('.x_edit[data-array='+ (index_c+2) +']').editable('setValue',Numbers(response.recalculate.ppn));
+								$('.x_edit[data-array='+ (index_c+3) +']').editable('setValue',Numbers(response.recalculate.totalinv));
 							}
 						}
 					}).on('save', function(e, params) {
